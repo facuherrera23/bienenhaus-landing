@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script>
+    (function(){
+      var parts = window.location.pathname.split('/').filter(Boolean);
+      var knownRoutes = ['venta','alquiler','propiedad','about','contact','agents','tasacion','admin','api'];
+      var base = (parts.length && knownRoutes.indexOf(parts[0]) === -1) ? '/' + parts[0] + '/' : '/';
+      document.write('<base href="' + base + '">');
+    })();
+  </script>
   <link rel="canonical" href="/"/>
   <title>Bienenhaus Propiedades · Córdoba</title>
   <meta name="description" content="Inmobiliaria de confianza en Córdoba. Casas, departamentos y fincas seleccionados por expertos."/>
@@ -83,15 +91,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="preconnect" href="https://res.cloudinary.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="/css/styles.css?v=2B"/>
-  <link rel="stylesheet" href="/css/detalle.css?v=2B"/>
-  <link rel="stylesheet" href="/css/comparador.css?v=2B"/>
-  <link rel="manifest" href="/manifest.json"/>
+  <link rel="stylesheet" href="css/styles.css?v=2B"/>
+  <link rel="stylesheet" href="css/detalle.css?v=2B"/>
+  <link rel="stylesheet" href="css/comparador.css?v=2B"/>
+  <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#20b8ab"/>
-  <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"/>
-  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192x192.png"/>
-  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192x192.png"/>
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
   <style>
     .tasacion-section {
       position: relative;
@@ -229,8 +237,8 @@
 <nav id="navbar">
   <div class="nav-inner">
     <div class="brand">
-      <a href="#" data-scroll="hero" class="logo-3d-wrap">
-        <img src="/images/BienenhausBHBlanco512x512.png"
+      <a href="." data-scroll="hero" class="logo-3d-wrap">
+        <img src="images/BienenhausBHBlanco512x512.png"
              alt="Bienenhaus Propiedades"
              class="nav-logo logo-3d"/>
       </a>
@@ -285,7 +293,7 @@
 
   <div class="hero-content">
     <div class="logo-3d-wrap a1">
-      <img src="/images/logo-bienenhaus.png"
+      <img src="images/logo-bienenhaus.png"
            alt="Bienenhaus Propiedades"
            class="hero-logo logo-3d"/>
     </div>
@@ -849,7 +857,7 @@
 <footer id="footer">
   <div class="footer-inner">
     <div class="footer-brand-col">
-      <img src="/images/logo-bienenhaus.png" alt="Bienenhaus Propiedades" class="footer-logo" loading="lazy"/>
+      <img src="images/logo-bienenhaus.png" alt="Bienenhaus Propiedades" class="footer-logo" loading="lazy"/>
       <p class="footer-desc">Inmobiliaria en Córdoba. Casas, departamentos, fincas y terrenos seleccionados por expertos.</p>
       <div class="footer-social">
         <a href="https://instagram.com" target="_blank" class="footer-social-link" aria-label="Instagram">
@@ -921,11 +929,11 @@
   </svg>
 </a>
 
-<script src="/js/api.min.js"></script>
-<script src="/js/properties.min.js"></script>
-  <script src="/js/agents.min.js"></script>
-  <script src="/js/comparador.min.js"></script>
-  <script src="/js/main.min.js"></script>
+<script src="js/api.min.js"></script>
+<script src="js/properties.min.js"></script>
+  <script src="js/agents.min.js"></script>
+  <script src="js/comparador.min.js"></script>
+  <script src="js/main.min.js"></script>
 <script>
   var tfTsEl = document.getElementById('tf_ts');
   if (tfTsEl) { tfTsEl.value = Math.floor(Date.now() / 1000); }
@@ -989,7 +997,7 @@
     });
   }
 </script>
-<link rel="manifest" href="/manifest.json"/>
-<script src="/js/sw-register.min.js"></script>
+<link rel="manifest" href="manifest.json"/>
+<script src="js/sw-register.min.js"></script>
 </body>
 </html>

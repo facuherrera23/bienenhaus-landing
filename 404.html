@@ -3,15 +3,25 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script>
+    (function(){
+      var parts = window.location.pathname.split('/').filter(Boolean);
+      var knownRoutes = ['venta','alquiler','propiedad','about','contact','agents','tasacion','admin','api'];
+      var base = (parts.length && knownRoutes.indexOf(parts[0]) === -1) ? '/' + parts[0] + '/' : '/';
+      document.write('<base href="' + base + '">');
+    })();
+  </script>
   <title>Bienenhaus Propiedades</title>
   <script>
-    // SPA routing para GitHub Pages: redirigir 404 → index.html
-    var segments = window.location.pathname.split('/').filter(Boolean);
-    var isProperty = segments.length >= 2 && (segments[0] === 'venta' || segments[0] === 'alquiler' || segments[0] === 'propiedad');
-    var isAsset = /\.(css|js|png|jpg|svg|ico|webp|json|xml)$/i.test(window.location.pathname);
-    if (!isAsset) {
-      window.location.replace('/');
-    }
+    (function(){
+      var isAsset = /\.\w+$/.test(window.location.pathname);
+      if (!isAsset) {
+        var p = window.location.pathname.split('/').filter(Boolean);
+        var known = ['venta','alquiler','propiedad'];
+        var root = (p.length && known.indexOf(p[0]) === -1 && p[0]) ? '/' + p[0] + '/' : '/';
+        window.location.replace(root);
+      }
+    })();
   </script>
 </head>
 <body>
