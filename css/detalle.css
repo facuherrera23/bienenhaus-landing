@@ -123,16 +123,16 @@
 }
 
 .gh-badge--featured {
-  color: var(--gold, #c8a96e);
-  border-color: rgba(200,169,110,0.25);
-  background: rgba(200,169,110,0.08);
+  color: var(--gold, #20b8ab);
+  border-color: rgba(32,184,171,0.25);
+  background: rgba(32,184,171,0.08);
 }
 
 .gh-price {
   font-family: var(--font-num);
   font-size: clamp(28px, 4vw, 48px);
   font-weight: 800;
-  color: var(--gold, #c8a96e);
+  color: var(--gold, #20b8ab);
   line-height: 1;
   margin-bottom: clamp(4px, 0.5vw, 8px);
   text-shadow: 0 2px 12px rgba(0,0,0,0.3);
@@ -173,7 +173,7 @@
 .gh-location svg {
   flex-shrink: 0;
   opacity: .5;
-  stroke: var(--gold, #c8a96e);
+  stroke: var(--gold, #20b8ab);
   width: 12px;
   height: 12px;
 }
@@ -272,8 +272,8 @@
 }
 
 .gh-thumb.active {
-  border-color: var(--gold, #c8a96e);
-  box-shadow: 0 0 0 1px rgba(200,169,110,0.2);
+  border-color: var(--gold, #20b8ab);
+  box-shadow: 0 0 0 1px rgba(32,184,171,0.2);
   opacity: 1;
 }
 
@@ -487,7 +487,7 @@
 .d-badge-disponible { color: #4caf80; border-color: rgba(76,175,128,.25); background: rgba(76,175,128,.06); }
 .d-badge-vendida    { color: var(--g3); border-color: var(--b); }
 .d-badge-type       { color: var(--g2); border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); }
-.d-badge-featured   { color: #c9a84c; border-color: rgba(201,168,76,.2); background: rgba(201,168,76,.05); }
+.d-badge-featured   { color: #20b8ab; border-color: rgba(32,184,171,.2); background: rgba(32,184,171,.05); }
 
 /* ═══════════════════════════════════════════════════
    SPECS — Premium cards
@@ -517,14 +517,14 @@
   top: 0;
   left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold, #c8a96e), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold, #20b8ab), transparent);
   opacity: 0;
   transition: opacity .4s ease;
 }
 
 .dspec:hover {
   background: rgba(255,255,255,0.04);
-  border-color: rgba(200,169,110,0.15);
+  border-color: rgba(32,184,171,0.15);
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
@@ -539,7 +539,7 @@
   width: 20px;
   height: 20px;
   opacity: .5;
-  color: var(--gold, #c8a96e);
+  color: var(--gold, #20b8ab);
   transition: opacity .3s, transform .3s;
 }
 
@@ -592,7 +592,7 @@
   content: '';
   position: absolute; bottom: 0; left: 0;
   width: 32px; height: 2px;
-  background: var(--gold, #c8a96e);
+  background: var(--gold, #20b8ab);
   border-radius: 1px;
 }
 
@@ -616,7 +616,7 @@
   float: left;
   line-height: 0.85;
   margin-right: 12px;
-  color: var(--gold, #c8a96e);
+  color: var(--gold, #20b8ab);
   text-transform: uppercase;
 }
 
@@ -639,7 +639,7 @@
 .agent-card {
   display: flex;
   gap: 24px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(200,169,110,0.03) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(32,184,171,0.03) 100%);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 12px;
   padding: 24px;
@@ -653,13 +653,13 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold, #c8a96e), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold, #20b8ab), transparent);
   opacity: 0;
   transition: opacity .4s ease;
 }
 
 .agent-card:hover {
-  border-color: rgba(200,169,110,0.15);
+  border-color: rgba(32,184,171,0.15);
   box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   transform: translateY(-2px);
 }
@@ -674,7 +674,7 @@
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid rgba(200,169,110,0.2);
+  border: 2px solid rgba(32,184,171,0.2);
   background: var(--s3);
   display: flex;
   align-items: center;
@@ -682,7 +682,7 @@
   font-size: 28px;
   font-weight: 600;
   font-family: var(--font-sub);
-  color: var(--gold, #c8a96e);
+  color: var(--gold, #20b8ab);
 }
 
 .agent-avatar img {
@@ -716,7 +716,7 @@
 .agent-specialty {
   font-family: var(--font-sub);
   font-size: 11px;
-  color: var(--gold, #c8a96e);
+  color: var(--gold, #20b8ab);
   font-weight: 500;
   margin-bottom: 12px;
 }
@@ -792,14 +792,14 @@
   text-decoration: none;
   cursor: pointer;
   transition: all .3s;
-  background: linear-gradient(135deg, var(--gold, #c8a96e), #d4b87a);
-  color: #1a1a1a;
+  background: var(--accent, #20b8ab);
+  color: #000;
   border: none;
 }
 
 .agent-main-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(200,169,110,0.3);
+  box-shadow: 0 6px 20px rgba(32,184,171,0.3);
 }
 
 @media (max-width: 600px) {
@@ -855,7 +855,7 @@
 
 /* Price card — gold accent premium */
 .detalle-price-card {
-  background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(200,169,110,0.03) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(32,184,171,0.03) 100%);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 12px; padding: 28px 24px;
   position: relative;
@@ -863,17 +863,17 @@
   transition: border-color .4s, box-shadow .4s;
 }
 .detalle-price-card:hover {
-  border-color: rgba(200,169,110,0.15);
-  box-shadow: 0 0 0 1px rgba(200,169,110,0.08), 0 8px 32px rgba(0,0,0,0.2);
+  border-color: rgba(32,184,171,0.15);
+  box-shadow: 0 0 0 1px rgba(32,184,171,0.08), 0 8px 32px rgba(0,0,0,0.2);
 }
 .detalle-price-card::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold, #c8a96e), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold, #20b8ab), transparent);
 }
 .detalle-precio {
   font-family: var(--font-num);
-  font-size: 36px; font-weight: 800; color: var(--gold, #c8a96e); line-height: 1; margin-bottom: 4px;
+  font-size: 36px; font-weight: 800; color: var(--gold, #20b8ab); line-height: 1; margin-bottom: 4px;
 }
 .detalle-precio-label {
   font-family: var(--font-sub);
@@ -911,7 +911,7 @@
 }
 .detalle-price-card .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(200,169,110,0.25);
+  box-shadow: 0 4px 16px rgba(32,184,171,0.25);
 }
 
 /* Thumbnails in aside — keep for desktop sidebar */
@@ -935,8 +935,8 @@
 .detalle-thumb:hover { transform: scale(1.04); z-index: 1; }
 .detalle-thumb:hover::after { opacity: 1; }
 .detalle-thumb.active {
-  border-color: var(--gold, #c8a96e);
-  box-shadow: 0 0 0 1px rgba(200,169,110,0.2);
+  border-color: var(--gold, #20b8ab);
+  box-shadow: 0 0 0 1px rgba(32,184,171,0.2);
 }
 .detalle-thumb img {
   width: 100%; height: 100%; object-fit: cover; display: block;
@@ -980,8 +980,8 @@
   margin-top: 64px;
   margin-bottom: 48px;
   padding: clamp(32px, 5vw, 56px) clamp(20px, 3vw, 40px);
-  background: linear-gradient(135deg, rgba(200,169,110,0.04) 0%, rgba(255,255,255,0.02) 100%);
-  border: 1px solid rgba(200,169,110,0.08);
+  background: linear-gradient(135deg, rgba(32,184,171,0.04) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(32,184,171,0.08);
   border-radius: 14px;
   text-align: center;
   position: relative;
@@ -992,7 +992,7 @@
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold, #c8a96e), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold, #20b8ab), transparent);
 }
 
 .cta-final-title {
@@ -1037,13 +1037,13 @@
 }
 
 .cta-final-btn--primary {
-  background: linear-gradient(135deg, var(--gold, #c8a96e), #d4b87a);
-  color: #1a1a1a;
+  background: var(--accent, #20b8ab);
+  color: #000;
 }
 
 .cta-final-btn--primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(200,169,110,0.3);
+  box-shadow: 0 8px 24px rgba(32,184,171,0.3);
 }
 
 .cta-final-btn--outline {
@@ -1053,10 +1053,10 @@
 }
 
 .cta-final-btn--outline:hover {
-  border-color: var(--gold, #c8a96e);
-  color: var(--gold, #c8a96e);
+  border-color: var(--gold, #20b8ab);
+  color: var(--gold, #20b8ab);
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(200,169,110,0.1);
+  box-shadow: 0 4px 16px rgba(32,184,171,0.1);
 }
 
 .cta-final-btn svg {
@@ -1093,7 +1093,7 @@
   content: '';
   position: absolute; bottom: 0; left: 0;
   width: 32px; height: 2px;
-  background: var(--gold, #c8a96e);
+  background: var(--gold, #20b8ab);
   border-radius: 1px;
 }
 
@@ -1140,7 +1140,7 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold, #c8a96e), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold, #20b8ab), transparent);
   opacity: 0;
   transition: opacity .4s ease;
 }
@@ -1148,7 +1148,7 @@
 .sim-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-  border-color: rgba(200,169,110,0.12);
+  border-color: rgba(32,184,171,0.12);
 }
 
 .sim-card:hover::after {
@@ -1209,7 +1209,7 @@
   font-family: var(--font-num);
   font-size: 16px;
   font-weight: 800;
-  color: var(--gold, #c8a96e);
+  color: var(--gold, #20b8ab);
   margin-top: auto;
 }
 
@@ -1260,7 +1260,7 @@
 .carousel-dot.active {
   width: 20px;
   border-radius: 3px;
-  background: var(--gold, #c8a96e);
+  background: var(--gold, #20b8ab);
 }
 
 @media (max-width: 900px) {
