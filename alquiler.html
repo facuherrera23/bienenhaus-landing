@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <base href="/bienenhaus-landing/">
   <link rel="canonical" href="https://bienenhaus.onrender.com/alquiler"/>
   <title>Alquileres · Bienenhaus Propiedades</title>
   <meta name="description" content="Alquiler de casas, departamentos y fincas en Córdoba. Encontrá tu próximo hogar."/>
@@ -49,14 +48,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/styles.css?v=2B"/>
-  <link rel="stylesheet" href="css/alquiler.css?v=2B"/>
-  <link rel="manifest" href="manifest.json"/>
+  <link rel="stylesheet" href="/bienenhaus-landing/css/styles.css?v=2B"/>
+  <link rel="stylesheet" href="/bienenhaus-landing/css/alquiler.css?v=2B"/>
+  <link rel="manifest" href="/bienenhaus-landing/manifest.json"/>
   <meta name="theme-color" content="#20b8ab"/>
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
-  <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192x192.png"/>
-  <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
+  <link rel="icon" type="image/x-icon" href="/bienenhaus-landing/images/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/bienenhaus-landing/images/favicon-32x32.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="/bienenhaus-landing/images/favicon-192x192.png"/>
+  <link rel="apple-touch-icon" href="/bienenhaus-landing/images/apple-touch-icon.png"/>
   <style>
     .page-header {
       max-width: 960px; margin: 0 auto; padding: 40px 0 32px;
@@ -135,10 +134,9 @@
     }
     .filter-chip-remove {
       cursor: pointer; opacity: .5; transition: opacity .15s;
-      width: 24px; height: 24px; margin: -6px;
-      display: flex; align-items: center; justify-content: center;
+      width: 12px; height: 12px; display: flex; align-items: center; justify-content: center;
       background: none; border: none; color: var(--g2); padding: 0;
-      font-size: 12px; line-height: 1;
+      font-size: 10px; line-height: 1;
     }
     .filter-chip-remove:hover { opacity: 1; color: var(--accent); }
 
@@ -174,25 +172,6 @@
       .listings-container { padding: 0 16px 60px; }
       #mapContainer { margin-left: 16px; margin-right: 16px; }
     }
-    @media (max-width: 414px) {
-      .page-header { padding: 20px 14px 16px; }
-      .page-title { font-size: clamp(26px, 7vw, 36px); }
-      .page-sub { font-size: 12px; }
-      .filter-bar-wrap { padding: 0 14px; }
-      .filter-status { padding: 0 14px; flex-direction: column; align-items: stretch; gap: 8px; }
-      .view-toggle { margin-left: 14px; margin-right: 14px; padding: 2px; }
-      .view-toggle-btn { padding: 6px 14px; font-size: 8px; }
-      .listings-container { padding: 0 14px 48px; }
-      #mapContainer { margin-left: 14px; margin-right: 14px; }
-    }
-    @media (max-width: 320px) {
-      .page-header { padding: 16px 10px 16px; }
-      .filter-bar-wrap { padding: 0 10px; }
-      .filter-status { padding: 0 10px; }
-      .view-toggle { margin-left: 10px; margin-right: 10px; }
-      .listings-container { padding: 0 10px 40px; }
-      #mapContainer { margin-left: 10px; margin-right: 10px; }
-    }
   </style>
 </head>
 <body>
@@ -201,19 +180,19 @@
 <nav id="navbar">
   <div class="nav-inner">
     <div class="brand">
-      <a href=".">
-        <img src="images/logo-bienenhaus.png"
+      <a href="/bienenhaus-landing/">
+        <img src="/bienenhaus-landing/images/logo-bienenhaus.png"
              alt="Bienenhaus Propiedades"
              class="nav-logo"/>
       </a>
     </div>
     <div class="nav-links" id="navLinks">
-      <a href="." class="nav-link">Inicio</a>
-      <a href="#quienes" class="nav-link">Nosotros</a>
-      <a href="venta" class="nav-link">Comprar</a>
-      <a href="alquiler" class="nav-link active">Alquilar</a>
-      <a href="#agents" class="nav-link">Equipo</a>
-      <a href="#contact" class="nav-link">Contacto</a>
+      <a href="/bienenhaus-landing/" class="nav-link">Inicio</a>
+      <a href="/bienenhaus-landing/#quienes" class="nav-link">Nosotros</a>
+      <a href="/bienenhaus-landing/venta" class="nav-link">Comprar</a>
+      <a href="/bienenhaus-landing/alquiler" class="nav-link active">Alquilar</a>
+      <a href="/bienenhaus-landing/#agents" class="nav-link">Equipo</a>
+      <a href="/bienenhaus-landing/#contact" class="nav-link">Contacto</a>
     </div>
     <a href="https://wa.me/5493510000000?text=Hola%20Bienenhaus!" target="_blank" class="btn btn-outline nav-cta hide-mobile">WhatsApp</a>
     <button class="hamburger" id="hamburger" aria-label="Menú">
@@ -221,12 +200,12 @@
     </button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="." class="nav-link">Inicio</a>
-    <a href="#quienes" class="nav-link">Nosotros</a>
-    <a href="venta" class="nav-link">Comprar</a>
-    <a href="alquiler" class="nav-link">Alquilar</a>
-    <a href="#agents" class="nav-link">Equipo</a>
-    <a href="#contact" class="nav-link">Contacto</a>
+    <a href="/bienenhaus-landing/" class="nav-link">Inicio</a>
+    <a href="/bienenhaus-landing/#quienes" class="nav-link">Nosotros</a>
+    <a href="/bienenhaus-landing/venta" class="nav-link">Comprar</a>
+    <a href="/bienenhaus-landing/alquiler" class="nav-link">Alquilar</a>
+    <a href="/bienenhaus-landing/#agents" class="nav-link">Equipo</a>
+    <a href="/bienenhaus-landing/#contact" class="nav-link">Contacto</a>
     <a href="https://wa.me/5493510000000" target="_blank" class="btn btn-outline" style="margin-top:8px">WhatsApp</a>
   </div>
 </nav>
@@ -234,7 +213,7 @@
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div class="page-breadcrumb">
-    <a href=".">Inicio</a>
+    <a href="/bienenhaus-landing/">Inicio</a>
     <span>›</span>
     <span>Alquiler</span>
   </div>
@@ -437,7 +416,7 @@
 <footer id="footer">
   <div class="footer-inner">
     <div class="footer-brand-col">
-      <img src="images/logo-bienenhaus.png" alt="Bienenhaus Propiedades" class="footer-logo" loading="lazy"/>
+      <img src="/bienenhaus-landing/images/logo-bienenhaus.png" alt="Bienenhaus Propiedades" class="footer-logo" loading="lazy"/>
       <p class="footer-desc">Inmobiliaria en Córdoba. Casas, departamentos, fincas y terrenos seleccionados por expertos.</p>
       <div class="footer-social">
         <a href="https://instagram.com" target="_blank" class="footer-social-link" aria-label="Instagram">
@@ -453,11 +432,11 @@
     </div>
     <div class="footer-nav-col">
       <div class="footer-col-title">Navegación</div>
-      <a href="." class="footer-link">Inicio</a>
-      <a href="venta" class="footer-link">Comprar</a>
-      <a href="alquiler" class="footer-link">Alquilar</a>
-      <a href="#agents" class="footer-link">Equipo</a>
-      <a href="#contact" class="footer-link">Contacto</a>
+      <a href="/bienenhaus-landing/" class="footer-link">Inicio</a>
+      <a href="/bienenhaus-landing/venta" class="footer-link">Comprar</a>
+      <a href="/bienenhaus-landing/alquiler" class="footer-link">Alquilar</a>
+      <a href="/bienenhaus-landing/#agents" class="footer-link">Equipo</a>
+      <a href="/bienenhaus-landing/#contact" class="footer-link">Contacto</a>
     </div>
     <div class="footer-nav-col">
       <div class="footer-col-title">Contacto</div>
@@ -488,7 +467,7 @@
   </div>
   <div class="footer-legal">
     <span>© <span id="footerYear"></span> Bienenhaus Propiedades · <span class="cpi-badge">Matrícula CPI N° 1.834</span></span>
-    <a href="admin" class="btn-admin-access">Admin</a>
+    <a href="/bienenhaus-landing/admin" class="btn-admin-access">Admin</a>
   </div>
 </footer>
 
@@ -503,10 +482,10 @@
   </svg>
 </a>
 
-<script src="js/api.min.js"></script>
-<script src="js/rentals.min.js"></script>
-<script src="js/rentals-ui.min.js"></script>
-<script src="js/mapa.min.js"></script>
-<script src="js/sw-register.min.js"></script>
+<script src="/bienenhaus-landing/js/api.min.js"></script>
+<script src="/bienenhaus-landing/js/rentals.min.js"></script>
+<script src="/bienenhaus-landing/js/rentals-ui.min.js"></script>
+<script src="/bienenhaus-landing/js/mapa.min.js"></script>
+<script src="/bienenhaus-landing/js/sw-register.min.js"></script>
 </body>
 </html>

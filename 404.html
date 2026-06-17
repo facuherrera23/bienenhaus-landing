@@ -3,47 +3,40 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <base href="/bienenhaus-landing/">
   <link rel="canonical" href="https://bienenhaus.onrender.com/"/>
-  <title>Bienenhaus Propiedades</title>
+  <title>404 · Página no encontrada · Bienenhaus</title>
   <meta name="robots" content="noindex, follow"/>
+  <meta name="prerender-status-code" content="404"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/styles.min.css"/>
-  <link rel="manifest" href="manifest.json"/>
+  <link rel="stylesheet" href="/bienenhaus-landing/css/styles.min.css"/>
+  <link rel="manifest" href="/bienenhaus-landing/manifest.json"/>
   <meta name="theme-color" content="#20b8ab"/>
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
-  <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192x192.png"/>
-  <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
+  <link rel="icon" type="image/x-icon" href="/bienenhaus-landing/images/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/bienenhaus-landing/images/favicon-32x32.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="/bienenhaus-landing/images/favicon-192x192.png"/>
+  <link rel="apple-touch-icon" href="/bienenhaus-landing/images/apple-touch-icon.png"/>
+  <script>
+    var path = window.location.pathname;
+    var match = path.match(/\/(venta|alquiler)\/\d+/);
+    if (match) {
+      sessionStorage.setItem('gh_redirect', path);
+      window.location.replace('/bienenhaus-landing/propiedad.html');
+    } else if (path.match(/\/(venta|alquiler)$/)) {
+      window.location.replace(path + '.html');
+    }
+  </script>
 </head>
 <body>
   <div class="page-wrapper">
     <div class="content" style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;">
       <h1 style="font-size:6rem;margin:0;color:var(--primary);font-family:'Anton',sans-serif;line-height:1;">404</h1>
       <p style="font-size:1.25rem;margin:1rem 0 2rem;color:var(--text-muted);">Esta página no existe o fue movida.</p>
-      <a href="." class="btn-primary">Volver al inicio</a>
+      <a href="/bienenhaus-landing/" class="btn-primary">Volver al inicio</a>
     </div>
   </div>
-  <script>
-  (function(){
-    var path = window.location.pathname;
-    if (!path || path === '/') return;
-    if (/^\/venta\/(\d+)/.test(path) || /^\/alquiler\/(\d+)/.test(path)) {
-      sessionStorage.setItem('gh_redirect', path);
-      window.location.replace('propiedad.html');
-      return;
-    }
-    if (/^\/venta/.test(path) || path === '/venta') {
-      window.location.replace('venta.html');
-      return;
-    }
-    if (/^\/alquiler/.test(path) || path === '/alquiler') {
-      window.location.replace('alquiler.html');
-      return;
-    }
-  })();
-  </script>
+  <script src="/bienenhaus-landing/js/api.min.js"></script>
+  <script src="/bienenhaus-landing/js/main.min.js"></script>
 </body>
 </html>
