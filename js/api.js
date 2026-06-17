@@ -251,7 +251,7 @@ function proxyImgUrl(url) {
   if (!url || url.startsWith('blob:') || url.startsWith('data:')) return url;
   if (url.startsWith(location.origin)) return url;
   if (url.includes('res.cloudinary.com')) return url;
-  return '/api/proxy-image?url=' + encodeURIComponent(url);
+  return `${API_BASE}/api/proxy-image?url=` + encodeURIComponent(url);
 }
 
 // ── Imágenes responsivas (Cloudinary srcset) ─────────────────────────
