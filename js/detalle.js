@@ -6,8 +6,11 @@ const ICON_TYPE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" s
 function esc(v) { return String(v ?? '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 const $ = id => document.getElementById(id);
 
-const _path = sessionStorage.getItem('gh_redirect') || window.location.pathname;
+const _pathRaw = sessionStorage.getItem('gh_redirect') || window.location.pathname;
 sessionStorage.removeItem('gh_redirect');
+// Strip GH Pages repo prefix (e.g. /bienenhaus-landing) if present
+const _path = _pathRaw.replace(/^\/[^/]+\/(venta|alquiler)\//, '/$1/');
+const _ghBase = _path === _pathRaw ? '' : '/' + _pathRaw.split('/')[1];
 const _isRental = _path.startsWith('/alquiler/');
 const _isSale   = _path.startsWith('/venta/');
 const _itemId = parseInt(_path.split('/').pop());
@@ -140,7 +143,7 @@ function renderAgentCard(agent) {
 function buildCtaFinal(item) {
   const wrap = $('dCtaFinal');
   if (!wrap) return;
-  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa la propiedad *${item.title}* en ${item.location}.\n${window.location.origin}${_path}`);
+  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa la propiedad *${item.title}* en ${item.location}.\n${window.location.origin}${_ghBase}${_path}`);
   wrap.innerHTML = `
     <div class="cta-final">
       <div class="cta-final-title">¿Te interesa esta propiedad?</div>
@@ -375,7 +378,7 @@ function renderItem(item) {
 
   // WhatsApp
   const waLabel = _isRental ? 'alquiler' : 'propiedad';
-  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa ${_isRental ? 'el alquiler' : 'la propiedad'} *${item.title}* en ${item.location}.\n${window.location.origin}${_path}`);
+  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa ${_isRental ? 'el alquiler' : 'la propiedad'} *${item.title}* en ${item.location}.\n${window.location.origin}${_ghBase}${_path}`);
   const waUrl = `https://wa.me/${_wa()}?text=${waMsg}`;
   $('dWhatsapp').href = waUrl;
   $('waFloat').href   = waUrl;
@@ -598,12 +601,12 @@ $('inquiryModal')?.addEventListener('click', e => {
 
 // ── Share ────────────────────────────────────────────────────────────
 function shareWA() {
-  const url = encodeURIComponent(window.location.origin + _path);
+  const url = encodeURIComponent(window.location.origin + _ghBase + _path);
   window.open(`https://wa.me/?text=${url}`, '_blank');
 }
 
 function copyLink() {
-  navigator.clipboard.writeText(window.location.origin + _path).then(() => {
+  navigator.clipboard.writeText(window.location.origin + _ghBase + _path).then(() => {
     $('copyMsg').classList.remove('hidden');
     setTimeout(() => $('copyMsg').classList.add('hidden'), 2500);
   });
