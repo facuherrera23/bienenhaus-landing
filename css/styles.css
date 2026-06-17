@@ -948,13 +948,13 @@ input:focus, textarea:focus, select:focus { outline: none; }
   box-shadow:0 8px 28px rgba(0,0,0,0.3);
 }
 .contact-social-card--wa {
-  background:rgba(32,184,171,0.12); border-color:rgba(32,184,171,0.2);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+  background:#20b8ab; border-color:#20b8ab;
+  box-shadow:0 4px 20px rgba(32,184,171,0.3);
 }
 .contact-social-card--wa:hover {
-  background:rgba(32,184,171,0.18); border-color:rgba(32,184,171,0.3);
+  background:#1aa89c; border-color:#1aa89c;
   transform:translateY(-3px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow:0 8px 32px rgba(32,184,171,0.4);
 }
 .contact-social-icon-wrap {
   flex-shrink:0;
@@ -967,15 +967,15 @@ input:focus, textarea:focus, select:focus { outline: none; }
 }
 .contact-social-card--wa .contact-social-icon-wrap {
   width:52px; height:52px;
-  background:rgba(32,184,171,0.15);
-  color:var(--accent-warm, #20b8ab);
+  background:rgba(0,0,0,0.15);
+  color:#fff;
 }
 .contact-social-card:hover .contact-social-icon-wrap {
   background:rgba(32,184,171,0.15);
   box-shadow:0 0 20px rgba(32,184,171,0.1);
 }
 .contact-social-card--wa:hover .contact-social-icon-wrap {
-  background:rgba(32,184,171,0.2);
+  background:rgba(0,0,0,0.2);
 }
 .contact-social-body {
   display:flex; flex-direction:column; gap:2px;
@@ -987,14 +987,14 @@ input:focus, textarea:focus, select:focus { outline: none; }
   font-weight:700;
 }
 .contact-social-card--wa .contact-social-label {
-  color:rgba(0,0,0,0.5);
+  color:rgba(255,255,255,0.6);
 }
 .contact-social-value {
   font-family:var(--font-sub); color:var(--white);
   font-size:14px; font-weight:600;
 }
 .contact-social-card--wa .contact-social-value {
-  color:#000;
+  color:#fff;
 }
 .contact-social-cta {
   font-family:var(--font-text); color:var(--g3);
@@ -1005,10 +1005,10 @@ input:focus, textarea:focus, select:focus { outline: none; }
   color:var(--accent);
 }
 .contact-social-card--wa .contact-social-cta {
-  color:rgba(0,0,0,0.6);
+  color:rgba(255,255,255,0.7);
 }
 .contact-social-card--wa:hover .contact-social-cta {
-  color:rgba(0,0,0,0.8);
+  color:#fff;
 }
 .contact-right { min-width:0; }
 .contact-form-card {

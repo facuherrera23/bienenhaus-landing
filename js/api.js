@@ -1,7 +1,7 @@
 /**
  * api.js — Cliente HTTP para la API Flask de Bienenhaus
  */
-const API_BASE = '';
+const API_BASE = window.__API_BASE__ || '';
 
 let _csrfToken = null;
 
@@ -29,7 +29,7 @@ async function _req(method, path, body = null, _retried = false) {
   const opts = {
     method,
     headers,
-    credentials: 'same-origin',
+    credentials: 'include',
   };
   if (body !== null) opts.body = JSON.stringify(body);
 
@@ -61,7 +61,7 @@ async function _req(method, path, body = null, _retried = false) {
 
 async function _ensureCsrfToken() {
   try {
-    const r = await fetch(`${API_BASE}/api/auth/csrf-token`, { credentials: 'same-origin' });
+    const r = await fetch(`${API_BASE}/api/auth/csrf-token`, { credentials: 'include' });
     const j = await r.json();
     if (j.ok && j.data?.csrf_token) _csrfToken = j.data.csrf_token;
   } catch { console.warn('getCsrfToken falló'); }
@@ -163,7 +163,7 @@ const API = {
     const res  = await fetch(`/api/upload${qs}`, {
       method: 'POST',
       headers,
-      credentials: 'same-origin',
+      credentials: 'include',
       body: form,
     });
     const json = await res.json();
