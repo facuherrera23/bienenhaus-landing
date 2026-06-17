@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Favicon Converter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --accent: #e8ff47;
+    --accent2: #ff6b35;
+    --text: #f0f0f0;
+    --muted: #666;
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 48px 20px 80px;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .wrapper { position: relative; z-index: 1; width: 100%; max-width: 700px; }
+
+  /* HEADER */
+  header { margin-bottom: 48px; }
+  .tag {
+    display: inline-block;
+    font-family: 'Syne Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* DROP ZONE */
+  .dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    background: var(--surface);
+    margin-bottom: 24px;
+  }
+  .dropzone:hover, .dropzone.over {
+    border-color: var(--accent);
+    background: rgba(232,255,71,0.04);
+  }
+  .dropzone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .drop-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+  }
+  .drop-label { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .drop-sub { font-size: 13px; color: var(--muted); }
+
+  /* OPTIONS */
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .opt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .opt-card input[type=radio], .opt-card input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; flex-shrink: 0; }
+  .opt-card:has(input:checked) { border-color: var(--accent); background: rgba(232,255,71,0.05); }
+  .opt-label { font-size: 13px; font-weight: 600; }
+  .opt-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  /* PREVIEW PANEL */
+  #preview-panel {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+  .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .preview-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .sizes-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+  }
+  .size-item { text-align: center; }
+  .size-item canvas {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    image-rendering: pixelated;
+    background: repeating-conic-gradient(#333 0% 25%, #222 0% 50%) 0 0 / 10px 10px;
+  }
+  .size-label {
+    font-family: 'Syne Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* SOURCE PREVIEW */
+  .source-row {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  #source-thumb {
+    width: 64px; height: 64px;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: repeating-conic-gradient(#333 0% 25%, #222 0% 50%) 0 0 / 10px 10px;
+  }
+  .source-info { flex: 1; }
+  .source-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; word-break: break-all; }
+  .source-dim { font-family: 'Syne Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  /* BUTTON */
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    flex: 1;
+    padding: 14px 24px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-width: 140px;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0a;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--muted); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* DOWNLOAD GRID */
+  #download-panel {
+    display: none;
+    margin-top: 16px;
+  }
+  .dl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .dl-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    font-family: 'Syne Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .dl-btn:hover { border-color: var(--accent); background: rgba(232,255,71,0.05); color: var(--accent); }
+  .dl-btn svg { opacity: 0.6; }
+
+  /* CODE SNIPPET */
+  .code-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-top: 16px;
+    position: relative;
+  }
+  .code-block pre {
+    font-family: 'Syne Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-family: 'Syne', sans-serif;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .copy-btn:hover { color: var(--accent); }
+
+  /* STATUS */
+  .status {
+    font-family: 'Syne Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-align: center;
+    padding: 8px;
+    display: none;
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 60px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    font-family: 'Syne Mono', monospace;
+  }
+
+  /* SECTION LABELS */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="tag">// herramienta gratuita</div>
+    <h1>Imagen <span>→</span><br>Favicon</h1>
+    <p class="subtitle">
+      Convertí cualquier imagen a todos los tamaños de favicon.<br>
+      100% local — tus archivos nunca salen de tu navegador.
+    </p>
+  </header>
+
+  <!-- DROP ZONE -->
+  <div class="dropzone" id="dropzone">
+    <input type="file" id="file-input" accept="image/*">
+    <div class="drop-icon">🖼️</div>
+    <div class="drop-label">Arrastrá tu imagen acá</div>
+    <div class="drop-sub">o hacé click para elegir un archivo · PNG, JPG, SVG, WEBP</div>
+  </div>
+
+  <!-- OPTIONS -->
+  <p class="section-label">Opciones de recorte</p>
+  <div class="options">
+    <label class="opt-card">
+      <input type="radio" name="crop" value="contain" checked>
+      <div>
+        <div class="opt-label">Contener</div>
+        <div class="opt-sub">Imagen completa, rellena el espacio vacío</div>
+      </div>
+    </label>
+    <label class="opt-card">
+      <input type="radio" name="crop" value="cover">
+      <div>
+        <div class="opt-label">Cubrir (crop)</div>
+        <div class="opt-sub">Recorta al centro para llenar el cuadro</div>
+      </div>
+    </label>
+    <label class="opt-card">
+      <input type="checkbox" id="opt-rounded">
+      <div>
+        <div class="opt-label">Esquinas redondeadas</div>
+        <div class="opt-sub">Aplica border-radius 20%</div>
+      </div>
+    </label>
+    <label class="opt-card">
+      <input type="checkbox" id="opt-bg">
+      <div>
+        <div class="opt-label">Fondo blanco</div>
+        <div class="opt-sub">Rellena transparencia con blanco</div>
+      </div>
+    </label>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div id="preview-panel">
+    <div class="source-row">
+      <img id="source-thumb" alt="preview">
+      <div class="source-info">
+        <div class="source-name" id="source-name">—</div>
+        <div class="source-dim" id="source-dim">—</div>
+      </div>
+    </div>
+    <div class="preview-header">
+      <span class="preview-title">Vista previa de tamaños</span>
+    </div>
+    <div class="sizes-grid" id="sizes-grid"></div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="status" id="status">⚡ Procesando...</div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row" id="btn-row">
+    <button class="btn btn-primary" id="btn-generate" disabled>
+      <span>⚡</span> Generar Favicons
+    </button>
+    <button class="btn btn-secondary" id="btn-reset" style="display:none">
+      ↺ Reiniciar
+    </button>
+  </div>
+
+  <!-- DOWNLOAD PANEL -->
+  <div id="download-panel">
+    <p class="section-label" style="margin-top:20px">Descargar por tamaño</p>
+    <div class="dl-grid" id="dl-grid"></div>
+
+    <p class="section-label" style="margin-top:20px">Código HTML para tu &lt;head&gt;</p>
+    <div class="code-block">
+      <button class="copy-btn" id="copy-html">Copiar</button>
+      <pre id="html-snippet"></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- Hidden canvases for processing -->
+<canvas id="work-canvas" style="display:none"></canvas>
+
+<script>
+// ─── CONFIG ────────────────────────────────────────────────────
+const SIZES = [16, 32, 48, 57, 64, 128, 180, 192, 512];
+const DISPLAY_SIZES = [16, 32, 48, 64, 128, 180, 192, 512];
+
+// ─── STATE ─────────────────────────────────────────────────────
+let sourceImage = null;
+let generatedCanvases = {};
+
+// ─── ELEMENTS ──────────────────────────────────────────────────
+const dropzone   = document.getElementById('dropzone');
+const fileInput  = document.getElementById('file-input');
+const btnGen     = document.getElementById('btn-generate');
+const btnReset   = document.getElementById('btn-reset');
+const previewPan = document.getElementById('preview-panel');
+const dlPanel    = document.getElementById('download-panel');
+const sizesGrid  = document.getElementById('sizes-grid');
+const dlGrid     = document.getElementById('dl-grid');
+const statusEl   = document.getElementById('status');
+const htmlSnip   = document.getElementById('html-snippet');
+const copyHtml   = document.getElementById('copy-html');
+const workCanvas = document.getElementById('work-canvas');
+
+// ─── FILE HANDLING ──────────────────────────────────────────────
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('over');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+});
+fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+// Options change → re-render preview
+document.querySelectorAll('input[name=crop], #opt-rounded, #opt-bg').forEach(el => {
+  el.addEventListener('change', () => { if (sourceImage) renderPreviews(); });
+});
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) { alert('Seleccioná un archivo de imagen válido.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      sourceImage = img;
+      document.getElementById('source-thumb').src = e.target.result;
+      document.getElementById('source-name').textContent = file.name;
+      document.getElementById('source-dim').textContent = `${img.naturalWidth} × ${img.naturalHeight} px`;
+      previewPan.style.display = 'block';
+      btnGen.disabled = false;
+      dlPanel.style.display = 'none';
+      btnReset.style.display = 'inline-flex';
+      renderPreviews();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ─── RENDER PREVIEWS ──────────────────────────────────────────
+function renderPreviews() {
+  sizesGrid.innerHTML = '';
+  DISPLAY_SIZES.forEach(size => {
+    const canvas = drawFavicon(size);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'size-item';
+    const displaySize = Math.max(size, 16);
+    canvas.style.width = displaySize + 'px';
+    canvas.style.height = displaySize + 'px';
+    wrapper.appendChild(canvas);
+    const label = document.createElement('div');
+    label.className = 'size-label';
+    label.textContent = `${size}×${size}`;
+    wrapper.appendChild(label);
+    sizesGrid.appendChild(wrapper);
+  });
+}
+
+// ─── CORE DRAW ─────────────────────────────────────────────────
+function drawFavicon(size) {
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  const cropMode  = document.querySelector('input[name=crop]:checked').value;
+  const rounded   = document.getElementById('opt-rounded').checked;
+  const whiteBg   = document.getElementById('opt-bg').checked;
+
+  // Background
+  if (whiteBg) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+  } else {
+    ctx.clearRect(0, 0, size, size);
+  }
+
+  // Rounded clip
+  if (rounded) {
+    const r = size * 0.2;
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    ctx.lineTo(size - r, 0);
+    ctx.arcTo(size, 0, size, r, r);
+    ctx.lineTo(size, size - r);
+    ctx.arcTo(size, size, size - r, size, r);
+    ctx.lineTo(r, size);
+    ctx.arcTo(0, size, 0, size - r, r);
+    ctx.lineTo(0, r);
+    ctx.arcTo(0, 0, r, 0, r);
+    ctx.closePath();
+    ctx.clip();
+  }
+
+  // Draw image
+  const sw = sourceImage.naturalWidth;
+  const sh = sourceImage.naturalHeight;
+
+  if (cropMode === 'cover') {
+    // Cover: crop to center
+    const scale = Math.max(size / sw, size / sh);
+    const dw = sw * scale;
+    const dh = sh * scale;
+    const ox = (size - dw) / 2;
+    const oy = (size - dh) / 2;
+    ctx.drawImage(sourceImage, ox, oy, dw, dh);
+  } else {
+    // Contain: fit inside
+    const scale = Math.min(size / sw, size / sh);
+    const dw = sw * scale;
+    const dh = sh * scale;
+    const ox = (size - dw) / 2;
+    const oy = (size - dh) / 2;
+    ctx.drawImage(sourceImage, ox, oy, dw, dh);
+  }
+
+  return canvas;
+}
+
+// ─── GENERATE BUTTON ────────────────────────────────────────────
+btnGen.addEventListener('click', async () => {
+  if (!sourceImage) return;
+  statusEl.style.display = 'block';
+  btnGen.disabled = true;
+
+  await new Promise(r => setTimeout(r, 50)); // let UI breathe
+
+  generatedCanvases = {};
+  SIZES.forEach(size => {
+    generatedCanvases[size] = drawFavicon(size);
+  });
+
+  // Build download grid
+  dlGrid.innerHTML = '';
+  SIZES.forEach(size => {
+    const btn = document.createElement('button');
+    btn.className = 'dl-btn';
+    btn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      favicon-${size}×${size}.png
+    `;
+    btn.addEventListener('click', () => downloadPng(size));
+    dlGrid.appendChild(btn);
+  });
+
+  // ICO download button
+  const icoBtn = document.createElement('button');
+  icoBtn.className = 'dl-btn';
+  icoBtn.style.borderColor = 'var(--accent)';
+  icoBtn.style.color = 'var(--accent)';
+  icoBtn.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    ⭐ favicon.ico (multi-size)
+  `;
+  icoBtn.addEventListener('click', generateIco);
+  dlGrid.appendChild(icoBtn);
+
+  // HTML snippet
+  htmlSnip.textContent =
+`<!-- Favicon básico -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+
+<!-- Apple Touch Icon (iOS / Safari) -->
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png">
+
+<!-- PWA / Android -->
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">`;
+
+  statusEl.style.display = 'none';
+  dlPanel.style.display = 'block';
+  btnGen.disabled = false;
+});
+
+// ─── DOWNLOAD PNG ───────────────────────────────────────────────
+function downloadPng(size) {
+  const canvas = generatedCanvases[size];
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `favicon-${size}x${size}.png`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }, 'image/png');
+}
+
+// ─── GENERATE ICO (16 + 32 + 48 packed) ────────────────────────
+// Real ICO binary format (ICONDIR + ICONDIRENTRYs + image data)
+function generateIco() {
+  const icoSizes = [16, 32, 48];
+  const images   = icoSizes.map(s => ({
+    size: s,
+    data: canvasToRGBA(generatedCanvases[s] || drawFavicon(s))
+  }));
+
+  // Each image as raw BITMAPINFOHEADER + AND/XOR mask
+  const icoBuffers = images.map(img => buildBmpEntry(img.size, img.data));
+
+  const numImages   = icoBuffers.length;
+  const headerSize  = 6;
+  const entrySize   = 16;
+  const dirSize     = headerSize + numImages * entrySize;
+  let offset        = dirSize;
+  const offsets     = [];
+  icoBuffers.forEach(buf => { offsets.push(offset); offset += buf.byteLength; });
+
+  const totalSize = offset;
+  const buffer    = new ArrayBuffer(totalSize);
+  const view      = new DataView(buffer);
+
+  // ICONDIR
+  view.setUint16(0, 0, true);       // reserved
+  view.setUint16(2, 1, true);       // type: 1 = ICO
+  view.setUint16(4, numImages, true);
+
+  // ICONDIRENTRYs
+  icoBuffers.forEach((buf, i) => {
+    const s  = images[i].size;
+    const base = headerSize + i * entrySize;
+    view.setUint8(base,     s === 256 ? 0 : s); // width
+    view.setUint8(base + 1, s === 256 ? 0 : s); // height
+    view.setUint8(base + 2, 0);   // color count
+    view.setUint8(base + 3, 0);   // reserved
+    view.setUint16(base + 4, 1, true); // color planes
+    view.setUint16(base + 6, 32, true); // bits per pixel
+    view.setUint32(base + 8, buf.byteLength, true);
+    view.setUint32(base + 12, offsets[i], true);
+  });
+
+  // Image data
+  let pos = dirSize;
+  icoBuffers.forEach(buf => {
+    const src = new Uint8Array(buf);
+    const dst = new Uint8Array(buffer, pos, buf.byteLength);
+    dst.set(src);
+    pos += buf.byteLength;
+  });
+
+  const blob = new Blob([buffer], { type: 'image/x-icon' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = 'favicon.ico';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function canvasToRGBA(canvas) {
+  const ctx  = canvas.getContext('2d');
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+function buildBmpEntry(size, imageData) {
+  const rowBytes    = size * 4;
+  const xorSize     = rowBytes * size;
+  const andRowBytes = Math.ceil(size / 8 / 4) * 4;
+  const andSize     = andRowBytes * size;
+  const totalSize   = 40 + xorSize + andSize;
+  const buf  = new ArrayBuffer(totalSize);
+  const view = new DataView(buf);
+  const rgba = imageData.data;
+
+  // BITMAPINFOHEADER
+  view.setUint32(0, 40, true);
+  view.setInt32(4, size, true);
+  view.setInt32(8, size * 2, true); // height * 2 for ICO
+  view.setUint16(12, 1, true);
+  view.setUint16(14, 32, true);
+  view.setUint32(16, 0, true);
+  view.setUint32(20, xorSize + andSize, true);
+  view.setInt32(24, 0, true);
+  view.setInt32(28, 0, true);
+  view.setUint32(32, 0, true);
+  view.setUint32(36, 0, true);
+
+  // XOR mask — BGRA, bottom-up
+  const xorOffset = 40;
+  for (let y = 0; y < size; y++) {
+    const srcRow = (size - 1 - y) * size; // flip vertically
+    for (let x = 0; x < size; x++) {
+      const si = (srcRow + x) * 4;
+      const di = xorOffset + (y * size + x) * 4;
+      view.setUint8(di,     rgba[si + 2]); // B
+      view.setUint8(di + 1, rgba[si + 1]); // G
+      view.setUint8(di + 2, rgba[si]);     // R
+      view.setUint8(di + 3, rgba[si + 3]); // A
+    }
+  }
+
+  // AND mask — 1 bit per pixel, 0 = opaque, 1 = transparent
+  const andOffset = xorOffset + xorSize;
+  for (let y = 0; y < size; y++) {
+    const srcRow = (size - 1 - y) * size;
+    for (let x = 0; x < size; x++) {
+      const si = (srcRow + x) * 4;
+      const alpha = rgba[si + 3];
+      if (alpha < 128) {
+        const byteIndex = andOffset + y * andRowBytes + Math.floor(x / 8);
+        const bit = 7 - (x % 8);
+        view.setUint8(byteIndex, view.getUint8(byteIndex) | (1 << bit));
+      }
+    }
+  }
+
+  return buf;
+}
+
+// ─── COPY HTML ──────────────────────────────────────────────────
+copyHtml.addEventListener('click', () => {
+  navigator.clipboard.writeText(htmlSnip.textContent).then(() => {
+    copyHtml.textContent = '✓ Copiado';
+    setTimeout(() => copyHtml.textContent = 'Copiar', 1800);
+  });
+});
+
+// ─── RESET ──────────────────────────────────────────────────────
+btnReset.addEventListener('click', () => {
+  sourceImage = null;
+  generatedCanvases = {};
+  fileInput.value = '';
+  previewPan.style.display = 'none';
+  dlPanel.style.display = 'none';
+  btnGen.disabled = true;
+  btnReset.style.display = 'none';
+  sizesGrid.innerHTML = '';
+  dlGrid.innerHTML = '';
+});
+</script>
+
+<footer>sin servidores · sin cookies · 100% local · open source</footer>
+</body>
+</html>

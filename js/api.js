@@ -1,13 +1,7 @@
 /**
  * api.js — Cliente HTTP para la API Flask de Bienenhaus
- * Landing standalone: configura API_BASE desde window.__API_BASE__
- * o usa valor por defecto según entorno.
  */
-const API_BASE = window.__API_BASE__ || (
-  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? ''  // mismo origen en dev
-    : 'https://bienenhaus.onrender.com'  // producción
-);
+const API_BASE = '';
 
 let _csrfToken = null;
 
@@ -32,11 +26,10 @@ async function _req(method, path, body = null, _retried = false) {
     headers['X-CSRF-Token'] = _csrfToken;
   }
 
-  const isCrossOrigin = API_BASE && !window.location.origin.includes(API_BASE.replace(/https?:\/\//, '').split('/')[0]);
   const opts = {
     method,
     headers,
-    credentials: isCrossOrigin ? 'include' : 'same-origin',
+    credentials: 'same-origin',
   };
   if (body !== null) opts.body = JSON.stringify(body);
 
@@ -68,8 +61,7 @@ async function _req(method, path, body = null, _retried = false) {
 
 async function _ensureCsrfToken() {
   try {
-    const isCrossOrigin = API_BASE && !window.location.origin.includes(API_BASE.replace(/https?:\/\//, '').split('/')[0]);
-    const r = await fetch(`${API_BASE}/api/auth/csrf-token`, { credentials: isCrossOrigin ? 'include' : 'same-origin' });
+    const r = await fetch(`${API_BASE}/api/auth/csrf-token`, { credentials: 'same-origin' });
     const j = await r.json();
     if (j.ok && j.data?.csrf_token) _csrfToken = j.data.csrf_token;
   } catch { console.warn('getCsrfToken falló'); }
@@ -168,7 +160,7 @@ const API = {
     if (_csrfToken) headers['X-CSRF-Token'] = _csrfToken;
 
     const qs = type ? `?type=${encodeURIComponent(type)}` : '';
-    const res  = await fetch(`${API_BASE}/api/upload${qs}`, {
+    const res  = await fetch(`/api/upload${qs}`, {
       method: 'POST',
       headers,
       credentials: 'same-origin',
@@ -259,7 +251,7 @@ function proxyImgUrl(url) {
   if (!url || url.startsWith('blob:') || url.startsWith('data:')) return url;
   if (url.startsWith(location.origin)) return url;
   if (url.includes('res.cloudinary.com')) return url;
-  return API_BASE + '/api/proxy-image?url=' + encodeURIComponent(url);
+  return '/api/proxy-image?url=' + encodeURIComponent(url);
 }
 
 // ── Imágenes responsivas (Cloudinary srcset) ─────────────────────────

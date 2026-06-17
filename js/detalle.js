@@ -6,7 +6,8 @@ const ICON_TYPE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" s
 function esc(v) { return String(v ?? '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 const $ = id => document.getElementById(id);
 
-const _path = window.location.pathname;
+const _path = sessionStorage.getItem('gh_redirect') || window.location.pathname;
+sessionStorage.removeItem('gh_redirect');
 const _isRental = _path.startsWith('/alquiler/');
 const _isSale   = _path.startsWith('/venta/');
 const _itemId = parseInt(_path.split('/').pop());
@@ -31,33 +32,67 @@ let _lbPlayInterval = null;
 let _lbScale      = 1;
 let _lbPinchDist  = 0;
 
-// ── Galería hero ─────────────────────────────────────────────────────
-function buildGaleria(images) {
+// ── Galería hero premium ─────────────────────────────────────────────
+function buildGaleria(item) {
   const hero = $('galeriaHero');
+  const images = item.images || [];
   if (!images.length) {
     hero.innerHTML = `<div style="height:320px;display:flex;align-items:center;justify-content:center;color:var(--g4)">Sin imágenes</div>`;
     return;
   }
   const n = images.length;
+  const isRental = 'price_ars' in item;
+  const statusBadgeCls = isRental
+    ? (item.status === 'alquilada' ? 'gh-badge--status-sold' : 'gh-badge--status')
+    : (item.status === 'vendida' ? 'gh-badge--status-sold' : 'gh-badge--status');
+  const statusLabel = isRental
+    ? (item.status === 'alquilada' ? 'Alquilada' : 'Disponible')
+    : (item.status === 'vendida' ? 'Vendida' : 'Disponible');
+  const priceHtml = isRental
+    ? `AR$ ${Number(item.price_ars).toLocaleString('es-AR')}<span style="font-size:0.4em;font-family:var(--font-sub);font-weight:400;color:rgba(255,255,255,0.5);margin-left:6px">/mes</span>`
+    : fmtPriceARS(item.price);
+  const priceLabel = isRental ? '' : (item.status === 'vendida' ? 'Precio de venta' : 'Precio de lista');
+  const locationIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+  const badges = `
+    <span class="gh-badge gh-badge--type">${esc(item.type)}</span>
+    <span class="gh-badge ${statusBadgeCls}">${statusLabel}</span>
+    ${item.featured ? '<span class="gh-badge gh-badge--featured">★ Destacado</span>' : ''}`;
+
   const countBadge = n > 1
-    ? `<div class="galeria-count-badge">
+    ? `<div class="gh-counter">
        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
        ${n} fotos</div>`
     : '';
-  if (n === 1) {
-    hero.classList.add('has-1');
-    hero.innerHTML = `<div class="galeria-item" onclick="openLightbox(0)" style="height:100%"><img ${imgAttrs(images[0], [600, 1200, 1800])} alt="Foto 1" loading="eager" style="width:100%;height:100%;object-fit:cover"/>${countBadge}</div>`;
-  } else if (n === 2) {
-    hero.classList.add('has-2');
-    hero.innerHTML = `<div class="galeria-item" onclick="openLightbox(0)"><img ${imgAttrs(images[0], [600, 1200, 1800])} alt="Foto 1" loading="eager"/>${countBadge}</div><div class="galeria-item" onclick="openLightbox(1)"><img ${imgAttrs(images[1], [400, 800])} alt="Foto 2" loading="lazy"/></div>`;
-  } else if (n === 3) {
-    hero.classList.add('has-3');
-    hero.innerHTML = `<div class="galeria-item" onclick="openLightbox(0)"><img ${imgAttrs(images[0], [600, 1200, 1800])} alt="Foto 1" loading="eager"/>${countBadge}</div><div class="galeria-col"><div class="galeria-item" onclick="openLightbox(1)"><img ${imgAttrs(images[1], [400, 800])} alt="Foto 2" loading="lazy"/></div><div class="galeria-item" onclick="openLightbox(2)"><img ${imgAttrs(images[2], [400, 800])} alt="Foto 3" loading="lazy"/></div></div>`;
-  } else {
-    hero.classList.add('has-many');
-    const remaining = n - 3;
-    hero.innerHTML = `<div class="galeria-item" onclick="openLightbox(0)"><img ${imgAttrs(images[0], [600, 1200, 1800])} alt="Foto 1" loading="eager"/>${countBadge}</div><div class="galeria-col"><div class="galeria-item" onclick="openLightbox(1)"><img ${imgAttrs(images[1], [400, 800])} alt="Foto 2" loading="lazy"/></div><div class="galeria-item" onclick="openLightbox(2)" style="position:relative"><img ${imgAttrs(images[2], [400, 800])} alt="Foto 3" loading="lazy"/>${remaining > 0 ? `<button class="galeria-ver-mas" onclick="event.stopPropagation();openLightbox(3)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>+${remaining} más</button>` : ''}</div></div>`;
-  }
+
+  const thumbs = n > 1 ? images.map((url, i) =>
+    `<div class="gh-thumb${i === 0 ? ' active' : ''}" onclick="openLightbox(${i})">
+      <img ${imgAttrs(url, [160])} alt="Foto ${i+1}" loading="${i < 2 ? 'eager' : 'lazy'}"/>
+    </div>`
+  ).join('') + (n > 8 ? `<div class="gh-thumb-more" onclick="openLightbox(8)">+${n - 8}</div>` : '') : '';
+
+  hero.innerHTML = `
+    <div class="gh-main" onclick="openLightbox(0)">
+      <img ${imgAttrs(images[0], [600, 1200, 1800])} alt="${esc(item.title)}" loading="eager"/>
+      <div class="gh-overlay">
+        <div class="gh-badges">${badges}</div>
+        <div class="gh-title">${esc(item.title)}</div>
+        <div class="gh-location">${locationIcon} ${esc(item.location)}</div>
+        <div class="gh-price">${priceHtml}</div>
+        ${priceLabel ? `<div class="gh-price-label">${priceLabel}</div>` : ''}
+      </div>
+      ${countBadge}
+      <button class="gh-fullscreen-btn" onclick="event.stopPropagation();openLightbox(0)" title="Pantalla completa" aria-label="Pantalla completa">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      </button>
+    </div>
+    ${thumbs ? `<div class="gh-thumbs-wrap"><div class="gh-thumbs">${thumbs}</div></div>` : ''}`;
+}
+
+function syncHeroThumb(idx) {
+  document.querySelectorAll('.gh-thumb').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
 }
 
 function buildThumbs(images) {
@@ -67,6 +102,64 @@ function buildThumbs(images) {
     `<div class="detalle-thumb${i === 0 ? ' active' : ''}" id="thumb-${i}" onclick="openLightbox(${i})">
        <img ${imgAttrs(url, [160])} alt="Foto ${i+1}" loading="lazy"/>
      </div>`).join('');
+}
+
+function renderAgentCard(agent) {
+  const wrap = $('dAgentSection');
+  if (!wrap) return;
+  const avatarHtml = agent?.avatar
+    ? `<img src="${esc(agent.avatar)}" alt="${esc(agent.name)}" loading="lazy"/>`
+    : `${(agent?.name?.[0] || 'B')}${(agent?.last?.[0] || 'H')}`;
+  const waNumber = agent?.whatsapp || _wa();
+  const waMsg = encodeURIComponent('Hola Bienenhaus! Quisiera recibir asesoramiento sobre una propiedad.');
+  wrap.innerHTML = `
+    <div class="agent-card">
+      <div class="agent-avatar">${avatarHtml}</div>
+      <div class="agent-info">
+        <div class="agent-name">${esc(agent ? `${agent.name} ${agent.last}` : 'Equipo Bienenhaus')}</div>
+        <div class="agent-license">${agent?.license_number ? `Matrícula CPI N° ${esc(agent.license_number)}` : 'Asesores expertos'}</div>
+        <div class="agent-specialty">${agent?.specialty ? esc(agent.specialty) : 'Propiedades residenciales y comerciales'}</div>
+        <div class="agent-contacts">
+          <a href="https://wa.me/${waNumber}?text=${waMsg}" target="_blank" class="agent-contact-btn agent-contact-btn--wa">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+            WhatsApp
+          </a>
+          <a href="mailto:${esc(agent?.email || 'info@bienenhaus.com.ar')}" class="agent-contact-btn agent-contact-btn--email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email
+          </a>
+        </div>
+        <a href="https://wa.me/${waNumber}?text=${waMsg}" target="_blank" class="agent-main-cta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          Contactar Asesor
+        </a>
+      </div>
+    </div>`;
+}
+
+function buildCtaFinal(item) {
+  const wrap = $('dCtaFinal');
+  if (!wrap) return;
+  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa la propiedad *${item.title}* en ${item.location}.\n${window.location.origin}${_path}`);
+  wrap.innerHTML = `
+    <div class="cta-final">
+      <div class="cta-final-title">¿Te interesa esta propiedad?</div>
+      <div class="cta-final-sub">Nuestro equipo está listo para ayudarte con todos los detalles.</div>
+      <div class="cta-final-btns">
+        <a href="https://wa.me/${_wa()}?text=${waMsg}" target="_blank" class="cta-final-btn cta-final-btn--primary">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          Solicitar información
+        </a>
+        <a href="https://wa.me/${_wa()}?text=${encodeURIComponent('Hola Bienenhaus! Quisiera coordinar una visita para la propiedad ' + item.title + '.')}" target="_blank" class="cta-final-btn cta-final-btn--outline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Coordinar visita
+        </a>
+        <a href="/#tasacion" class="cta-final-btn cta-final-btn--outline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          Tasar mi propiedad
+        </a>
+      </div>
+    </div>`;
 }
 
 // ── Lightbox ─────────────────────────────────────────────────────────
@@ -164,6 +257,7 @@ function syncThumb() {
     thumb.classList.add('active');
     thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
   }
+  syncHeroThumb(_lbIndex);
 }
 
 document.addEventListener('keydown', e => {
@@ -185,7 +279,7 @@ function renderItem(item) {
     $('dBreadParent').textContent = 'Venta';
   }
   _images = item.images || [];
-  const pageUrl = `https://bienenhaus.onrender.com${window.location.pathname}`;
+  const pageUrl = `https://bienenhaus.onrender.com${_path}`;
   const desc = `${item.title} — ${item.location}. ${(item.desc || item.description || '').slice(0, 120)}`;
   const ogImageUrl = _images[0] || 'https://bienenhaus.onrender.com/images/logo-bienenhaus.png';
 
@@ -208,21 +302,21 @@ function renderItem(item) {
   const twImage = document.getElementById('twImage');
   if (twImage) twImage.content = ogImageUrl;
 
-  buildGaleria(_images);
+  buildGaleria(item);
   buildThumbs(_images);
 
-  // Zoom on hover for hero
-  const heroFirst = document.querySelector('.galeria-item:first-child img');
-  if (heroFirst && _images.length > 0) {
-    heroFirst.style.transition = 'transform .5s ease';
-    heroFirst.parentElement.addEventListener('mousemove', e => {
-      const rect = heroFirst.parentElement.getBoundingClientRect();
+  // Zoom on hover for hero main image
+  const ghMain = document.querySelector('.gh-main img');
+  if (ghMain && _images.length > 0) {
+    ghMain.style.transition = 'transform .5s ease';
+    ghMain.parentElement.addEventListener('mousemove', e => {
+      const rect = ghMain.parentElement.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top)  / rect.height;
-      heroFirst.style.transformOrigin = `${x * 100}% ${y * 100}%`;
-      heroFirst.style.transform = 'scale(1.25)';
+      ghMain.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+      ghMain.style.transform = 'scale(1.25)';
     });
-    heroFirst.parentElement.addEventListener('mouseleave', () => { heroFirst.style.transform = ''; });
+    ghMain.parentElement.addEventListener('mouseleave', () => { ghMain.style.transform = ''; });
   }
 
   $('dBreadTitle').textContent = item.title;
@@ -281,7 +375,7 @@ function renderItem(item) {
 
   // WhatsApp
   const waLabel = _isRental ? 'alquiler' : 'propiedad';
-  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa ${_isRental ? 'el alquiler' : 'la propiedad'} *${item.title}* en ${item.location}.\n${window.location.href}`);
+  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa ${_isRental ? 'el alquiler' : 'la propiedad'} *${item.title}* en ${item.location}.\n${window.location.origin}${_path}`);
   const waUrl = `https://wa.me/${_wa()}?text=${waMsg}`;
   $('dWhatsapp').href = waUrl;
   $('waFloat').href   = waUrl;
@@ -295,10 +389,13 @@ function renderItem(item) {
   $('loadingState').classList.add('hidden');
   $('detalleMain').classList.remove('hidden');
 
+  // CTA Final
+  buildCtaFinal(item);
+
   // Scroll reveal
-  document.querySelectorAll('.detalle-section, .detalle-price-card, .detalle-share-card, .detalle-card, .detalle-specs').forEach((el, i) => {
+  document.querySelectorAll('.detalle-section, .detalle-price-card, .detalle-share-card, .detalle-card, .detalle-specs, .agent-section, .cta-final').forEach((el, i) => {
     el.classList.add('reveal');
-    if (i > 0) el.style.transitionDelay = `${Math.min(i * 0.08, 0.4)}s`;
+    if (i > 0) el.style.transitionDelay = `${Math.min(i * 0.06, 0.4)}s`;
   });
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
@@ -309,9 +406,21 @@ function renderItem(item) {
   const viewUrl = _isRental ? `/api/rentals/${_itemId}/view` : `/api/properties/${_itemId}/view`;
   fetch(viewUrl, { method: 'POST' }).catch(() => {});
 
+  // Load agent
+  loadAgent();
+
   // Similar properties
-  if (!_isRental) {
-    loadSimilares(item);
+  loadSimilares(item);
+}
+
+async function loadAgent() {
+  try {
+    const res = await fetch('/api/agents');
+    const agents = await res.json();
+    const agent = Array.isArray(agents) ? agents[0] : null;
+    renderAgentCard(agent);
+  } catch {
+    renderAgentCard(null);
   }
 }
 
@@ -436,7 +545,7 @@ let _inquiryItem = null;
 function openInquiry(item) {
   _inquiryItem = item;
   $('inquiryRef').textContent = item.title || 'Propiedad';
-  $('iq_message').value = `Hola, me interesa esta propiedad: ${item.title}\nhttps://bienenhaus.com.ar${window.location.pathname}`;
+  $('iq_message').value = `Hola, me interesa esta propiedad: ${item.title}\nhttps://bienenhaus.com.ar${_path}`;
   $('iq_ts').value = Date.now();
   $('iqMsg').classList.add('hidden');
   $('inquiryModal').classList.remove('hidden');
@@ -489,12 +598,12 @@ $('inquiryModal')?.addEventListener('click', e => {
 
 // ── Share ────────────────────────────────────────────────────────────
 function shareWA() {
-  const url = encodeURIComponent(window.location.href);
+  const url = encodeURIComponent(window.location.origin + _path);
   window.open(`https://wa.me/?text=${url}`, '_blank');
 }
 
 function copyLink() {
-  navigator.clipboard.writeText(window.location.href).then(() => {
+  navigator.clipboard.writeText(window.location.origin + _path).then(() => {
     $('copyMsg').classList.remove('hidden');
     setTimeout(() => $('copyMsg').classList.add('hidden'), 2500);
   });

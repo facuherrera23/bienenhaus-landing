@@ -4,25 +4,25 @@ const IMAGE_CACHE = 'bienenhaus-imgs-v1';
 const FONT_CACHE = 'bienenhaus-fonts-v1';
 
 const PRECACHE = [
-  'css/styles.min.css',
-  'css/detalle.min.css',
-  'css/comparador.min.css',
-  'css/alquiler.min.css',
-
-  'js/api.min.js',
-  'js/main.min.js',
-  'js/properties.min.js',
-  'js/agents.min.js',
-  'js/detalle.min.js',
-  'js/comparador.min.js',
-  'js/venta-ui.min.js',
-  'js/rentals.min.js',
-  'js/rentals-ui.min.js',
-  'js/mapa.min.js',
-  'js/offline.min.js',
-  'js/sw-register.min.js',
-  'manifest.json',
-  'offline.html',
+  '/css/styles.min.css',
+  '/css/detalle.min.css',
+  '/css/comparador.min.css',
+  '/css/alquiler.min.css',
+  '/css/admin.min.css',
+  '/js/api.min.js',
+  '/js/main.min.js',
+  '/js/properties.min.js',
+  '/js/agents.min.js',
+  '/js/detalle.min.js',
+  '/js/comparador.min.js',
+  '/js/venta-ui.min.js',
+  '/js/rentals.min.js',
+  '/js/rentals-ui.min.js',
+  '/js/mapa.min.js',
+  '/js/offline.min.js',
+  '/js/sw-register.min.js',
+  '/manifest.json',
+  '/offline.html',
 ];
 
 self.addEventListener('install', (e) => {
@@ -117,7 +117,7 @@ self.addEventListener('fetch', (e) => {
         }
         return res;
       }).catch(() =>
-        caches.match(request).then((cached) => cached ||         caches.match('offline.html') || caches.match('.'))
+        caches.match(request).then((cached) => cached || caches.match('/offline.html') || caches.match('/'))
       )
     );
     return;
@@ -138,18 +138,18 @@ self.addEventListener('fetch', (e) => {
 });
 
 self.addEventListener('push', (e) => {
-  let data = { title: 'Bienenhaus', body: '', icon: 'images/logo-bienenhaus.png' };
+  let data = { title: 'Bienenhaus', body: '', icon: '/images/logo-bienenhaus.png' };
   try { data = e.data?.json() ?? data; } catch {}
   self.registration.showNotification(data.title, {
     body: data.body,
     icon: data.icon,
-    badge: 'images/logo-bienenhaus.png',
+    badge: '/images/logo-bienenhaus.png',
     data: data.url ? { url: data.url } : {},
   });
 });
 
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
-  const url = e.notification.data?.url || '.';
+  const url = e.notification.data?.url || '/';
   clients.openWindow(url);
 });
