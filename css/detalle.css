@@ -1322,7 +1322,7 @@
   .reveal, .reveal-scale, .reveal-left, .reveal-right,
   .gh-main img, .dspec, .sim-card, .agent-card, .agent-main-cta,
   .detalle-price-card, .gh-thumb, .cta-final-btn,
-  #agentsGrid .agent-photo-img {
+  #agentsGrid .agent-booth-img {
     transition: none !important;
     animation: none !important;
   }
@@ -1332,5 +1332,5 @@
   .agent-card:hover { transform: none; }
   .agent-main-cta:hover { transform: none; }
   .gh-main:hover img { transform: none; }
-  #agentsGrid .agent-card:hover .agent-photo-img { transform: none; }
+  #agentsGrid .agent-booth:hover .agent-booth-img { transform: none; }
 }
