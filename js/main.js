@@ -432,7 +432,7 @@ function initReveal() {
 }
 
 function revealCards() {
-  document.querySelectorAll('.prop-card, .agent-card').forEach((card, i) => {
+  document.querySelectorAll('.prop-card').forEach((card, i) => {
     card.classList.add('reveal-card');
     const dirs = ['reveal-left','reveal-right','reveal-center'];
     card.classList.add(dirs[i % 3]);
