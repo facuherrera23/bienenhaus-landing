@@ -1,7 +1,7 @@
 /**
  * api.js — Cliente HTTP para la API Flask de Bienenhaus
  */
-const API_BASE = '';
+const API_BASE = window.__API_BASE__ || '';
 
 let _csrfToken = null;
 
@@ -29,7 +29,7 @@ async function _req(method, path, body = null, _retried = false) {
   const opts = {
     method,
     headers,
-    credentials: 'same-origin',
+    credentials: 'include',
   };
   if (body !== null) opts.body = JSON.stringify(body);
 
@@ -61,7 +61,7 @@ async function _req(method, path, body = null, _retried = false) {
 
 async function _ensureCsrfToken() {
   try {
-    const r = await fetch(`${API_BASE}/api/auth/csrf-token`, { credentials: 'same-origin' });
+    const r = await fetch(`${API_BASE}/api/auth/csrf-token`, { credentials: 'include' });
     const j = await r.json();
     if (j.ok && j.data?.csrf_token) _csrfToken = j.data.csrf_token;
   } catch { console.warn('getCsrfToken falló'); }
@@ -163,7 +163,7 @@ const API = {
     const res  = await fetch(`/api/upload${qs}`, {
       method: 'POST',
       headers,
-      credentials: 'same-origin',
+      credentials: 'include',
       body: form,
     });
     const json = await res.json();
@@ -251,7 +251,7 @@ function proxyImgUrl(url) {
   if (!url || url.startsWith('blob:') || url.startsWith('data:')) return url;
   if (url.startsWith(location.origin)) return url;
   if (url.includes('res.cloudinary.com')) return url;
-  return '/api/proxy-image?url=' + encodeURIComponent(url);
+  return `${API_BASE}/api/proxy-image?url=` + encodeURIComponent(url);
 }
 
 // ── Imágenes responsivas (Cloudinary srcset) ─────────────────────────
@@ -494,7 +494,7 @@ function switchTab(tab) {
   _tab = tab;
   document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
   document.querySelectorAll('.sidebar-link[data-tab]').forEach(el => el.classList.remove('active'));
-  const map = { dashboard: 'tabDashboard', props: 'tabProps', agents: 'tabAgents', messages: 'tabMessages', 'tasacion-requests': 'tabTasacionRequests', appraisals: 'tabAppraisals', settings: 'tabSettings', users: 'tabUsers', portals: 'tabPortals', marketing: 'tabMarketing', activity: 'tabActivity' };
+  const map = { dashboard: 'tabDashboard', props: 'tabProps', agents: 'tabAgents', messages: 'tabMessages', 'tasacion-requests': 'tabTasacionRequests', appraisals: 'tabAppraisals', settings: 'tabSettings', users: 'tabUsers', portals: 'tabPortals', activity: 'tabActivity' };
   $(map[tab])?.classList.remove('hidden');
   document.querySelector(`.sidebar-link[data-tab="${tab}"]`)?.classList.add('active');
 
@@ -506,7 +506,6 @@ function switchTab(tab) {
   if (tab === 'portals')    loadPortals();
   if (tab === 'appraisals') loadAppraisals();
   if (tab === 'activity')   loadActivity();
-  if (tab === 'marketing')  loadSocialAccounts();
 }
 
 function switchSubTab(subtab) {
