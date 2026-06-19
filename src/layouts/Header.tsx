@@ -50,156 +50,121 @@ export function Header() {
     : null
 
   return (
-    <>
-      <style>{`
-        #navbar {
-          position: fixed; top:0; left:0; right:0; z-index:100;
-          border-bottom: 1px solid transparent;
-          transition: background .4s, border-color .4s, backdrop-filter .4s;
-        }
-        #navbar.scrolled {
-          background: rgba(0,0,0,0.92);
-          border-color: rgba(255,255,255,0.06);
-          backdrop-filter: blur(20px) saturate(1.2);
-        }
-        #navbar.scrolled::after {
-          content: '';
-          position: absolute; bottom: -1px; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(32,184,171,0.28), #20b8ab, rgba(32,184,171,0.28), transparent);
-          opacity: .4;
-        }
-        .nav-inner {
-          max-width: 1280px; margin: 0 auto; padding: 0 48px;
-          height: 72px; display: flex; align-items: center; gap: 32px;
-        }
-        .nav-brand { flex: 1; display: flex; align-items: center; }
-        .nav-links { display: flex; gap: 32px; }
-        .nav-link {
-          font-family: 'Poppins', sans-serif;
-          font-size: 10px; font-weight: 600;
-          letter-spacing: 0.12em; text-transform: uppercase;
-          color: #9a9a9a; transition: color .2s; position: relative;
-        }
-        .nav-link::after {
-          content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-          height: 1px; background: #20b8ab;
-          transform: scaleX(0); transition: transform .25s cubic-bezier(.22,.61,.36,1);
-        }
-        .nav-link:hover { color: #ffffff; }
-        .nav-link:hover::after { transform: scaleX(1); }
-        .nav-link.active { color: #20b8ab; }
-        .nav-link.active::after { transform: scaleX(1); }
-        .nav-cta {
-          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-          padding: 7px 18px;
-          background: transparent; color: #20b8ab;
-          border: 1px solid rgba(32,184,171,0.28);
-          font-family: 'Poppins', sans-serif;
-          font-size: 10px; font-weight: 700;
-          letter-spacing: 0.12em; text-transform: uppercase;
-          transition: all .2s cubic-bezier(.22,.61,.36,1);
-        }
-        .nav-cta:hover {
-          background: rgba(32,184,171,0.18);
-          border-color: #20b8ab;
-          transform: translateY(-1px);
-        }
-        .hamburger {
-          display: none; flex-direction: column; gap: 5px;
-          background: none; border: none; padding: 4px;
-        }
-        .hamburger span {
-          display: block; width: 22px; height: 1.5px;
-          background: #9a9a9a; transition: all .25s;
-        }
-        @media (max-width: 768px) {
-          .nav-links, .hide-mobile { display: none !important; }
-          .hamburger { display: flex; }
-          .nav-inner { padding: 0 24px; }
-        }
-        #mobileMenu {
-          display: none; flex-direction: column; gap: 4px;
-          padding: 16px 24px 20px;
-          background: rgba(0,0,0,0.98);
-          border-top: 1px solid rgba(255,255,255,0.06);
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        #mobileMenu.open { display: flex; }
-        #mobileMenu .nav-link {
-          padding: 12px 0;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        #mobileMenu .nav-link::after { display: none; }
-        .nav-logo {
-          height: 56px; width: auto; display: block;
-          opacity: 0; transform: translateY(-4px) scale(0.96);
-          transition: opacity .35s ease, transform .35s ease, visibility .35s;
-          visibility: hidden;
-        }
-        #navbar.scrolled .nav-logo {
-          opacity: 0.92; transform: translateY(0) scale(1);
-          visibility: visible;
-        }
-        #navbar.scrolled .nav-logo:hover { opacity: 1; }
-      `}</style>
+    <header
+      className={`fixed top-0 inset-x-0 z-50 border-b transition-all duration-[400ms] ${
+        scrolled
+          ? 'bg-[rgba(0,0,0,0.92)] border-white/10'
+          : 'bg-transparent border-transparent'
+      }`}
+      style={{
+        backdropFilter: scrolled ? 'blur(20px) saturate(1.2)' : 'none',
+      }}
+    >
+      {/* Accent line on scroll */}
+      <div
+        className={`absolute bottom-[-1px] left-0 right-0 h-px pointer-events-none transition-opacity duration-[400ms] ${
+          scrolled ? 'opacity-40' : 'opacity-0'
+        }`}
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(32,184,171,0.28), #20b8ab, rgba(32,184,171,0.28), transparent)',
+        }}
+      />
 
-      <header id="navbar" className={scrolled ? 'scrolled' : ''}>
-        <div className="nav-inner">
-          <div className="nav-brand">
-            <Link to="/">
-              <img
-                src="/bienenhaus-landing/images/logo-blanco.png"
-                alt="Bienenhaus Propiedades"
-                className="nav-logo"
+      <div className="max-w-container mx-auto px-5 lg:px-12 h-[72px] flex items-center">
+        {/* Brand / Logo */}
+        <Link to="/" className="flex-1 flex items-center">
+          <img
+            src="/bienenhaus-landing/images/logo-blanco.png"
+            alt="Bienenhaus Propiedades"
+            className="h-14 w-auto"
+            style={{
+              opacity: scrolled ? 0.92 : 0,
+              transform: scrolled ? 'translateY(0) scale(1)' : 'translateY(-4px) scale(0.96)',
+              visibility: scrolled ? 'visible' : 'hidden',
+              transition: 'opacity 0.35s ease, transform 0.35s ease, visibility 0.35s',
+            }}
+          />
+        </Link>
+
+        {/* Desktop nav links */}
+        <nav className="hidden lg:flex items-center gap-8" aria-label="Navegación principal">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => handleNavClick(link)}
+              className="relative font-body text-[10px] font-semibold tracking-[0.12em] uppercase transition-colors duration-200 group"
+              style={{ color: isActive(link) ? '#20b8ab' : '#9a9a9a' }}
+              onMouseEnter={(e) => { if (!isActive(link)) e.currentTarget.style.color = '#ffffff' }}
+              onMouseLeave={(e) => { if (!isActive(link)) e.currentTarget.style.color = '#9a9a9a' }}
+            >
+              {link.label}
+              <span
+                className="absolute -bottom-[4px] left-0 right-0 h-px bg-accent transition-transform duration-250 origin-left"
+                style={{
+                  transform: isActive(link) ? 'scaleX(1)' : 'scaleX(0)',
+                  transitionTimingFunction: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scaleX(1)' }}
+                onMouseLeave={(e) => {
+                  if (!isActive(link)) e.currentTarget.style.transform = 'scaleX(0)'
+                }}
               />
             </Link>
-          </div>
+          ))}
+        </nav>
 
-          <div className="nav-links" id="navLinks">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => handleNavClick(link)}
-                className={`nav-link${isActive(link) ? ' active' : ''}`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
+        {/* WhatsApp CTA */}
+        <div className="hidden lg:flex items-center ml-8">
           {waLink && (
             <a
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="nav-cta hide-mobile"
+              className="inline-flex items-center justify-center gap-2 bg-transparent text-accent border text-[10px] font-body font-bold tracking-[0.12em] uppercase px-[18px] py-[7px] transition-all duration-200 hover:-translate-y-px"
+              style={{
+                borderColor: 'rgba(32,184,171,0.28)',
+                borderRadius: '2px',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(32,184,171,0.18)'
+                e.currentTarget.style.borderColor = '#20b8ab'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.borderColor = 'rgba(32,184,171,0.28)'
+              }}
             >
               WhatsApp
             </a>
           )}
-
-          <button
-            className="hamburger"
-            id="hamburger"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={menuOpen}
-          >
-            <span /><span /><span />
-          </button>
         </div>
 
-        <AnimatePresence>
-          {menuOpen && (
-            <div id="mobileMenu" className="open">
+        {/* Hamburger */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="lg:hidden flex flex-col gap-[5px] bg-none border-none p-1 ml-4"
+          aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={menuOpen}
+        >
+          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a] transition-all duration-250" />
+          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a] transition-all duration-250" />
+          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a] transition-all duration-250" />
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <div className="lg:hidden bg-[rgba(0,0,0,0.98)] border-t border-b border-white/[0.06]">
+            <nav className="flex flex-col px-6 py-4 gap-1" aria-label="Navegación móvil">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => handleNavClick(link)}
-                  className={`nav-link${isActive(link) ? ' active' : ''}`}
+                  className="font-body text-[10px] font-semibold tracking-[0.12em] uppercase py-3 border-b border-white/[0.06] transition-colors"
+                  style={{ color: isActive(link) ? '#20b8ab' : '#9a9a9a' }}
                 >
                   {link.label}
                 </Link>
@@ -209,16 +174,27 @@ export function Header() {
                   href={waLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="nav-cta"
-                  style={{ marginTop: '8px', textAlign: 'center' }}
+                  className="block text-center bg-transparent text-accent border text-[10px] font-body font-bold tracking-[0.12em] uppercase py-3 mt-2 transition-all"
+                  style={{
+                    borderColor: 'rgba(32,184,171,0.28)',
+                    borderRadius: '2px',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(32,184,171,0.18)'
+                    e.currentTarget.style.borderColor = '#20b8ab'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent'
+                    e.currentTarget.style.borderColor = 'rgba(32,184,171,0.28)'
+                  }}
                 >
                   WhatsApp
                 </a>
               )}
-            </div>
-          )}
-        </AnimatePresence>
-      </header>
-    </>
+            </nav>
+          </div>
+        )}
+      </AnimatePresence>
+    </header>
   )
 }
