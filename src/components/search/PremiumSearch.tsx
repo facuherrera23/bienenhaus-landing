@@ -17,7 +17,7 @@ export function PremiumSearch() {
   }, [activeTab, navigate])
 
   return (
-    <section className="relative -mt-16 z-20 px-5">
+    <section className="relative z-20 px-5 mb-12">
       <div className="max-w-container mx-auto">
         <motion.form
           initial={{ opacity: 0, y: 24 }}
