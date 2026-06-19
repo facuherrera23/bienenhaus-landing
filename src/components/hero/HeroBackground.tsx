@@ -7,10 +7,22 @@ interface HeroBackgroundProps {
 
 export function HeroBackground({ video, poster }: HeroBackgroundProps) {
   const [loaded, setLoaded] = useState(false)
+  const showPosterAsImage = !video && poster
 
   return (
     <div className="absolute inset-0" aria-hidden="true">
-      {video ? (
+      {/* Background image (static) */}
+      {showPosterAsImage && (
+        <img
+          src={poster}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Background video */}
+      {video && (
         <>
           {poster && !loaded && (
             <img
@@ -34,7 +46,10 @@ export function HeroBackground({ video, poster }: HeroBackgroundProps) {
             <source src={video} type="video/mp4" />
           </video>
         </>
-      ) : (
+      )}
+
+      {/* Gradient fallback when neither video nor poster */}
+      {!video && !poster && (
         <div className="absolute inset-0 bg-gradient-to-br from-black via-surface-1 to-black" />
       )}
 
