@@ -1,3 +1,4 @@
+import { usePageTitle } from '../hooks/usePageTitle'
 import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -10,6 +11,7 @@ import { PROPERTY_TYPES, BED_OPTIONS, STATUS_OPTIONS_VENTA, SORT_OPTIONS } from 
 import type { PropertyFilters } from '../types/api'
 
 export function SalesPage() {
+  usePageTitle('Venta')
   const [searchParams, setSearchParams] = useSearchParams()
   const [filters, setFilters] = useState<PropertyFilters>({
     search: searchParams.get('search') || undefined,

@@ -3,11 +3,13 @@ import { cn } from '../../utils/cn'
 type ButtonVariant = 'accent' | 'outline' | 'ghost' | 'whatsapp'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'target' | 'rel'> {
   variant?: ButtonVariant
   size?: ButtonSize
   as?: 'button' | 'a'
   href?: string
+  target?: string
+  rel?: string
 }
 
 const variantStyles: Record<ButtonVariant, string> = {

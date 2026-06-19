@@ -9,6 +9,7 @@ const HomePage = lazy(() => import('../pages/HomePage').then((m) => ({ default: 
 const SalesPage = lazy(() => import('../pages/SalesPage').then((m) => ({ default: m.SalesPage })))
 const RentalsPage = lazy(() => import('../pages/RentalsPage').then((m) => ({ default: m.RentalsPage })))
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })))
+const PropertyDetailPage = lazy(() => import('../pages/PropertyDetailPage').then((m) => ({ default: m.PropertyDetailPage })))
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,8 +46,8 @@ export function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/venta" element={<SalesPage />} />
                 <Route path="/alquiler" element={<RentalsPage />} />
-                <Route path="/venta/:id" element={<div>Property detail (venta) - coming soon</div>} />
-                <Route path="/alquiler/:id" element={<div>Property detail (alquiler) - coming soon</div>} />
+                <Route path="/venta/:id" element={<PropertyDetailPage />} />
+                <Route path="/alquiler/:id" element={<PropertyDetailPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>

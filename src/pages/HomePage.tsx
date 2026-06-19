@@ -1,3 +1,4 @@
+import { usePageTitle } from '../hooks/usePageTitle'
 import { HeroSection } from '../components/hero'
 import { InfiniteCarousel } from '../components/carousel'
 import { PremiumSearch } from '../components/search'
@@ -9,6 +10,7 @@ import { PhilosophySection } from '../components/philosophy'
 import { ContactSection } from '../components/contact'
 
 export function HomePage() {
+  usePageTitle('Inicio')
   return (
     <>
       <HeroSection />
