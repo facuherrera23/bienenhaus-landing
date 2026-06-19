@@ -1,15 +1,15 @@
-import type { ReactNode } from 'react'
-import { cn } from '../../lib/utils'
+import { cn } from '../../utils/cn'
 
 interface ContainerProps {
-  children: ReactNode
+  children: React.ReactNode
   className?: string
+  as?: 'div' | 'section' | 'article' | 'header' | 'footer'
 }
 
-export function Container({ children, className }: ContainerProps) {
+export function Container({ children, className, as: Tag = 'div' }: ContainerProps) {
   return (
-    <div className={cn('container-main', className)}>
+    <Tag className={cn('max-w-container mx-auto px-5', className)}>
       {children}
-    </div>
+    </Tag>
   )
 }
