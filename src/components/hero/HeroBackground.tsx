@@ -5,16 +5,19 @@ interface HeroBackgroundProps {
   poster?: string
 }
 
+const DEFAULT_POSTER = '/bienenhaus-landing/hero-bg.png'
+
 export function HeroBackground({ video, poster }: HeroBackgroundProps) {
   const [loaded, setLoaded] = useState(false)
-  const showPosterAsImage = !video && poster
+  const imageSrc = poster || DEFAULT_POSTER
+  const showPosterAsImage = !video && imageSrc
 
   return (
     <div className="absolute inset-0" aria-hidden="true">
-      {/* Background image (static) */}
+      {/* Background image (static fallback when no video) */}
       {showPosterAsImage && (
         <img
-          src={poster}
+          src={imageSrc}
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
           aria-hidden="true"
@@ -24,9 +27,9 @@ export function HeroBackground({ video, poster }: HeroBackgroundProps) {
       {/* Background video */}
       {video && (
         <>
-          {poster && !loaded && (
+          {(poster || imageSrc) && !loaded && (
             <img
-              src={poster}
+              src={poster || imageSrc}
               alt=""
               className="absolute inset-0 w-full h-full object-cover"
               aria-hidden="true"
@@ -37,7 +40,7 @@ export function HeroBackground({ video, poster }: HeroBackgroundProps) {
             muted
             loop
             playsInline
-            poster={poster || undefined}
+            poster={poster || imageSrc}
             onLoadedData={() => setLoaded(true)}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
               loaded ? 'opacity-100' : 'opacity-0'
@@ -46,11 +49,6 @@ export function HeroBackground({ video, poster }: HeroBackgroundProps) {
             <source src={video} type="video/mp4" />
           </video>
         </>
-      )}
-
-      {/* Gradient fallback when neither video nor poster */}
-      {!video && !poster && (
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-surface-1 to-black" />
       )}
 
       {/* Grain overlay */}
