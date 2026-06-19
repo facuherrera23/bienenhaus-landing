@@ -53,11 +53,9 @@ export function Header() {
     <header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-[400ms]"
       style={{
-        background: scrolled
-          ? 'rgba(0,0,0,0.92)'
-          : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 70%, transparent 100%)',
+        background: scrolled ? 'rgba(0,0,0,0.92)' : 'rgba(0,0,0,0.12)',
         borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
-        backdropFilter: scrolled ? 'blur(20px) saturate(1.2)' : 'none',
+        backdropFilter: scrolled ? 'blur(20px) saturate(1.2)' : 'blur(4px)',
       }}
     >
       {/* Accent line */}
