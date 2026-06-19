@@ -51,22 +51,21 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 border-b transition-all duration-[400ms] ${
-        scrolled
-          ? 'bg-[rgba(0,0,0,0.92)] border-white/10'
-          : 'bg-transparent border-transparent'
-      }`}
+      className="fixed top-0 inset-x-0 z-50 transition-all duration-[400ms]"
       style={{
+        background: scrolled
+          ? 'rgba(0,0,0,0.92)'
+          : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 70%, transparent 100%)',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
         backdropFilter: scrolled ? 'blur(20px) saturate(1.2)' : 'none',
       }}
     >
-      {/* Accent line on scroll */}
+      {/* Accent line */}
       <div
-        className={`absolute bottom-[-1px] left-0 right-0 h-px pointer-events-none transition-opacity duration-[400ms] ${
-          scrolled ? 'opacity-40' : 'opacity-0'
-        }`}
+        className="absolute bottom-[-1px] left-0 right-0 h-px pointer-events-none transition-opacity duration-[400ms]"
         style={{
           background: 'linear-gradient(90deg, transparent, rgba(32,184,171,0.28), #20b8ab, rgba(32,184,171,0.28), transparent)',
+          opacity: scrolled ? 0.4 : 0,
         }}
       />
 
@@ -121,9 +120,11 @@ export function Header() {
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-transparent text-accent border text-[10px] font-body font-bold tracking-[0.12em] uppercase px-[18px] py-[7px] transition-all duration-200 hover:-translate-y-px"
+              className="inline-flex items-center justify-center gap-2 text-[10px] font-body font-bold tracking-[0.12em] uppercase px-[18px] py-[7px] transition-all duration-200 hover:-translate-y-px"
               style={{
-                borderColor: 'rgba(32,184,171,0.28)',
+                color: '#20b8ab',
+                background: 'transparent',
+                border: '1px solid rgba(32,184,171,0.28)',
                 borderRadius: '2px',
               }}
               onMouseEnter={(e) => {
@@ -147,9 +148,9 @@ export function Header() {
           aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={menuOpen}
         >
-          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a] transition-all duration-250" />
-          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a] transition-all duration-250" />
-          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a] transition-all duration-250" />
+          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a]" />
+          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a]" />
+          <span className="block w-[22px] h-[1.5px] bg-[#9a9a9a]" />
         </button>
       </div>
 
@@ -174,9 +175,11 @@ export function Header() {
                   href={waLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-center bg-transparent text-accent border text-[10px] font-body font-bold tracking-[0.12em] uppercase py-3 mt-2 transition-all"
+                  className="block text-center text-[10px] font-body font-bold tracking-[0.12em] uppercase py-3 mt-2 transition-all"
                   style={{
-                    borderColor: 'rgba(32,184,171,0.28)',
+                    color: '#20b8ab',
+                    background: 'transparent',
+                    border: '1px solid rgba(32,184,171,0.28)',
                     borderRadius: '2px',
                   }}
                   onMouseEnter={(e) => {
