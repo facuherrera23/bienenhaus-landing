@@ -83,11 +83,12 @@ function StatItem({
 export function HeroSection() {
   const { data: settings } = useSettings()
 
-  const hasStats =
-    settings?.properties_count != null ||
-    settings?.agents_count != null ||
-    settings?.years_count != null ||
-    settings?.trust_count != null
+  const stats = [
+    { value: settings?.properties_count, label: 'Propiedades' },
+    { value: settings?.agents_count, label: 'Agentes' },
+    { value: settings?.years_count, label: 'Años', suffix: '+' },
+    { value: settings?.trust_count, label: 'Confianza', suffix: '%' },
+  ].filter((s) => s.value != null)
 
   return (
     <section
@@ -99,7 +100,7 @@ export function HeroSection() {
       <HeroContent subtitle={settings?.hero_subtitle || undefined} />
 
       {/* Stats strip */}
-      {hasStats && (
+      {stats.length > 0 && (
         <motion.div
           variants={stagger}
           initial="hidden"
@@ -107,19 +108,10 @@ export function HeroSection() {
           className="absolute bottom-0 inset-x-0 z-10"
         >
           <div className="max-w-container mx-auto px-5">
-            <div className="border-t border-border/60 py-8 grid grid-cols-2 md:grid-cols-4 gap-8">
-              {settings!.properties_count != null && (
-                <StatItem value={settings!.properties_count!} label="Propiedades" />
-              )}
-              {settings!.agents_count != null && (
-                <StatItem value={settings!.agents_count!} label="Agentes" />
-              )}
-              {settings!.years_count != null && (
-                <StatItem value={settings!.years_count!} label="Años" suffix="+" />
-              )}
-              {settings!.trust_count != null && (
-                <StatItem value={settings!.trust_count!} label="Confianza" suffix="%" />
-              )}
+            <div className="border-t border-border/60 py-8 flex flex-wrap justify-center gap-x-12 gap-y-6">
+              {stats.map((s) => (
+                <StatItem key={s.label} value={s.value!} label={s.label} suffix={s.suffix} />
+              ))}
             </div>
           </div>
         </motion.div>
