@@ -1,46 +1,16 @@
-import { useRef, useEffect } from 'react'
 import { CAROUSEL_ITEMS } from '../../constants'
 
 export function InfiniteCarousel() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const scrollerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const scroller = scrollerRef.current
-    if (!scroller) return
-
-    let animationId: number
-    let speed = 0.5
-
-    function animate() {
-      if (!scroller) return
-      scroller.scrollLeft += speed
-
-      const halfScroll = scroller.scrollWidth / 2
-      if (scroller.scrollLeft >= halfScroll) {
-        scroller.scrollLeft = 0
-      }
-
-      animationId = requestAnimationFrame(animate)
-    }
-
-    animationId = requestAnimationFrame(animate)
-
-    return () => cancelAnimationFrame(animationId)
-  }, [])
-
   const items = [...CAROUSEL_ITEMS, ...CAROUSEL_ITEMS, ...CAROUSEL_ITEMS]
+  const duration = items.length * 4
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full overflow-hidden bg-surface-1 border-y border-border/40 py-5"
-      aria-hidden="true"
-    >
+    <div className="relative w-full overflow-hidden bg-surface-1 border-y border-border/40 py-5" aria-hidden="true">
       <div
-        ref={scrollerRef}
-        className="flex gap-12 overflow-x-hidden whitespace-nowrap"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex gap-12 whitespace-nowrap"
+        style={{
+          animation: `carousel-scroll ${duration}s linear infinite`,
+        }}
       >
         {items.map((item, i) => (
           <span
@@ -53,7 +23,13 @@ export function InfiniteCarousel() {
         ))}
       </div>
 
-      {/* Edge gradients */}
+      <style>{`
+        @keyframes carousel-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+
       <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-surface-1 to-transparent pointer-events-none z-10" />
       <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-surface-1 to-transparent pointer-events-none z-10" />
     </div>
