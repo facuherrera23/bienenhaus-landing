@@ -61,13 +61,13 @@ export function RentalsPage() {
                 placeholder="Buscar propiedad..."
                 value={filters.search || ''}
                 onChange={(e) => updateFilter('search', e.target.value)}
-                className="w-full bg-surface-3 border border-border rounded-lg px-4 py-3 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors"
+                className="w-full bg-surface-3 border border-border rounded-lg px-4 py-4 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors"
               />
             </div>
             <select
               value={filters.type || ''}
               onChange={(e) => updateFilter('type', e.target.value)}
-              className="w-full bg-surface-3 border border-border rounded-lg px-3 py-3 text-sm text-white font-desc appearance-none cursor-pointer focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-3 border border-border rounded-lg px-3 py-4 text-sm text-white font-desc appearance-none cursor-pointer focus:outline-none focus:border-accent/50"
             >
               {PROPERTY_TYPES.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -76,7 +76,7 @@ export function RentalsPage() {
             <select
               value={filters.beds || ''}
               onChange={(e) => updateFilter('beds', e.target.value)}
-              className="w-full bg-surface-3 border border-border rounded-lg px-3 py-3 text-sm text-white font-desc appearance-none cursor-pointer focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-3 border border-border rounded-lg px-3 py-4 text-sm text-white font-desc appearance-none cursor-pointer focus:outline-none focus:border-accent/50"
             >
               {BED_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -85,7 +85,7 @@ export function RentalsPage() {
             <select
               value={filters.status || ''}
               onChange={(e) => updateFilter('status', e.target.value)}
-              className="w-full bg-surface-3 border border-border rounded-lg px-3 py-3 text-sm text-white font-desc appearance-none cursor-pointer focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-3 border border-border rounded-lg px-3 py-4 text-sm text-white font-desc appearance-none cursor-pointer focus:outline-none focus:border-accent/50"
             >
               {STATUS_OPTIONS_ALQUILER.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -94,7 +94,7 @@ export function RentalsPage() {
             <select
               value={filters.sort || ''}
               onChange={(e) => updateFilter('sort', e.target.value)}
-              className="w-full bg-surface-3 border border-border rounded-lg px-3 py-3 text-sm text-white font-desc appearance-none cursor-pointer focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-3 border border-border rounded-lg px-3 py-4 text-sm text-white font-desc appearance-none cursor-pointer focus:outline-none focus:border-accent/50"
             >
               {SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -179,7 +179,7 @@ export function RentalsPage() {
             <button
               onClick={() => updateFilter('page', Math.max(1, currentPage - 1))}
               disabled={currentPage <= 1}
-              className="font-elegant text-xs text-text-secondary hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2"
+              className="font-elegant text-xs text-text-secondary hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed px-4 py-3"
             >
               Anterior
             </button>
@@ -187,7 +187,7 @@ export function RentalsPage() {
               <button
                 key={i}
                 onClick={() => updateFilter('page', i + 1)}
-                className={`w-8 h-8 rounded-md text-xs font-elegant transition-colors ${
+                className={`w-11 h-11 rounded-md text-xs font-elegant transition-colors ${
                   currentPage === i + 1
                     ? 'bg-accent text-black font-semibold'
                     : 'text-text-secondary hover:text-white hover:bg-surface-3'
@@ -199,7 +199,7 @@ export function RentalsPage() {
             <button
               onClick={() => updateFilter('page', Math.min(totalPages, currentPage + 1))}
               disabled={currentPage >= totalPages}
-              className="font-elegant text-xs text-text-secondary hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2"
+              className="font-elegant text-xs text-text-secondary hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed px-4 py-3"
             >
               Siguiente
             </button>

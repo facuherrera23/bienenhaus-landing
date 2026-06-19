@@ -44,7 +44,7 @@ export function AboutSection() {
               variants={fadeUp}
               className="relative text-center p-6 bg-surface-2 border border-border rounded-lg"
             >
-              <span className="font-display text-3xl text-accent/30 block mb-2">{item.year}</span>
+              <span className="font-display text-2xl md:text-3xl text-accent/30 block mb-2">{item.year}</span>
               <h3 className="font-elegant font-semibold text-sm text-white mb-2">{item.label}</h3>
               <p className="font-desc text-xs text-text-secondary leading-relaxed">{item.desc}</p>
             </motion.div>

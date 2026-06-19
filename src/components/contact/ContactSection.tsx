@@ -54,7 +54,7 @@ export function ContactSection() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="bg-surface-2 border border-border rounded-lg overflow-hidden h-[400px]"
+            className="bg-surface-2 border border-border rounded-lg overflow-hidden h-[250px] md:h-[400px]"
           >
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3404.713!2d-64.188776!3d-31.420083!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9432a3f8d9c8b8f7%3A0x8f8e8d7c6b5a4f3e!2sC%C3%B3rdoba%2C%20Argentina!5e0!3m2!1ses!2sar!4v1"
@@ -107,7 +107,7 @@ export function ContactSection() {
                     required
                     value={form.name}
                     onChange={handleChange}
-                    className="w-full bg-surface-3 border border-border rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors"
+                    className="w-full bg-surface-3 border border-border rounded-lg px-4 py-4 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors"
                   />
                 </motion.div>
 
@@ -119,7 +119,7 @@ export function ContactSection() {
                     required
                     value={form.email}
                     onChange={handleChange}
-                    className="w-full bg-surface-3 border border-border rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors"
+                    className="w-full bg-surface-3 border border-border rounded-lg px-4 py-4 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors"
                   />
                 </motion.div>
 
@@ -130,7 +130,7 @@ export function ContactSection() {
                     placeholder="Teléfono (opcional)"
                     value={form.phone}
                     onChange={handleChange}
-                    className="w-full bg-surface-3 border border-border rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors"
+                    className="w-full bg-surface-3 border border-border rounded-lg px-4 py-4 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors"
                   />
                 </motion.div>
 
@@ -142,7 +142,7 @@ export function ContactSection() {
                     rows={5}
                     value={form.message}
                     onChange={handleChange}
-                    className="w-full bg-surface-3 border border-border rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors resize-none"
+                    className="w-full bg-surface-3 border border-border rounded-lg px-4 py-4 text-sm text-white placeholder:text-text-muted font-desc focus:outline-none focus:border-accent/50 transition-colors resize-none"
                   />
                 </motion.div>
 
@@ -154,7 +154,7 @@ export function ContactSection() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full bg-accent text-black font-elegant font-semibold text-sm py-3.5 rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-50"
+                    className="w-full bg-accent text-black font-elegant font-semibold text-sm py-4 rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-50"
                   >
                     {submitting ? 'Enviando...' : 'Enviar mensaje'}
                   </button>

@@ -30,7 +30,7 @@ export function Footer() {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="font-desc text-xs text-text-secondary hover:text-accent transition-colors"
+                    className="font-desc text-xs text-text-secondary hover:text-accent transition-colors inline-block py-2"
                   >
                     {link.label}
                   </Link>
@@ -47,14 +47,14 @@ export function Footer() {
             <ul className="space-y-3">
               {settings?.contact_phone && (
                 <li>
-                  <a href={`tel:${settings.contact_phone}`} className="font-desc text-xs text-text-secondary hover:text-accent transition-colors">
+                  <a href={`tel:${settings.contact_phone}`} className="font-desc text-xs text-text-secondary hover:text-accent transition-colors inline-block py-2">
                     {settings.contact_phone}
                   </a>
                 </li>
               )}
               {settings?.contact_email && (
                 <li>
-                  <a href={`mailto:${settings.contact_email}`} className="font-desc text-xs text-text-secondary hover:text-accent transition-colors">
+                  <a href={`mailto:${settings.contact_email}`} className="font-desc text-xs text-text-secondary hover:text-accent transition-colors inline-block py-2">
                     {settings.contact_email}
                   </a>
                 </li>
@@ -65,7 +65,7 @@ export function Footer() {
                     href={`https://wa.me/${settings.wa_number.replace(/[^0-9]/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-desc text-xs text-text-secondary hover:text-accent transition-colors"
+                    className="font-desc text-xs text-text-secondary hover:text-accent transition-colors inline-block py-2"
                   >
                     WhatsApp
                   </a>
@@ -86,7 +86,7 @@ export function Footer() {
                     href={settings.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-desc text-xs text-text-secondary hover:text-accent transition-colors"
+                    className="font-desc text-xs text-text-secondary hover:text-accent transition-colors inline-block py-2"
                   >
                     Instagram
                   </a>
@@ -98,7 +98,7 @@ export function Footer() {
                     href={settings.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-desc text-xs text-text-secondary hover:text-accent transition-colors"
+                    className="font-desc text-xs text-text-secondary hover:text-accent transition-colors inline-block py-2"
                   >
                     Facebook
                   </a>

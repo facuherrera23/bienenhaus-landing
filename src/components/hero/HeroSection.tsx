@@ -70,7 +70,7 @@ function StatItem({
 }) {
   return (
     <motion.div variants={fadeUp} className="flex flex-col items-center">
-      <span className="font-num text-2xl md:text-3xl font-bold text-white">
+      <span className="font-num text-xl md:text-2xl lg:text-3xl font-bold text-white truncate max-w-full">
         <CountUp end={value} suffix={suffix} />
       </span>
       <span className="font-desc text-2xs tracking-badge uppercase text-text-muted mt-1">

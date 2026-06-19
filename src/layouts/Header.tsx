@@ -51,7 +51,7 @@ export function Header() {
               href={`https://wa.me/${settings.wa_number.replace(/[^0-9]/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-accent text-black font-elegant font-semibold text-xs py-2 px-4 rounded-md hover:bg-accent-dark transition-colors"
+              className="bg-accent text-black font-elegant font-semibold text-xs py-3 px-5 rounded-md hover:bg-accent-dark transition-colors"
             >
               WhatsApp
             </a>
@@ -61,7 +61,7 @@ export function Header() {
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="lg:hidden text-white p-2"
+          className="lg:hidden text-white p-3"
           aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={menuOpen}
         >
@@ -89,7 +89,7 @@ export function Header() {
                     key={link.path}
                     to={link.path}
                     onClick={() => setMenuOpen(false)}
-                    className={`font-elegant text-sm uppercase tracking-wide transition-colors ${
+                    className={`font-elegant text-sm uppercase tracking-wide transition-colors py-3 ${
                       isActive ? 'text-accent' : 'text-text-secondary hover:text-white'
                     }`}
                   >
@@ -102,7 +102,7 @@ export function Header() {
                   href={`https://wa.me/${settings.wa_number.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-accent text-black font-elegant font-semibold text-sm text-center py-3 rounded-md mt-2"
+                  className="bg-accent text-black font-elegant font-semibold text-sm text-center py-4 rounded-md mt-2"
                 >
                   WhatsApp
                 </a>
