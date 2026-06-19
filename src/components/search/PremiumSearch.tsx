@@ -4,10 +4,11 @@ import { Search } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useFilterStore } from '../../store/useFilterStore'
 import { PROPERTY_TYPES, BED_OPTIONS, SORT_OPTIONS } from '../../constants'
+import type { OperationType } from '../../types/api'
 
 export function PremiumSearch() {
   const navigate = useNavigate()
-  const { activeTab, filters, updateFilter } = useFilterStore()
+  const { activeTab, filters, updateFilter, setActiveTab } = useFilterStore()
   const [searchValue, setSearchValue] = useState(filters.search || '')
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
@@ -17,8 +18,27 @@ export function PremiumSearch() {
   }, [activeTab, navigate])
 
   return (
-    <section className="relative z-20 px-5 mb-12">
+    <section className="relative z-20 px-5 mt-14 mb-16">
       <div className="max-w-container mx-auto">
+        {/* Toggle Venta / Alquiler */}
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex bg-white/5 border border-white/10 rounded-xl p-1">
+            {(['venta', 'alquiler'] as OperationType[]).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 py-2.5 rounded-lg text-sm font-elegant font-semibold transition-all ${
+                  activeTab === tab
+                    ? 'bg-accent text-black shadow-[0_0_16px_rgba(32,184,171,0.2)]'
+                    : 'text-text-secondary hover:text-white'
+                }`}
+              >
+                {tab === 'venta' ? 'Venta' : 'Alquiler'}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <motion.form
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
