@@ -498,15 +498,57 @@ function shareProperty() {
 }
 
 /* ── Hex pulse ────────────────────────────────── */
+function buildHexGrid(container, w, h) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.setAttribute('width', w);
+  svg.setAttribute('height', h);
+  svg.setAttribute('fill', 'none');
+  const R = 20, A = R * 0.866, B = R * 0.5;
+  function pts(cx, cy) {
+    return [[cx,cy-R],[cx+A,cy-B],[cx+A,cy+B],[cx,cy+R],[cx-A,cy+B],[cx-A,cy-B]]
+      .map(p => p.map(Math.round).join(',')).join(' ');
+  }
+  const COLS = Math.ceil(w / (2 * A)), ROWS = Math.ceil(h / (B * 3));
+  const polyData = [];
+  for (let r = 0; r < ROWS; r++) {
+    const cols = (r % 2 === 0) ? COLS : COLS - 1;
+    const xOff = (r % 2 === 0) ? 0 : A;
+    for (let c = 0; c < cols; c++) {
+      const cx = xOff + c * 2 * A + A;
+      const cy = r * B * 3 + R;
+      if (cx > w - R || cy > h - R) continue;
+      polyData.push({ cx, cy });
+    }
+  }
+  polyData.forEach(pd => {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    const base = (0.04 + Math.random() * 0.10).toFixed(3);
+    el.setAttribute('points', pts(pd.cx, pd.cy));
+    el.setAttribute('data-base', base);
+    el.setAttribute('stroke', `rgba(32,184,171,${base})`);
+    el.setAttribute('stroke-width', base > 0.14 ? '1.5' : base > 0.08 ? '1.1' : '0.75');
+    el.setAttribute('fill', 'none');
+    svg.appendChild(el);
+  });
+  container.appendChild(svg);
+  return svg.querySelectorAll('polygon');
+}
+
 function initHexPulse() {
-  const allP = [...document.querySelectorAll('.hzone polygon')];
+  const tl = document.getElementById('hzoneTl');
+  const br = document.getElementById('hzoneBr');
+  if (!tl && !br) return;
+  let allP = [];
+  if (tl) allP = allP.concat([...buildHexGrid(tl, 280, 280)]);
+  if (br) allP = allP.concat([...buildHexGrid(br, 220, 220)]);
   if (!allP.length) return;
-  allP.forEach(p => { p.style.transition = 'stroke .9s ease,stroke-width .9s ease'; });
   let lit = [];
   function pulse() {
     lit.forEach(p => {
-      p.setAttribute('stroke', 'rgba(32,184,171,' + p.dataset.base + ')');
-      p.setAttribute('stroke-width', p.dataset.base > 0.14 ? '1.5' : p.dataset.base > 0.08 ? '1.1' : '0.75');
+      const base = parseFloat(p.dataset.base);
+      p.setAttribute('stroke', `rgba(32,184,171,${base})`);
+      p.setAttribute('stroke-width', base > 0.14 ? '1.5' : base > 0.08 ? '1.1' : '0.75');
     });
     lit = [];
     const n = Math.floor(Math.random() * 6) + 4;
@@ -514,7 +556,7 @@ function initHexPulse() {
     while (used.size < n && used.size < allP.length) used.add(Math.floor(Math.random() * allP.length));
     used.forEach(i => {
       const p = allP[i];
-      p.setAttribute('stroke', 'rgba(32,184,171,0.6)');
+      p.setAttribute('stroke', 'rgba(32,184,171,0.65)');
       p.setAttribute('stroke-width', '1.8');
       lit.push(p);
     });

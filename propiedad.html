@@ -64,18 +64,13 @@
 </nav>
 
 <!-- HEX DECORATION -->
-<svg class="hzone tl" width="280" height="280" viewBox="0 0 280 280" fill="none" id="hzone">
-  <defs><pattern id="hex" width="22" height="38.11" patternUnits="userSpaceOnUse"><path d="M11 0l11 6.35v12.7L11 25.4 0 19.05V6.35z" stroke="rgba(32,184,171,0.07)" stroke-width=".5" fill="none"/><path d="M11 12.7l11 6.35v12.7L11 38.1 0 31.75V19.05z" stroke="rgba(32,184,171,0.05)" stroke-width=".5" fill="none"/></pattern></defs>
-  <rect width="280" height="280" fill="url(#hex)" opacity=".3"/>
-</svg>
-<svg class="hzone br" width="220" height="220" viewBox="0 0 220 220" fill="none">
-  <defs><pattern id="hex2" width="22" height="38.11" patternUnits="userSpaceOnUse"><path d="M11 0l11 6.35v12.7L11 25.4 0 19.05V6.35z" stroke="rgba(32,184,171,0.07)" stroke-width=".5" fill="none"/></pattern></defs>
-  <rect width="220" height="220" fill="url(#hex2)" opacity=".2"/>
-</svg>
+<div class="hzone tl" id="hzoneTl" aria-hidden="true"></div>
+<div class="hzone br" id="hzoneBr" aria-hidden="true"></div>
 
 <!-- LOADING -->
 <div id="detalleLoading" class="detalle-loading">
   <div class="spinner"></div>
+  <div class="spinner-label">Cargando propiedad</div>
 </div>
 
 <!-- ERROR -->
