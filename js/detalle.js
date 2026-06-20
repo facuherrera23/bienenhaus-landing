@@ -128,7 +128,8 @@ function renderProperty(item) {
 
   // Page title & SEO
   document.title = `${item.title} · Bienenhaus`;
-  document.querySelector('meta[name="description"]')?.content = desc.slice(0, 160);
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.content = desc.slice(0, 160);
   const ogUrl = document.getElementById('ogUrl');
   if (ogUrl) ogUrl.content = window.location.href;
   const ogTitle = document.getElementById('ogTitle');
