@@ -22,7 +22,7 @@
     var match = path.match(/\/(venta|alquiler)\/\d+/);
     if (match) {
       sessionStorage.setItem('gh_redirect', path);
-      window.location.replace('/propiedad.html');
+      window.location.replace('/bienenhaus-landing/propiedad');
     } else if (path.match(/\/(venta|alquiler)$/)) {
       window.location.replace(path + '.html');
     }
