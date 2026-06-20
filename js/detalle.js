@@ -111,6 +111,14 @@ function renderProperty(item) {
   // Gallery
   buildGallery(_images);
 
+  // Video tour
+  const vWrap = $('vWrap');
+  const vIframe = $('vIframe');
+  if (item.video_url && vWrap && vIframe) {
+    vIframe.src = item.video_url;
+    vWrap.classList.remove('hidden');
+  }
+
   // Map
   const mapQ = encodeURIComponent((item.location || 'Córdoba Capital') + ', Argentina');
   $('mapLink').onclick = () => window.open(`https://maps.google.com/?q=${mapQ}`, '_blank');
@@ -538,10 +546,12 @@ function buildHexGrid(container, w, h) {
 function initHexPulse() {
   const tl = document.getElementById('hzoneTl');
   const br = document.getElementById('hzoneBr');
-  if (!tl && !br) return;
+  const tr = document.getElementById('hzoneTr');
+  if (!tl && !br && !tr) return;
   let allP = [];
   if (tl) allP = allP.concat([...buildHexGrid(tl, 280, 280)]);
   if (br) allP = allP.concat([...buildHexGrid(br, 220, 220)]);
+  if (tr) allP = allP.concat([...buildHexGrid(tr, 200, 220)]);
   if (!allP.length) return;
   let lit = [];
   function pulse() {
@@ -567,6 +577,9 @@ function initHexPulse() {
 
 /* ── Init ─────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', async () => {
+  // Body fade-in
+  document.body.style.opacity = '1';
+
   // Load settings first
   await loadSettings();
 

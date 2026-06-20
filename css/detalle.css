@@ -13,6 +13,7 @@
 .hzone svg { width: 100%; height: 100%; }
 .hzone.tl { top: 0; left: 0; width: 280px; height: 280px; }
 .hzone.br { bottom: 0; right: 0; width: 220px; height: 220px; }
+.hzone.tr { top: 0; right: 0; width: 200px; height: 220px; opacity: .45; }
 .hzone polygon { transition: stroke .9s ease, stroke-width .9s ease; }
 
 /* ===== LAYOUT ===== */
@@ -211,6 +212,7 @@
   aspect-ratio: 16/9; background: var(--s2); transition: all .3s cubic-bezier(.4,0,.2,1);
   box-shadow: 0 20px 40px -12px rgba(0,0,0,.6);
 }
+.vwrap:not(.hidden) { display: block; }
 .vwrap:hover { border-color: rgba(32,184,171,.3); box-shadow: 0 30px 60px -12px rgba(0,0,0,.8); }
 .vwrap iframe { width: 100%; height: 100%; display: block; border: none; }
 
