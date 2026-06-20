@@ -11,9 +11,9 @@
 /* ===== HEXAGON ZONES ===== */
 .hzone { position: fixed; pointer-events: none; z-index: 0; }
 .hzone svg { width: 100%; height: 100%; }
-.hzone.tl { top: 0; left: 0; width: 280px; height: 280px; }
-.hzone.br { bottom: 0; right: 0; width: 220px; height: 220px; }
-.hzone.tr { top: 0; right: 0; width: 200px; height: 220px; opacity: .45; }
+.hzone.tl { top: 0; left: 0; width: 200px; height: 200px; }
+.hzone.br { bottom: 0; right: 0; width: 140px; height: 140px; }
+.hzone.tr { top: 0; right: 0; width: 140px; height: 160px; opacity: .35; }
 .hzone polygon { transition: stroke .9s ease, stroke-width .9s ease; }
 
 /* ===== LAYOUT ===== */
@@ -260,6 +260,7 @@
   min-width: calc(25% - .9rem); flex-shrink: 0; background: var(--s2);
   border: 1px solid rgba(255,255,255,.06); border-radius: 18px; padding: 1rem;
   cursor: pointer; transition: all .3s cubic-bezier(.4,0,.2,1); box-shadow: 0 20px 40px -12px rgba(0,0,0,.6);
+  display: block; text-decoration: none; color: inherit;
 }
 .sc:hover { border-color: rgba(32,184,171,.3); transform: translateY(-6px); box-shadow: 0 30px 60px -12px rgba(0,0,0,.8); }
 .simg { background: var(--s3); border-radius: 10px; aspect-ratio: 16/9; margin-bottom: .75rem; overflow: hidden; }

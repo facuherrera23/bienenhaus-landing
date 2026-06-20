@@ -497,7 +497,8 @@ $('compareModal')?.addEventListener('click', (e) => { if (e.target === e.current
 /* ── Compartir ────────────────────────────────── */
 function shareProperty() {
   const url = window.location.href;
-  const title = _property ? `${_property.title} · USD ${_property.price}` : 'Bienenhaus Propiedades';
+  const priceStr = _property ? (_isRental ? `ARS ${_property.price_ars}` : `USD ${_property.price}`) : '';
+  const title = _property ? `${_property.title} · ${priceStr}` : 'Bienenhaus Propiedades';
   if (navigator.share) {
     navigator.share({ title, text: `Mirá esta propiedad: ${_property?.title}`, url }).catch(() => {});
   } else {
@@ -549,9 +550,9 @@ function initHexPulse() {
   const tr = document.getElementById('hzoneTr');
   if (!tl && !br && !tr) return;
   let allP = [];
-  if (tl) allP = allP.concat([...buildHexGrid(tl, 280, 280)]);
-  if (br) allP = allP.concat([...buildHexGrid(br, 220, 220)]);
-  if (tr) allP = allP.concat([...buildHexGrid(tr, 200, 220)]);
+  if (tl) allP = allP.concat([...buildHexGrid(tl, 200, 200)]);
+  if (br) allP = allP.concat([...buildHexGrid(br, 140, 140)]);
+  if (tr) allP = allP.concat([...buildHexGrid(tr, 140, 160)]);
   if (!allP.length) return;
   let lit = [];
   function pulse() {
