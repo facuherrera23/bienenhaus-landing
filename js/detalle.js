@@ -114,14 +114,16 @@ function renderProperty(item) {
   // Video tour
   const vWrap = $('vWrap');
   const vIframe = $('vIframe');
-  if (item.video_url && vWrap && vIframe) {
+  const vPlaceholder = $('vPlaceholder');
+  if (vWrap) vWrap.classList.remove('hidden');
+  if (item.video_url && vIframe) {
     let url = item.video_url;
     const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
     if (ytMatch) {
       url = `https://www.youtube.com/embed/${ytMatch[1]}`;
     }
     vIframe.src = url;
-    vWrap.classList.remove('hidden');
+    if (vPlaceholder) vPlaceholder.classList.add('hidden');
   }
 
   // Map
