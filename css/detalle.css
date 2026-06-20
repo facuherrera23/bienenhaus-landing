@@ -26,26 +26,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== AMBIENT GLOW ===== */
-.detalle-page::before {
-  content: ''; position: fixed; pointer-events: none; z-index: -1;
-  width: 600px; height: 600px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(32,184,171,.06) 0%, transparent 70%);
-  top: -200px; right: -200px;
-  animation: glowDrift 12s ease-in-out infinite alternate;
-}
-.detalle-page::after {
-  content: ''; position: fixed; pointer-events: none; z-index: -1;
-  width: 500px; height: 500px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(32,184,171,.04) 0%, transparent 70%);
-  bottom: -150px; left: -150px;
-  animation: glowDrift 10s ease-in-out infinite alternate-reverse;
-}
-@keyframes glowDrift {
-  from { transform: translate(0, 0) scale(1); }
-  to { transform: translate(30px, -30px) scale(1.1); }
-}
-
 /* ===== BREADCRUMB ===== */
 .bc { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; padding: .75rem 0 1.75rem; border-bottom: 1px solid rgba(255,255,255,.06); margin-bottom: 2.5rem; }
 .bc a, .bc span { font-family: var(--font-num); font-size: .75rem; font-weight: 500; color: var(--t3, #4a6666); text-decoration: none; letter-spacing: .03em; transition: color .25s; }
