@@ -56,17 +56,17 @@ function renderProperty(item) {
 
   // Badges
   const statusLabel = _isRental
-    ? (item.status === 'alquilada' ? 'Alquilada' : 'Disponible')
-    : (item.status === 'vendida' ? 'Vendida' : 'Disponible');
+    ? (item.status === 'alquilada' ? 'Alquilada' : 'En alquiler')
+    : (item.status === 'vendida' ? 'Vendida' : 'En venta');
   $('badgeStatus').textContent = statusLabel;
-  $('badgeType').textContent = item.type;
+  $('badgeType').textContent = item.type.charAt(0).toUpperCase() + item.type.slice(1);
   if (item.featured) {
     $('badgeFeatured').classList.remove('hidden');
   }
 
   // Title & location
   $('propTitle').textContent = item.title;
-  $('propLocation').textContent = item.location;
+  $('propLocation').querySelector('span').textContent = item.location;
 
   // Price
   if (_isRental) {
