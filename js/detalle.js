@@ -115,7 +115,12 @@ function renderProperty(item) {
   const vWrap = $('vWrap');
   const vIframe = $('vIframe');
   if (item.video_url && vWrap && vIframe) {
-    vIframe.src = item.video_url;
+    let url = item.video_url;
+    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    if (ytMatch) {
+      url = `https://www.youtube.com/embed/${ytMatch[1]}`;
+    }
+    vIframe.src = url;
     vWrap.classList.remove('hidden');
   }
 
