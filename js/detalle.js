@@ -1,748 +1,566 @@
+/* ═══════════════════════════════════════════════════
+   DETALLE DE PROPIEDAD — Nuevo diseño premium
+   Carga datos desde la API de Render
+═════════════════════════════════════════════════ */
+
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
 const ICON_BED  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 012 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>';
 const ICON_BATH = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/><path d="M4 21l1-1.5"/><path d="M20 21l-1-1.5"/></svg>';
 const ICON_SQM  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>';
 const ICON_TYPE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
 
-function esc(v) { return String(v ?? '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-const $ = id => document.getElementById(id);
-
-const _pathRaw = sessionStorage.getItem('gh_redirect') || window.location.pathname;
-sessionStorage.removeItem('gh_redirect');
-// Strip GH Pages repo prefix (e.g. /bienenhaus-landing) if present
-const _path = _pathRaw.replace(/^\/[^/]+\/(venta|alquiler)\//, '/$1/');
-const _ghBase = _path === _pathRaw ? '' : '/' + _pathRaw.split('/')[1];
-const _isRental = _path.startsWith('/alquiler/');
-const _isSale   = _path.startsWith('/venta/');
-const _itemId = parseInt(_path.split('/').pop());
-
 window._whatsapp2 = '';
-function _wa() {
+function getWA() {
   const nums = [window._whatsapp || '5493510000000'];
   if (window._whatsapp2) nums.push(window._whatsapp2);
   return nums[Math.floor(Math.random() * nums.length)];
 }
-const _catalogPath = _isRental ? '/alquiler' : '/venta';
-document.getElementById('backBtn')?.setAttribute('href', _catalogPath);
-document.getElementById('backBtnMobile')?.setAttribute('href', _catalogPath);
-document.getElementById('navVenta')?.classList.toggle('active', _isSale);
-document.getElementById('navAlquiler')?.classList.toggle('active', _isRental);
-document.getElementById('mNavVenta')?.classList.toggle('active', _isSale);
-document.getElementById('mNavAlquiler')?.classList.toggle('active', _isRental);
 
-let _images       = [];
-let _lbIndex      = 0;
-let _lbPlayInterval = null;
-let _lbScale      = 1;
-let _lbPinchDist  = 0;
+const _pathRaw = sessionStorage.getItem('gh_redirect') || window.location.pathname;
+sessionStorage.removeItem('gh_redirect');
+const _path = _pathRaw.replace(/^\/[^/]+\/(venta|alquiler)\//, '/$1/');
+const _isRental = _path.startsWith('/alquiler/');
+const _isSale = _path.startsWith('/venta/');
+const _itemId = parseInt(_path.split('/').pop());
 
-// ── Galería hero premium ─────────────────────────────────────────────
-function buildGaleria(item) {
-  const hero = $('galeriaHero');
-  const images = item.images || [];
-  if (!images.length) {
-    hero.innerHTML = `<div style="height:320px;display:flex;align-items:center;justify-content:center;color:var(--g4)">Sin imágenes</div>`;
-    return;
-  }
-  const n = images.length;
-  const isRental = 'price_ars' in item;
-  const statusBadgeCls = isRental
-    ? (item.status === 'alquilada' ? 'gh-badge--status-sold' : 'gh-badge--status')
-    : (item.status === 'vendida' ? 'gh-badge--status-sold' : 'gh-badge--status');
-  const statusLabel = isRental
-    ? (item.status === 'alquilada' ? 'Alquilada' : 'Disponible')
-    : (item.status === 'vendida' ? 'Vendida' : 'Disponible');
-  const priceHtml = isRental
-    ? `AR$ ${Number(item.price_ars).toLocaleString('es-AR')}<span style="font-size:0.4em;font-family:var(--font-sub);font-weight:400;color:rgba(255,255,255,0.5);margin-left:6px">/mes</span>`
-    : fmtPriceARS(item.price);
-  const priceLabel = isRental ? '' : (item.status === 'vendida' ? 'Precio de venta' : 'Precio de lista');
-  const locationIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+let _property = null;
+let _images = [];
 
-  const badges = `
-    <span class="gh-badge gh-badge--type">${esc(item.type)}</span>
-    <span class="gh-badge ${statusBadgeCls}">${statusLabel}</span>
-    ${item.featured ? '<span class="gh-badge gh-badge--featured">★ Destacado</span>' : ''}`;
-
-  const countBadge = n > 1
-    ? `<div class="gh-counter">
-       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-       ${n} fotos</div>`
-    : '';
-
-  const thumbs = n > 1 ? images.map((url, i) =>
-    `<div class="gh-thumb${i === 0 ? ' active' : ''}" onclick="openLightbox(${i})">
-      <img ${imgAttrs(url, [160])} alt="Foto ${i+1}" loading="${i < 2 ? 'eager' : 'lazy'}"/>
-    </div>`
-  ).join('') + (n > 8 ? `<div class="gh-thumb-more" onclick="openLightbox(8)">+${n - 8}</div>` : '') : '';
-
-  hero.innerHTML = `
-    <div class="gh-main" onclick="openLightbox(0)">
-      <img ${imgAttrs(images[0], [600, 1200, 1800])} alt="${esc(item.title)}" loading="eager"/>
-      <div class="gh-overlay">
-        <div class="gh-badges">${badges}</div>
-        <div class="gh-title">${esc(item.title)}</div>
-        <div class="gh-location">${locationIcon} ${esc(item.location)}</div>
-        <div class="gh-price">${priceHtml}</div>
-        ${priceLabel ? `<div class="gh-price-label">${priceLabel}</div>` : ''}
-      </div>
-      ${countBadge}
-      <button class="gh-fullscreen-btn" onclick="event.stopPropagation();openLightbox(0)" title="Pantalla completa" aria-label="Pantalla completa">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-      </button>
-    </div>
-    ${thumbs ? `<div class="gh-thumbs-wrap"><div class="gh-thumbs">${thumbs}</div></div>` : ''}`;
+/* ── Cargar settings ──────────────────────────── */
+async function loadSettings() {
+  try {
+    const s = await API.getPublicSettings();
+    window._siteSettings = s;
+    window._whatsapp = s.whatsapp || '5493510000000';
+    window._whatsapp2 = s.whatsapp2 || '';
+  } catch {}
 }
 
-function syncHeroThumb(idx) {
-  document.querySelectorAll('.gh-thumb').forEach((t, i) => {
-    t.classList.toggle('active', i === idx);
-  });
-}
-
-function buildThumbs(images) {
-  const wrap = $('dThumbs');
-  if (!images.length || images.length < 2) { wrap.style.display = 'none'; return; }
-  wrap.innerHTML = images.slice(0, 8).map((url, i) =>
-    `<div class="detalle-thumb${i === 0 ? ' active' : ''}" id="thumb-${i}" onclick="openLightbox(${i})">
-       <img ${imgAttrs(url, [160])} alt="Foto ${i+1}" loading="lazy"/>
-     </div>`).join('');
-}
-
-function renderAgentCard(agent) {
-  const wrap = $('dAgentSection');
-  if (!wrap) return;
-  const avatarHtml = agent?.avatar
-    ? `<img src="${esc(agent.avatar)}" alt="${esc(agent.name)}" loading="lazy"/>`
-    : `${(agent?.name?.[0] || 'B')}${(agent?.last?.[0] || 'H')}`;
-  const waNumber = agent?.whatsapp || _wa();
-  const waMsg = encodeURIComponent('Hola Bienenhaus! Quisiera recibir asesoramiento sobre una propiedad.');
-  wrap.innerHTML = `
-    <div class="agent-card">
-      <div class="agent-avatar">${avatarHtml}</div>
-      <div class="agent-info">
-        <div class="agent-name">${esc(agent ? `${agent.name} ${agent.last}` : 'Equipo Bienenhaus')}</div>
-        <div class="agent-license">${agent?.license_number ? `Matrícula CPI N° ${esc(agent.license_number)}` : 'Asesores expertos'}</div>
-        <div class="agent-specialty">${agent?.specialty ? esc(agent.specialty) : 'Propiedades residenciales y comerciales'}</div>
-        <div class="agent-contacts">
-          <a href="https://wa.me/${waNumber}?text=${waMsg}" target="_blank" class="agent-contact-btn agent-contact-btn--wa">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-            WhatsApp
-          </a>
-          <a href="mailto:${esc(agent?.email || 'info@bienenhaus.com.ar')}" class="agent-contact-btn agent-contact-btn--email">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            Email
-          </a>
-        </div>
-        <a href="https://wa.me/${waNumber}?text=${waMsg}" target="_blank" class="agent-main-cta">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-          Contactar Asesor
-        </a>
-      </div>
-    </div>`;
-}
-
-function buildCtaFinal(item) {
-  const wrap = $('dCtaFinal');
-  if (!wrap) return;
-  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa la propiedad *${item.title}* en ${item.location}.\n${window.location.origin}${_ghBase}${_path}`);
-  wrap.innerHTML = `
-    <div class="cta-final">
-      <div class="cta-final-title">¿Te interesa esta propiedad?</div>
-      <div class="cta-final-sub">Nuestro equipo está listo para ayudarte con todos los detalles.</div>
-      <div class="cta-final-btns">
-        <a href="https://wa.me/${_wa()}?text=${waMsg}" target="_blank" class="cta-final-btn cta-final-btn--primary">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-          Solicitar información
-        </a>
-        <a href="https://wa.me/${_wa()}?text=${encodeURIComponent('Hola Bienenhaus! Quisiera coordinar una visita para la propiedad ' + item.title + '.')}" target="_blank" class="cta-final-btn cta-final-btn--outline">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Coordinar visita
-        </a>
-        <a href="/#tasacion" class="cta-final-btn cta-final-btn--outline">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
-          Tasar mi propiedad
-        </a>
-      </div>
-    </div>`;
-}
-
-// ── Lightbox ─────────────────────────────────────────────────────────
-function openLightbox(idx) {
-  _lbIndex = idx; _lbScale = 1;
-  $('lightbox').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  updateLightbox(true);
-  stopAutoPlay();
-}
-
-function closeLightbox() {
-  $('lightbox').classList.add('hidden');
-  document.body.style.overflow = '';
-  stopAutoPlay(); resetZoom();
-}
-
-function updateLightbox(instant = false) {
-  const img  = $('lbImg');
-  const next = $('lbImgNext');
-  if (!_images.length) return;
-  if (instant) {
-    img.src = _images[_lbIndex];
-    next.classList.add('hidden');
-    next.src = '';
-  } else {
-    next.src = _images[(_lbIndex + 1) % _images.length];
-    next.classList.remove('hidden');
-    next.style.opacity = '0';
-    void next.offsetWidth;
-    img.style.transition = 'opacity .35s ease';
-    img.style.opacity = '0';
-    next.style.transition = 'opacity .35s ease';
-    next.style.opacity = '1';
-    setTimeout(() => {
-      img.src = _images[_lbIndex];
-      img.style.transition = 'none';
-      img.style.opacity = '1';
-      next.classList.add('hidden');
-      next.style.opacity = '';
-    }, 380);
-  }
-  $('lbCounter').textContent = `${_lbIndex + 1} / ${_images.length}`;
-  resetZoom();
-  syncThumb();
-}
-
-function lbNav(dir) {
-  _lbIndex = (_lbIndex + dir + _images.length) % _images.length;
-  updateLightbox();
-  stopAutoPlay();
-}
-
-function toggleAutoPlay() {
-  if (_lbPlayInterval) { stopAutoPlay(); return; }
-  const btn = $('lbPlay');
-  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-  btn.classList.add('lb-play--active');
-  _lbPlayInterval = setInterval(() => {
-    _lbIndex = (_lbIndex + 1) % _images.length;
-    updateLightbox();
-  }, 3500);
-}
-
-function stopAutoPlay() {
-  if (_lbPlayInterval) {
-    clearInterval(_lbPlayInterval);
-    _lbPlayInterval = null;
-  }
-  const btn = $('lbPlay');
-  if (btn) {
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-    btn.classList.remove('lb-play--active');
-  }
-}
-
-function resetZoom() {
-  _lbScale = 1;
-  const img = $('lbImg');
-  img.style.transform = ''; img.style.cursor = '';
-}
-
-function applyZoom() {
-  const img = $('lbImg');
-  _lbScale = Math.max(1, Math.min(5, _lbScale));
-  img.style.transform = `scale(${_lbScale})`;
-  img.style.cursor = _lbScale > 1 ? 'grab' : '';
-}
-
-function syncThumb() {
-  const active = document.querySelector('.detalle-thumb.active');
-  if (active) active.classList.remove('active');
-  const thumb = $(`thumb-${_lbIndex}`);
-  if (thumb) {
-    thumb.classList.add('active');
-    thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-  }
-  syncHeroThumb(_lbIndex);
-}
-
-document.addEventListener('keydown', e => {
-  if ($('lightbox').classList.contains('hidden')) return;
-  if (e.key === 'ArrowRight') lbNav(1);
-  if (e.key === 'ArrowLeft')  lbNav(-1);
-  if (e.key === 'Escape')     closeLightbox();
-  if (e.key === ' ' || e.key === 'Space') { e.preventDefault(); toggleAutoPlay(); }
-});
-
-// ── Render ───────────────────────────────────────────────────────────
-function renderItem(item) {
-  window._detailItem = item;
-  if (_isRental) {
-    $('dBreadParent').href = '/alquiler';
-    $('dBreadParent').textContent = 'Alquileres';
-  } else {
-    $('dBreadParent').href = '/#venta';
-    $('dBreadParent').textContent = 'Venta';
-  }
+/* ── Renderizar propiedad ─────────────────────── */
+function renderProperty(item) {
+  _property = item;
   _images = item.images || [];
-  const pageUrl = `https://bienenhaus.onrender.com${_path}`;
-  const desc = `${item.title} — ${item.location}. ${(item.desc || item.description || '').slice(0, 120)}`;
-  const ogImageUrl = _images[0] || 'https://bienenhaus.onrender.com/images/logo-bienenhaus.png';
 
-  document.title = `${item.title} · Bienenhaus`;
-  document.querySelector('meta[name="description"]').content = desc;
-  const canon = document.getElementById('canonicalLink');
-  if (canon) canon.href = pageUrl;
-  const ogUrl = document.getElementById('ogUrl');
-  if (ogUrl) ogUrl.content = pageUrl;
-  const ogTitle = document.getElementById('ogTitle');
-  if (ogTitle) ogTitle.content = `${item.title} · Bienenhaus`;
-  const ogDesc = document.getElementById('ogDesc');
-  if (ogDesc) ogDesc.content = desc;
-  const ogImage = document.getElementById('ogImage');
-  if (ogImage) ogImage.content = ogImageUrl;
-  const twTitle = document.getElementById('twTitle');
-  if (twTitle) twTitle.content = `${item.title} · Bienenhaus`;
-  const twDesc = document.getElementById('twDesc');
-  if (twDesc) twDesc.content = desc;
-  const twImage = document.getElementById('twImage');
-  if (twImage) twImage.content = ogImageUrl;
+  // Loading → content
+  $('detalleLoading').classList.add('hidden');
+  $('detalleContent').classList.remove('hidden');
 
-  buildGaleria(item);
-  buildThumbs(_images);
-
-  // Zoom on hover for hero main image
-  const ghMain = document.querySelector('.gh-main img');
-  if (ghMain && _images.length > 0) {
-    ghMain.style.transition = 'transform .5s ease';
-    ghMain.parentElement.addEventListener('mousemove', e => {
-      const rect = ghMain.parentElement.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top)  / rect.height;
-      ghMain.style.transformOrigin = `${x * 100}% ${y * 100}%`;
-      ghMain.style.transform = 'scale(1.25)';
-    });
-    ghMain.parentElement.addEventListener('mouseleave', () => { ghMain.style.transform = ''; });
-  }
-
-  $('dBreadTitle').textContent = item.title;
+  // Breadcrumb
+  const parentLabel = _isRental ? 'Alquiler' : 'Venta';
+  const parentUrl = _isRental ? '/bienenhaus-landing/alquiler' : '/bienenhaus-landing/venta';
+  $('bcParent').href = parentUrl;
+  $('bcParent').textContent = parentLabel;
+  $('bcTitle').textContent = item.title;
 
   // Badges
-  if (_isRental) {
-    const statusMap = { disponible: 'd-badge-disponible', alquilada: 'd-badge-vendida', oculta: '' };
-    $('dBadges').innerHTML = `
-      <span class="d-badge d-badge-type">${esc(item.type)}</span>
-      <span class="d-badge ${statusMap[item.status] || ''}">${esc(item.status)}</span>
-      ${item.featured ? '<span class="d-badge d-badge-featured">★ Destacado</span>' : ''}`;
-  } else {
-    const statusMap = { disponible: 'd-badge-disponible', vendida: 'd-badge-vendida', oculta: '' };
-    $('dBadges').innerHTML = `
-      <span class="d-badge d-badge-type">${esc(item.type)}</span>
-      <span class="d-badge ${statusMap[item.status] || ''}">${esc(item.status)}</span>
-      ${item.featured ? '<span class="d-badge d-badge-featured">★ Destacada</span>' : ''}`;
+  const statusLabel = _isRental
+    ? (item.status === 'alquilada' ? 'Alquilada' : 'Disponible')
+    : (item.status === 'vendida' ? 'Vendida' : 'Disponible');
+  $('badgeStatus').textContent = statusLabel;
+  $('badgeType').textContent = item.type;
+  if (item.featured) {
+    $('badgeFeatured').classList.remove('hidden');
   }
 
-  $('dTitle').textContent = item.title;
-  $('dLocationText').textContent = item.location;
-
-  // Specs
-  const specIcon = [ICON_BED, ICON_BATH, ICON_SQM, ICON_TYPE];
-  $('dSpecs').innerHTML = [
-    { n: item.beds,  l: 'Dormitorios' },
-    { n: item.baths, l: 'Baños' },
-    { n: `${item.sqm}m²`, l: 'Superficie' },
-    { n: esc(item.type?.[0]?.toUpperCase?.() + item.type?.slice?.(1) || item.type || '—'), l: 'Tipo' },
-  ].map((s, i) => `
-    <div class="dspec">
-      ${specIcon[i]}
-      <div class="dspec-n">${s.n}</div>
-      <div class="dspec-l">${s.l}</div>
-    </div>`).join('');
-
-  $('dDesc').textContent = (item.desc || item.description || 'Sin descripción disponible.');
+  // Title & location
+  $('propTitle').textContent = item.title;
+  $('propLocation').textContent = item.location;
 
   // Price
   if (_isRental) {
-    $('dPrice').textContent = `ARS ${Number(item.price_ars).toLocaleString('es-AR')}`;
-    $('dPriceLabel').textContent = 'Por mes';
-    const exp = item.expenses > 0 ? `+ ARS ${Number(item.expenses).toLocaleString('es-AR')} expensas` : '';
-    $('dExpenses').textContent = exp;
-    const features = [];
-    if (item.furnished) features.push('<span class="card-feature-chip furnished">Amoblado</span>');
-    if (item.min_months > 0) features.push(`<span class="card-feature-chip">Mín. ${item.min_months} meses</span>`);
-    $('dFeatures').innerHTML = features.join('');
+    $('propPrice').textContent = `ARS ${Number(item.price_ars).toLocaleString('es-AR')}`;
+    $('propNote').textContent = '/mes';
   } else {
-    const isSold = item.status === 'vendida';
-    $('dPrice').textContent = fmtPriceARS(item.price);
-    $('dPriceLabel').textContent = isSold ? 'Precio de venta' : 'Precio de lista';
-    $('dExpenses').textContent = '';
-    $('dFeatures').innerHTML = '';
+    $('propPrice').textContent = `USD ${Number(item.price).toLocaleString('es-AR')}`;
+    $('propNote').textContent = item.status === 'vendida' ? 'Precio de venta' : 'Precio de lista';
   }
 
-  // WhatsApp
-  const waLabel = _isRental ? 'alquiler' : 'propiedad';
-  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa ${_isRental ? 'el alquiler' : 'la propiedad'} *${item.title}* en ${item.location}.\n${window.location.origin}${_ghBase}${_path}`);
-  const waUrl = `https://wa.me/${_wa()}?text=${waMsg}`;
-  $('dWhatsapp').href = waUrl;
-  $('waFloat').href   = waUrl;
+  // Features grid
+  const featsHtml = [];
+  if (item.beds) featsHtml.push(`<div class="feat"><div class="fl">Dormitorios</div><div class="fv">${item.beds}</div></div>`);
+  if (item.baths) featsHtml.push(`<div class="feat"><div class="fl">Baños</div><div class="fv">${item.baths}</div></div>`);
+  if (item.sqm) featsHtml.push(`<div class="feat"><div class="fl">Superficie</div><div class="fv">${item.sqm} m²</div></div>`);
+  if (item.type) featsHtml.push(`<div class="feat"><div class="fl">Tipo</div><div class="fv">${esc(item.type)}</div></div>`);
+  if (featsHtml.length) $('propFeats').innerHTML = featsHtml.join('');
+
+  // Description
+  const desc = item.desc || item.description || 'Sin descripción disponible.';
+  $('propDesc').innerHTML = desc.split('\n').map(p => p.trim()).filter(p => p).map(p => `<p>${esc(p)}</p>`).join('');
+
+  // Detail table
+  const tblRows = [];
+  if (item.sqm) tblRows.push(['Superficie total', `${item.sqm} m²`]);
+  if (item.beds) tblRows.push(['Dormitorios', `${item.beds}`]);
+  if (item.baths) tblRows.push(['Baños', `${item.baths}`]);
+  if (item.price) tblRows.push(['Precio', `USD ${Number(item.price).toLocaleString('es-AR')}`]);
+  if (item.location) tblRows.push(['Ubicación', esc(item.location)]);
+  tblRows.push(['Estado', statusLabel]);
+  $('propTable').innerHTML = tblRows.map(r =>
+    `<div class="di"><span class="dl">${r[0]}</span><span class="dv">${r[1]}</span></div>`
+  ).join('');
+
+  // Tags
+  const tags = [item.type, item.location?.split(',')[0], statusLabel];
+  if (item.featured) tags.push('Destacado');
+  $('propTags').innerHTML = tags.filter(Boolean).map(t =>
+    `<span class="tag">${esc(t)}</span>`
+  ).join('');
+
+  // Gallery
+  buildGallery(_images);
 
   // Map
   const mapQ = encodeURIComponent((item.location || 'Córdoba Capital') + ', Argentina');
-  $('dMap').innerHTML = `<iframe
-    src="https://maps.google.com/maps?q=${mapQ}&hl=es&z=14&output=embed"
-    loading="lazy" allowfullscreen title="Ubicación ${esc(item.title)}"></iframe>`;
+  $('mapLink').onclick = () => window.open(`https://maps.google.com/?q=${mapQ}`, '_blank');
+  $('mapLocation').textContent = item.location || 'Córdoba Capital';
+  $('mapSub').textContent = `Click para ver en Google Maps`;
 
-  $('loadingState').classList.add('hidden');
-  $('detalleMain').classList.remove('hidden');
+  // WhatsApp
+  const waLabel = _isRental ? 'alquiler' : 'propiedad';
+  const waMsg = encodeURIComponent(`Hola Bienenhaus! Me interesa ${_isRental ? 'el alquiler' : 'la propiedad'} *${item.title}* en ${item.location}.`);
+  $('waBtn').href = `https://wa.me/${getWA()}?text=${waMsg}`;
+  $('waFloat').href = `https://wa.me/${getWA()}?text=${waMsg}`;
 
-  // CTA Final
-  buildCtaFinal(item);
+  // Form prefill
+  $('cMensaje').value = `Hola, me interesa esta propiedad: ${item.title} - ${item.location}.`;
 
-  // Scroll reveal
-  document.querySelectorAll('.detalle-section, .detalle-price-card, .detalle-share-card, .detalle-card, .detalle-specs, .agent-section, .cta-final').forEach((el, i) => {
-    el.classList.add('reveal');
-    if (i > 0) el.style.transitionDelay = `${Math.min(i * 0.06, 0.4)}s`;
-  });
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  // Page title & SEO
+  document.title = `${item.title} · Bienenhaus`;
+  document.querySelector('meta[name="description"]')?.content = desc.slice(0, 160);
+  const ogUrl = document.getElementById('ogUrl');
+  if (ogUrl) ogUrl.content = window.location.href;
+  const ogTitle = document.getElementById('ogTitle');
+  if (ogTitle) ogTitle.content = `${item.title} · Bienenhaus`;
+  const ogDesc = document.getElementById('ogDesc');
+  if (ogDesc) ogDesc.content = desc.slice(0, 160);
+  const ogImage = document.getElementById('ogImage');
+  if (ogImage && _images[0]) ogImage.content = _images[0];
 
   // View tracking
   const viewUrl = _isRental ? `/api/rentals/${_itemId}/view` : `/api/properties/${_itemId}/view`;
   fetch(viewUrl, { method: 'POST' }).catch(() => {});
 
-  // Load agent
-  loadAgent();
-
-  // Similar properties
+  // Load similares
   loadSimilares(item);
 }
 
-async function loadAgent() {
-  try {
-    const res = await fetch('/api/agents');
-    const agents = await res.json();
-    const agent = Array.isArray(agents) ? agents[0] : null;
-    renderAgentCard(agent);
-  } catch {
-    renderAgentCard(null);
+/* ── Gallery ──────────────────────────────────── */
+function buildGallery(images) {
+  const wrap = $('mainSlides');
+  const tRail = $('tRail');
+  const dotsContainer = $('gDots');
+  const cnt = $('gCnt');
+  if (!images.length) {
+    wrap.innerHTML = '<div class="slide" style="display:flex;align-items:center;justify-content:center;color:var(--t3)">Sin imágenes</div>';
+    return;
   }
-}
-
-let _simInterval = null;
-
-function renderSimilarCard(prop) {
-  const thumb = prop.images?.[0];
-  const thumbHtml = thumb
-    ? `<img class="sim-card-img" ${imgAttrs(thumb, [400, 800])} alt="${esc(prop.title)}" loading="lazy"/>`
-    : `<div class="sim-card-img sim-card-img--empty">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-       </div>`;
-  const isRental = 'price_ars' in prop;
-  const price = isRental
-    ? `AR$ ${Number(prop.price_ars).toLocaleString('es-AR')}/mes`
-    : fmtPriceARS(prop.price, true);
-  const link = isRental ? `/alquiler/${prop.id}` : `/venta/${prop.id}`;
-  return `<div class="carousel-slide">
-    <a href="${link}" class="sim-card">
-      ${thumbHtml}
-      <div class="sim-card-body">
-        <div class="sim-card-title">${esc(prop.title)}</div>
-        <div class="sim-card-loc">
-          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          ${esc(prop.location)}
-        </div>
-        <div class="sim-card-price">${price}</div>
-      </div>
-    </a>
-  </div>`;
-}
-
-function simCarouselScroll() {
-  const track = $('similaresGrid');
-  if (!track) return;
-  const slide = track.querySelector('.carousel-slide');
-  if (!slide) return;
-  const slideW = slide.offsetWidth + 16;
-  const maxScroll = track.scrollWidth - track.clientWidth;
-  let next = track.scrollLeft + slideW;
-  if (next >= maxScroll - 10) next = 0;
-  track.scrollTo({ left: next, behavior: 'smooth' });
-  simUpdateDots(track);
-}
-
-function simUpdateDots(track) {
-  const dots = document.querySelectorAll('.carousel-dot');
-  if (!dots.length) return;
-  const slideW = (track.querySelector('.carousel-slide')?.offsetWidth || 300) + 16;
-  const idx = Math.round(track.scrollLeft / slideW);
-  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-}
-
-function simBuildDots(count) {
-  const wrap = $('simDots');
-  if (!wrap) return;
-  wrap.innerHTML = Array.from({ length: count }, (_, i) =>
-    `<button class="carousel-dot${i === 0 ? ' active' : ''}" data-idx="${i}" aria-label="Ir a slide ${i+1}"></button>`
+  wrap.innerHTML = images.map((url, i) =>
+    `<div class="slide"><img src="${proxyImgUrl(url)}" alt="Foto ${i+1}" loading="${i < 2 ? 'eager' : 'lazy'}"/></div>`
   ).join('');
-  wrap.addEventListener('click', e => {
-    const dot = e.target.closest('.carousel-dot');
-    if (!dot) return;
-    const track = $('similaresGrid');
-    if (!track) return;
-    const slideW = (track.querySelector('.carousel-slide')?.offsetWidth || 300) + 16;
-    track.scrollTo({ left: parseInt(dot.dataset.idx) * slideW, behavior: 'smooth' });
-    simUpdateDots(track);
+
+  tRail.innerHTML = images.map((url, i) =>
+    `<div class="thumb${i === 0 ? ' active' : ''}" data-i="${i}"><img src="${proxyImgUrl(url)}" alt="" loading="lazy"/></div>`
+  ).join('');
+
+  if (images.length <= 1) {
+    document.querySelector('.garr.prev')?.classList.add('hidden');
+    document.querySelector('.garr.next')?.classList.add('hidden');
+    document.querySelector('.gdots')?.classList.add('hidden');
+    document.querySelector('.twrap')?.classList.add('hidden');
+    return;
+  }
+
+  // Dots
+  dotsContainer.innerHTML = images.map((_, i) =>
+    `<span class="gdot${i === 0 ? ' active' : ''}" data-i="${i}"></span>`
+  ).join('');
+
+  // Gallery state
+  let cur = 0, thP = 0;
+  const PV = 4;
+  const TOTAL = images.length;
+  const thumbs = tRail.querySelectorAll('.thumb');
+  const dots = dotsContainer.querySelectorAll('.gdot');
+
+  function setSlide(n) {
+    cur = (n + TOTAL) % TOTAL;
+    wrap.style.transform = 'translateX(-' + (cur * 100) + '%)';
+    cnt.textContent = (cur + 1) + ' / ' + TOTAL;
+    thumbs.forEach((t, i) => t.classList.toggle('active', i === cur));
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    thP = Math.max(0, Math.min(cur, TOTAL - PV));
+    tRail.style.transform = 'translateX(-' + (thP * (100 / PV)) + '%)';
+  }
+
+  $('gPrev').onclick = () => setSlide(cur - 1);
+  $('gNext').onclick = () => setSlide(cur + 1);
+  thumbs.forEach(t => t.addEventListener('click', () => setSlide(+t.dataset.i)));
+  dots.forEach(d => d.addEventListener('click', () => setSlide(+d.dataset.i)));
+
+  let gA = setInterval(() => setSlide(cur + 1), 4000);
+  $('gmain').addEventListener('mouseenter', () => clearInterval(gA));
+  $('gmain').addEventListener('mouseleave', () => { gA = setInterval(() => setSlide(cur + 1), 4000); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') setSlide(cur - 1);
+    if (e.key === 'ArrowRight') setSlide(cur + 1);
   });
+
+  // Thumb scroll arrows
+  let tN = 0;
+  $('tPrev').onclick = () => { tN = Math.max(0, tN - 1); tRail.style.transform = 'translateX(-' + (tN * (100 / PV)) + '%)'; };
+  $('tNext').onclick = () => { tN = Math.min(TOTAL - PV, tN + 1); tRail.style.transform = 'translateX(-' + (tN * (100 / PV)) + '%)'; };
 }
 
-function simStartAutoPlay() {
-  if (_simInterval) clearInterval(_simInterval);
-  _simInterval = setInterval(simCarouselScroll, 4500);
+/* ── Formulario de consulta ───────────────────── */
+function enviarConsulta() {
+  const n = $('cNombre')?.value.trim();
+  const e = $('cEmail')?.value.trim();
+  const t = $('cTel')?.value.trim();
+  const m = $('cMensaje')?.value.trim();
+  const btn = $('cSubmit');
+  const msg = $('cMsg');
+  if (!n || !m) {
+    if (msg) { msg.textContent = 'Completá Nombre y Mensaje.'; msg.className = 'cf-msg cf-msg--err'; }
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  API.sendContact({ name: n, email: e, phone: t, message: m })
+    .then(() => {
+      if (msg) { msg.textContent = '✓ Consulta enviada. Te contactaremos pronto.'; msg.className = 'cf-msg cf-msg--ok'; }
+      $('cNombre').value = ''; $('cEmail').value = ''; $('cTel').value = ''; $('cMensaje').value = '';
+    })
+    .catch(() => {
+      if (msg) { msg.textContent = 'Error de conexión. Intentá de nuevo.'; msg.className = 'cf-msg cf-msg--err'; }
+    })
+    .finally(() => { btn.disabled = false; btn.textContent = 'Enviar consulta →'; });
 }
 
+function abrirWA(e) {
+  e.preventDefault();
+  const nombre = $('cNombre').value.trim();
+  const tel = $('cTel').value.trim();
+  const mensaje = $('cMensaje').value.trim();
+  let texto = `Hola, me interesa la propiedad: *${esc(_property?.title || '')}*`;
+  if (nombre) texto += `\nNombre: ${nombre}`;
+  if (tel) texto += `\nTeléfono: ${tel}`;
+  if (mensaje) texto += `\nMensaje: ${mensaje}`;
+  window.open(`https://wa.me/${getWA()}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+  return false;
+}
+
+/* ── Similares carrusel infinito ──────────────── */
 async function loadSimilares(item) {
-  const grid = $('similaresGrid');
-  if (!grid) return;
+  const rail = $('sRail');
+  const wrap = $('sWrap');
+  const dotsContainer = $('sDots');
+  if (!rail) return;
+
+  let similares = [];
   try {
-    const similares = _isRental
+    similares = _isRental
       ? await API.getRentalSimilares(item.id, 8)
       : await API.getSimilares(item.id, 8);
-    if (!similares || !similares.length) {
-      const section = grid.closest('.similares-section');
-      if (section) section.style.display = 'none';
-      return;
-    }
-    grid.innerHTML = similares.map(renderSimilarCard).join('');
-    simBuildDots(Math.min(similares.length, 8));
-
-    const carousel = $('similaresCarousel');
-    if (carousel) {
-      carousel.addEventListener('mouseenter', () => { if (_simInterval) clearInterval(_simInterval); _simInterval = null; });
-      carousel.addEventListener('mouseleave', simStartAutoPlay);
-    }
-
-    grid.addEventListener('scroll', () => simUpdateDots(grid));
-
-    $('simPrev')?.addEventListener('click', () => {
-      const track = $('similaresGrid');
-      const slideW = (track.querySelector('.carousel-slide')?.offsetWidth || 300) + 16;
-      track.scrollBy({ left: -slideW, behavior: 'smooth' });
-      setTimeout(() => simUpdateDots(track), 400);
-    });
-    $('simNext')?.addEventListener('click', () => {
-      const track = $('similaresGrid');
-      const slideW = (track.querySelector('.carousel-slide')?.offsetWidth || 300) + 16;
-      track.scrollBy({ left: slideW, behavior: 'smooth' });
-      setTimeout(() => simUpdateDots(track), 400);
-    });
-
-    simStartAutoPlay();
-  } catch {
-    const section = grid.closest('.similares-section');
-    if (section) section.style.display = 'none';
-  }
-}
-
-// ── Property inquiry modal ──────────────────────────────────────────
-let _inquiryItem = null;
-
-function openInquiry(item) {
-  _inquiryItem = item;
-  $('inquiryRef').textContent = item.title || 'Propiedad';
-  $('iq_message').value = `Hola, me interesa esta propiedad: ${item.title}\nhttps://bienenhaus.com.ar${_path}`;
-  $('iq_ts').value = Date.now();
-  $('iqMsg').classList.add('hidden');
-  $('inquiryModal').classList.remove('hidden');
-}
-
-function closeInquiry() {
-  $('inquiryModal').classList.add('hidden');
-}
-
-$('inquiryForm')?.addEventListener('submit', async e => {
-  e.preventDefault();
-  if (document.getElementById('iq_website').value) return;
-  const name = $('iq_name').value.trim();
-  const message = $('iq_message').value.trim();
-  if (!name || !message) {
-    $('iqMsg').textContent = 'Completá nombre y mensaje.';
-    $('iqMsg').className = 'cf-msg cf-msg--err';
-    return;
-  }
-  $('iqSubmit').disabled = true;
-  $('iqSubmit').textContent = 'Enviando...';
-  try {
-    const res = await API.sendContact({
-      name,
-      email: $('iq_email').value.trim(),
-      phone: $('iq_phone').value.trim(),
-      message,
-      _ts: $('iq_ts').value,
-      _website: $('iq_website').value,
-    });
-    if (res) {
-      $('iqMsg').textContent = '✓ Consulta enviada. Te contactaremos pronto.';
-      $('iqMsg').className = 'cf-msg cf-msg--ok';
-      $('inquiryForm').reset();
-      $('iq_ts').value = Date.now();
-      setTimeout(closeInquiry, 2500);
-    }
-  } catch {
-    $('iqMsg').textContent = 'Error de conexión.';
-    $('iqMsg').className = 'cf-msg cf-msg--err';
-  } finally {
-    $('iqSubmit').disabled = false;
-    $('iqSubmit').textContent = 'Enviar consulta';
-  }
-});
-
-$('inquiryModal')?.addEventListener('click', e => {
-  if (e.target === $('inquiryModal')) closeInquiry();
-});
-
-// ── Share ────────────────────────────────────────────────────────────
-function shareWA() {
-  const url = encodeURIComponent(window.location.origin + _ghBase + _path);
-  window.open(`https://wa.me/?text=${url}`, '_blank');
-}
-
-function copyLink() {
-  navigator.clipboard.writeText(window.location.origin + _ghBase + _path).then(() => {
-    $('copyMsg').classList.remove('hidden');
-    setTimeout(() => $('copyMsg').classList.add('hidden'), 2500);
-  });
-}
-
-// ── Init ─────────────────────────────────────────────────────────────
-document.getElementById('footerYear').textContent = new Date().getFullYear();
-
-window.addEventListener('scroll', () => {
-  document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50);
-  document.getElementById('backToTop')?.classList.toggle('visible', window.scrollY > 400);
-});
-
-document.getElementById('backToTop')?.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-document.addEventListener('DOMContentLoaded', async () => {
-  $('shareWABtn')?.addEventListener('click', shareWA);
-  $('copyLinkBtn')?.addEventListener('click', copyLink);
-  $('dInquiry')?.addEventListener('click', () => openInquiry(window._detailItem));
-
-  $('hamburger')?.addEventListener('click', () => {
-    $('mobileMenu')?.classList.toggle('open');
-  });
-
-  $('lbClose').addEventListener('click', closeLightbox);
-  $('lbPrev').addEventListener('click',  () => lbNav(-1));
-  $('lbNext').addEventListener('click',  () => lbNav(1));
-  $('lightbox').addEventListener('click', e => {
-    if (e.target === $('lightbox') || e.target === $('lbImg')) closeLightbox();
-  });
-  $('lbPlay').addEventListener('click', toggleAutoPlay);
-  $('lbFullscreen').addEventListener('click', () => {
-    if (!document.fullscreenElement) $('lbImgWrap').requestFullscreen?.();
-    else document.exitFullscreen?.();
-  });
-
-  $('lbImgWrap').addEventListener('wheel', e => {
-    if (e.deltaY < 0) _lbScale = Math.min(5, _lbScale + 0.25);
-    else              _lbScale = Math.max(1, _lbScale - 0.25);
-    applyZoom();
-    e.preventDefault();
-  }, { passive: false });
-
-  $('lbImgWrap').addEventListener('touchstart', e => {
-    if (e.touches.length === 2) {
-      _lbPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-    }
-  }, { passive: true });
-
-  $('lbImgWrap').addEventListener('touchmove', e => {
-    if (e.touches.length === 2) {
-      const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-      const delta = dist - _lbPinchDist;
-      if (Math.abs(delta) > 5) {
-        _lbScale = Math.max(1, Math.min(5, _lbScale + delta * 0.01));
-        applyZoom();
-        _lbPinchDist = dist;
-      }
-    }
-  }, { passive: true });
-
-  let touchStartX = 0;
-  let isSwiping   = false;
-  $('lightbox').addEventListener('touchstart', e => {
-    if (e.touches.length === 1) { touchStartX = e.touches[0].clientX; isSwiping = _lbScale <= 1; }
-  }, { passive: true });
-  $('lightbox').addEventListener('touchmove', e => {
-    if (e.touches.length === 1 && isSwiping) {
-      const dx = e.touches[0].clientX - touchStartX;
-      $('lbImg').style.transform = `scale(${_lbScale}) translateX(${dx * 0.3}px)`;
-    }
-  }, { passive: true });
-  $('lightbox').addEventListener('touchend', e => {
-    if (isSwiping) {
-      const diff = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 50) lbNav(diff > 0 ? 1 : -1);
-      else applyZoom();
-    }
-  }, { passive: true });
-
-  // Load settings for WhatsApp number + footer
-  try {
-    const s = await API.getPublicSettings();
-    window._siteSettings = s;
-    window._whatsapp  = s.whatsapp  || '5493510000000';
-    window._whatsapp2 = s.whatsapp2 || '';
-    if ($('sitePhoneFooter'))   $('sitePhoneFooter').textContent   = s.phone   || '';
-    if ($('siteEmailFooter'))   $('siteEmailFooter').textContent   = s.email   || '';
-    if ($('siteAddressFooter')) $('siteAddressFooter').textContent = s.address || '';
-    const defMsg = encodeURIComponent('Hola Bienenhaus, quisiera recibir información sobre esta propiedad.');
-    document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
-      try {
-        const url = new URL(a.href);
-        const text = url.searchParams.get('text') || defMsg;
-        a.href = `https://wa.me/${_wa()}${text ? '?text=' + encodeURIComponent(text) : ''}`;
-      } catch {
-        a.href = `https://wa.me/${_wa()}?text=${defMsg}`;
-      }
-    });
   } catch {}
-
-  // Set dynamic labels for rental vs property
-  if (_isRental) {
-    $('loadingText').textContent = 'Cargando alquiler...';
-    $('errorTitle').textContent = 'Alquiler no encontrado';
-    $('errorBackBtn').href = '/alquiler';
-    $('errorBackBtn').textContent = 'Volver al listado';
-  }
-
-  if (!_itemId || isNaN(_itemId)) {
-    $('loadingState').classList.add('hidden');
-    $('errorState').classList.remove('hidden');
+  if (!similares || !similares.length) {
+    const sec = rail.closest('.sec');
+    if (sec) sec.style.display = 'none';
     return;
   }
 
+  rail.innerHTML = similares.map(p => {
+    const thumb = p.images?.[0] || '';
+    const price = 'price_ars' in p
+      ? `ARS ${Number(p.price_ars).toLocaleString('es-AR')}/mes`
+      : `USD ${Number(p.price).toLocaleString('es-AR')}`;
+    const link = ('price_ars' in p) ? `/bienenhaus-landing/alquiler/${p.id}` : `/bienenhaus-landing/venta/${p.id}`;
+    return `<a href="${link}" class="sc">
+      <div class="simg">${thumb ? `<img src="${proxyImgUrl(thumb)}" alt="${esc(p.title)}" loading="lazy"/>` : ''}</div>
+      <div class="stitle">${esc(p.title)}</div>
+      <div class="sloc">${esc(p.location)}</div>
+      <div class="sprice">${price}</div>
+      ${p.sqm ? `<span class="sbadge">${p.sqm} m²</span>` : ''}
+    </a>`;
+  }).join('');
+
+  // Infinite carousel
+  const origCards = [...rail.querySelectorAll('.sc')];
+  const ORIG = origCards.length;
+  origCards.forEach(c => rail.appendChild(c.cloneNode(true)));
+  [...origCards].reverse().forEach(c => rail.insertBefore(c.cloneNode(true), rail.firstChild));
+
+  let cpv = 4;
+  const CLONE_BEFORE = ORIG;
+  let pos = CLONE_BEFORE;
+
+  function getCPV() {
+    return window.innerWidth < 580 ? 1 : window.innerWidth < 900 ? 2 : window.innerWidth < 1024 ? 3 : 4;
+  }
+  function cardW() {
+    cpv = getCPV();
+    const gap = 1.2 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    return (wrap.offsetWidth - gap * (cpv - 1)) / cpv + gap;
+  }
+  function applyTransform() { rail.style.transform = 'translateX(-' + (pos * cardW()) + 'px)'; }
+  function jumpTo(p) { rail.style.transition = 'none'; pos = p; applyTransform(); rail.offsetHeight; }
+  function goTo(p) {
+    cpv = getCPV(); pos = p;
+    rail.style.transition = 'transform .55s cubic-bezier(.4,0,.2,1)';
+    applyTransform();
+  }
+  rail.addEventListener('transitionend', () => {
+    if (pos >= CLONE_BEFORE + ORIG) jumpTo(pos - ORIG);
+    if (pos < CLONE_BEFORE) jumpTo(pos + ORIG);
+  });
+  $('sNext').onclick = () => goTo(pos + 1);
+  $('sPrev').onclick = () => goTo(pos - 1);
+
+  let timer = setInterval(() => goTo(pos + 1), 5000);
+  wrap.addEventListener('mouseenter', () => clearInterval(timer));
+  wrap.addEventListener('mouseleave', () => { timer = setInterval(() => goTo(pos + 1), 5000); });
+
+  window.addEventListener('resize', () => {
+    clearTimeout(window._simResize);
+    window._simResize = setTimeout(() => { cpv = getCPV(); rail.style.transition = 'none'; applyTransform(); }, 100);
+  });
+
+  jumpTo(CLONE_BEFORE);
+
+  // Dots
+  const totalDots = Math.max(1, ORIG - getCPV() + 1);
+  dotsContainer.innerHTML = Array.from({ length: totalDots }, (_, i) =>
+    `<span class="sdot${i === 0 ? ' active' : ''}"></span>`
+  ).join('');
+}
+
+/* ── Comparador ───────────────────────────────── */
+let selectedCompare = new Set();
+let compareData = [];
+
+function openCompare() {
+  const modal = $('compareModal');
+  const grid = $('cmpGrid');
+  const counter = $('cmpCounter');
+  const btnCompare = $('btnCompareAction');
+  if (!modal || !_property) return;
+
+  const currentData = {
+    title: _property.title,
+    location: _property.location,
+    price: _isRental ? `ARS ${Number(_property.price_ars).toLocaleString('es-AR')}/mes` : `USD ${Number(_property.price).toLocaleString('es-AR')}`,
+    size: _property.sqm ? `${_property.sqm} m²` : '—',
+    img: _images[0] || '',
+    isCurrent: true
+  };
+
+  const similarCards = [...document.querySelectorAll('.sc')];
+  const similarData = similarCards.slice(0, 8).map(card => ({
+    title: card.querySelector('.stitle')?.textContent || '',
+    location: card.querySelector('.sloc')?.textContent || '',
+    price: card.querySelector('.sprice')?.textContent || '',
+    size: card.querySelector('.sbadge')?.textContent || '',
+    img: card.querySelector('img')?.src || '',
+    isCurrent: false
+  }));
+
+  compareData = [currentData, ...similarData];
+    document.getElementById('cmpSelectView').style.display = 'block';
+  document.getElementById('cmpTableView').style.display = 'none';
+  document.getElementById('cmpSelectActions').style.display = 'flex';
+  document.getElementById('cmpTableActions').style.display = 'none';
+  document.getElementById('cmpTitle').textContent = '🔍 Comparar propiedades';
+
+  grid.innerHTML = '';
+  selectedCompare.clear();
+
+  compareData.forEach((prop, index) => {
+    const card = document.createElement('div');
+    card.className = 'cmp-card';
+    card.dataset.index = index;
+    if (index === 0) { card.classList.add('selected'); selectedCompare.add(index); }
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'cmp-check';
+    checkbox.checked = (index === 0);
+    checkbox.addEventListener('change', (e) => {
+      e.stopPropagation();
+      if (checkbox.checked) {
+        if (selectedCompare.size >= 3) { alert('Solo podés comparar hasta 3 propiedades.'); checkbox.checked = false; return; }
+        selectedCompare.add(index);
+        card.classList.add('selected');
+      } else {
+        selectedCompare.delete(index);
+        card.classList.remove('selected');
+      }
+      updateCompareCounter();
+    });
+
+    card.addEventListener('click', (e) => {
+      if (e.target === checkbox) return;
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+
+    const imgDiv = document.createElement('div');
+    imgDiv.className = 'cmp-img';
+    imgDiv.innerHTML = prop.img ? `<img src="${prop.img}" alt="${esc(prop.title)}" loading="lazy"/>` : '';
+
+    card.appendChild(checkbox);
+    card.appendChild(imgDiv);
+    card.innerHTML += `<div class="cmp-title">${esc(prop.title)}</div><div class="cmp-loc">${esc(prop.location)}</div><div class="cmp-price">${prop.price}</div><div class="cmp-size">${prop.size}</div>`;
+
+    if (prop.isCurrent) {
+      card.innerHTML += '<span class="cmp-badge">Actual</span>';
+    }
+
+    grid.appendChild(card);
+  });
+
+  updateCompareCounter();
+  modal.classList.add('open');
+}
+
+function updateCompareCounter() {
+  const counter = $('cmpCounter');
+  const btnCompare = $('btnCompareAction');
+  const count = selectedCompare.size;
+  if (counter) counter.textContent = count + ' de 3 seleccionada' + (count !== 1 ? 's' : '');
+  if (btnCompare) btnCompare.disabled = count < 2;
+}
+
+function selectAllCompare(select) {
+  const checkboxes = document.querySelectorAll('.cmp-check');
+  checkboxes.forEach((cb, idx) => {
+    if (select && selectedCompare.size >= 3) return;
+    cb.checked = select;
+    const card = cb.closest('.cmp-card');
+    if (select) {
+      if (selectedCompare.size < 3) { selectedCompare.add(idx); card?.classList.add('selected'); }
+      else cb.checked = false;
+    } else { selectedCompare.delete(idx); card?.classList.remove('selected'); }
+  });
+  updateCompareCounter();
+}
+
+function closeCompare() { $('compareModal')?.classList.remove('open'); }
+
+function showComparison() {
+  if (selectedCompare.size < 2) { alert('Seleccioná al menos dos propiedades.'); return; }
+  document.getElementById('cmpSelectView').style.display = 'none';
+  document.getElementById('cmpTableView').style.display = 'block';
+  document.getElementById('cmpSelectActions').style.display = 'none';
+  document.getElementById('cmpTableActions').style.display = 'flex';
+  document.getElementById('cmpTitle').textContent = '📊 Comparación';
+
+  const selectedProps = [];
+  selectedCompare.forEach(i => { const p = compareData[i]; if (p) selectedProps.push(p); });
+
+  const container = $('cmpTableContainer');
+  let html = '<table class="cmp-table"><thead><tr><th>Atributo</th>';
+  selectedProps.forEach(p => { html += `<th class="prop-name${p.isCurrent ? ' prop-current' : ''}">${esc(p.title)}${p.isCurrent ? ' (Actual)' : ''}</th>`; });
+  html += '</tr></thead><tbody>';
+  [ { label: 'Precio', key: 'price', cls: 'highlight-price' },
+    { label: 'Superficie', key: 'size' },
+    { label: 'Ubicación', key: 'location' }
+  ].forEach(attr => {
+    html += `<tr><td class="attr-label">${attr.label}</td>`;
+    selectedProps.forEach(p => { html += `<td${attr.cls ? ` class="${attr.cls}"` : ''}>${esc(p[attr.key] || '—')}</td>`; });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function backToSelect() {
+  document.getElementById('cmpSelectView').style.display = 'block';
+  document.getElementById('cmpTableView').style.display = 'none';
+  document.getElementById('cmpSelectActions').style.display = 'flex';
+  document.getElementById('cmpTableActions').style.display = 'none';
+  document.getElementById('cmpTitle').textContent = '🔍 Comparar propiedades';
+}
+
+$('compareModal')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeCompare(); });
+
+/* ── Compartir ────────────────────────────────── */
+function shareProperty() {
+  const url = window.location.href;
+  const title = _property ? `${_property.title} · USD ${_property.price}` : 'Bienenhaus Propiedades';
+  if (navigator.share) {
+    navigator.share({ title, text: `Mirá esta propiedad: ${_property?.title}`, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => alert('¡Enlace copiado!')).catch(() => prompt('Copiá este enlace:', url));
+  }
+}
+
+/* ── Hex pulse ────────────────────────────────── */
+function initHexPulse() {
+  const allP = [...document.querySelectorAll('.hzone polygon')];
+  if (!allP.length) return;
+  allP.forEach(p => { p.style.transition = 'stroke .9s ease,stroke-width .9s ease'; });
+  let lit = [];
+  function pulse() {
+    lit.forEach(p => {
+      p.setAttribute('stroke', 'rgba(32,184,171,' + p.dataset.base + ')');
+      p.setAttribute('stroke-width', p.dataset.base > 0.14 ? '1.5' : p.dataset.base > 0.08 ? '1.1' : '0.75');
+    });
+    lit = [];
+    const n = Math.floor(Math.random() * 6) + 4;
+    const used = new Set();
+    while (used.size < n && used.size < allP.length) used.add(Math.floor(Math.random() * allP.length));
+    used.forEach(i => {
+      const p = allP[i];
+      p.setAttribute('stroke', 'rgba(32,184,171,0.6)');
+      p.setAttribute('stroke-width', '1.8');
+      lit.push(p);
+    });
+  }
+  pulse();
+  setInterval(pulse, 2800);
+}
+
+/* ── Init ─────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load settings first
+  await loadSettings();
+
+  // Check valid ID
+  if (!_itemId || isNaN(_itemId)) {
+    $('detalleLoading')?.classList.add('hidden');
+    $('detalleError')?.classList.remove('hidden');
+    return;
+  }
+
+  // Fetch property
   try {
     let item;
     if (_isRental) {
       item = await API.getRental(_itemId);
     } else if (_isSale) {
-      const res = await fetch(`/api/properties/${_itemId}`).then(r => r.json());
+      const res = await fetch(`${API_BASE}/api/properties/${_itemId}`).then(r => r.json());
       if (!res.ok) throw new Error('No encontrada');
       item = res.data;
+    } else {
+      throw new Error('URL inválida');
     }
-    renderItem(item);
+    renderProperty(item);
   } catch {
-    $('loadingState').classList.add('hidden');
-    $('errorState').classList.remove('hidden');
+    $('detalleLoading')?.classList.add('hidden');
+    $('detalleError')?.classList.remove('hidden');
   }
+
+  // Hex pulse decoration
+  initHexPulse();
 });
 
-window.openLightbox  = openLightbox;
-window.closeLightbox = closeLightbox;
-window.shareWA       = shareWA;
-window.copyLink      = copyLink;
-window.openInquiry   = openInquiry;
-window.closeInquiry  = closeInquiry;
+window.enviarConsulta = enviarConsulta;
+window.abrirWA = abrirWA;
+window.openCompare = openCompare;
+window.closeCompare = closeCompare;
+window.selectAllCompare = selectAllCompare;
+window.showComparison = showComparison;
+window.backToSelect = backToSelect;
+window.shareProperty = shareProperty;

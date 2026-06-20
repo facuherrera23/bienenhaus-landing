@@ -20,8 +20,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="/bienenhaus-landing/css/styles.min.css"/>
-  <link rel="stylesheet" href="/bienenhaus-landing/css/detalle.min.css"/>
+  <link rel="stylesheet" href="/bienenhaus-landing/css/styles.css?v=2B"/>
+  <link rel="stylesheet" href="/bienenhaus-landing/css/detalle.css?v=2B"/>
   <link rel="manifest" href="/bienenhaus-landing/manifest.json"/>
   <meta name="theme-color" content="#20b8ab"/>
   <link rel="icon" type="image/x-icon" href="/bienenhaus-landing/images/favicon.ico"/>
@@ -29,7 +29,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/bienenhaus-landing/images/favicon-192x192.png"/>
   <link rel="apple-touch-icon" href="/bienenhaus-landing/images/apple-touch-icon.png"/>
   <script>window.__API_BASE__="https://bienenhaus.onrender.com";</script>
-
+</head>
 <body class="detalle-body">
 
 <!-- NAVBAR -->
@@ -47,7 +47,7 @@
       <a href="/bienenhaus-landing/alquiler" class="nav-link" id="navAlquiler">Alquilar</a>
       <a href="#agents" class="nav-link">Equipo</a>
       <a href="#contact" class="nav-link">Contacto</a>
-      <a href="#" class="btn btn-outline nav-cta hide-mobile" id="backBtn">← Volver</a>
+      <a href="/bienenhaus-landing/venta" class="btn btn-outline nav-cta hide-mobile" id="backBtn">← Volver</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Menú">
       <span></span><span></span><span></span>
@@ -59,181 +59,202 @@
     <a href="/bienenhaus-landing/alquiler" class="nav-link" id="mNavAlquiler">Alquilar</a>
     <a href="#agents" class="nav-link">Equipo</a>
     <a href="#contact" class="nav-link">Contacto</a>
-    <a href="#" class="btn btn-outline" id="backBtnMobile" style="margin-top:8px">← Volver al catálogo</a>
+    <a href="/bienenhaus-landing/venta" class="btn btn-outline" id="backBtnMobile" style="margin-top:8px">← Volver al catálogo</a>
   </div>
 </nav>
 
-<!-- ESTADO DE CARGA -->
-<div id="loadingState" class="detalle-loading">
-  <div class="loading-spinner"></div>
-      <div class="skeleton-detail-hero"></div>
-      <div class="skeleton-detail-content">
-        <div class="skeleton-detail-main">
-          <div class="skeleton-line skeleton-line--lg skeleton-line--w40"></div>
-          <div class="skeleton-line skeleton-line--sm skeleton-line--w60"></div>
-          <div class="skeleton-line skeleton-line--w30" style="margin-top:4px"></div>
-          <div class="skeleton-specs" style="margin-top:16px">
-            <div class="skeleton-line skeleton-line--spec"></div>
-            <div class="skeleton-line skeleton-line--spec"></div>
-            <div class="skeleton-line skeleton-line--spec"></div>
-            <div class="skeleton-line skeleton-line--spec"></div>
-          </div>
-          <div style="margin-top:20px">
-            <div class="skeleton-line"></div>
-            <div class="skeleton-line skeleton-line--w90"></div>
-            <div class="skeleton-line skeleton-line--w80"></div>
-            <div class="skeleton-line skeleton-line--w70"></div>
-          </div>
-        </div>
-        <div class="skeleton-detail-aside">
-          <div class="skeleton-line skeleton-line--lg skeleton-line--w50"></div>
-          <div class="skeleton-line skeleton-line--sm skeleton-line--w40" style="margin-top:6px"></div>
-          <div class="skeleton-line" style="margin-top:16px;height:40px;border-radius:8px"></div>
-          <div class="skeleton-line" style="margin-top:8px;height:40px;border-radius:8px"></div>
-        </div>
-      </div>
-    </div>
+<!-- HEX DECORATION -->
+<svg class="hzone tl" width="280" height="280" viewBox="0 0 280 280" fill="none" id="hzone">
+  <defs><pattern id="hex" width="22" height="38.11" patternUnits="userSpaceOnUse"><path d="M11 0l11 6.35v12.7L11 25.4 0 19.05V6.35z" stroke="rgba(32,184,171,0.07)" stroke-width=".5" fill="none"/><path d="M11 12.7l11 6.35v12.7L11 38.1 0 31.75V19.05z" stroke="rgba(32,184,171,0.05)" stroke-width=".5" fill="none"/></pattern></defs>
+  <rect width="280" height="280" fill="url(#hex)" opacity=".3"/>
+</svg>
+<svg class="hzone br" width="220" height="220" viewBox="0 0 220 220" fill="none">
+  <defs><pattern id="hex2" width="22" height="38.11" patternUnits="userSpaceOnUse"><path d="M11 0l11 6.35v12.7L11 25.4 0 19.05V6.35z" stroke="rgba(32,184,171,0.07)" stroke-width=".5" fill="none"/></pattern></defs>
+  <rect width="220" height="220" fill="url(#hex2)" opacity=".2"/>
+</svg>
 
-    <!-- ERROR -->
-<div id="errorState" class="detalle-error hidden">
-  <p class="error-title" id="errorTitle">No encontrado</p>
-  <a href="/bienenhaus-landing/" class="btn btn-outline" id="errorBackBtn">Volver al inicio</a>
+<!-- LOADING -->
+<div id="detalleLoading" class="detalle-loading">
+  <div class="spinner"></div>
 </div>
 
-  <!-- CONTENIDO PRINCIPAL -->
-<main id="detalleMain" class="hidden">
+<!-- ERROR -->
+<div id="detalleError" class="detalle-error hidden">
+  <h2>Propiedad no encontrada</h2>
+  <p>El enlace puede ser inválido o la propiedad fue eliminada.</p>
+  <a href="/bienenhaus-landing/venta" class="btn btn-outline">Ver propiedades en venta</a>
+</div>
 
-  <!-- GALERÍA HERO -->
-  <div id="galeriaHero" class="galeria-hero">
-    <!-- Inyectado por JS -->
-  </div>
+<!-- CONTENIDO PRINCIPAL -->
+<div id="detalleContent" class="detalle-page hidden">
 
-  <!-- LIGHTBOX -->
-  <div id="lightbox" class="lightbox hidden">
-    <button class="lb-close" id="lbClose">×</button>
-    <button class="lb-arrow lb-prev" id="lbPrev">&#8249;</button>
-    <button class="lb-arrow lb-next" id="lbNext">&#8250;</button>
-    <div class="lb-img-wrap" id="lbImgWrap">
-      <img id="lbImg" src="" alt="" class="lb-img"/>
-      <img id="lbImgNext" src="" alt="" class="lb-img lb-img--next hidden"/>
-    </div>
-    <div class="lb-counter" id="lbCounter"></div>
-    <button class="lb-play" id="lbPlay" title="Presentación automática">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    </button>
-    <button class="lb-fullscreen" id="lbFullscreen" title="Pantalla completa">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-    </button>
-  </div>
+  <nav class="bc">
+    <a href="/bienenhaus-landing/">Inicio</a>
+    <span class="sep">›</span>
+    <a href="/bienenhaus-landing/venta" id="bcParent">Venta</a>
+    <span class="sep">›</span>
+    <span class="cur" id="bcTitle">—</span>
+  </nav>
 
-  <!-- DETALLE -->
-  <div class="detalle-container">
-    <div class="detalle-grid">
+  <div class="pgrid">
 
-      <!-- Columna principal -->
-      <div class="detalle-main">
+    <!-- COLUMNA IZQUIERDA: Info -->
+    <div class="info">
 
-        <!-- Breadcrumb -->
-        <div class="detalle-breadcrumb">
-          <a href="/bienenhaus-landing/">Inicio</a>
-          <span>›</span>
-          <a href="/bienenhaus-landing/venta" id="dBreadParent">Venta</a>
-          <span>›</span>
-          <span id="dBreadTitle">—</span>
-        </div>
-
-        <!-- Badges -->
-        <div class="detalle-badges" id="dBadges"></div>
-
-        <!-- Título -->
-        <h1 class="detalle-titulo" id="dTitle">—</h1>
-        <p class="detalle-location" id="dLocation">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span id="dLocationText">—</span>
-        </p>
-
-        <!-- Specs -->
-        <div class="detalle-specs" id="dSpecs"></div>
-
-        <!-- Descripción -->
-        <div class="detalle-section">
-          <h2 class="detalle-section-title">Descripción</h2>
-          <p class="detalle-desc" id="dDesc"></p>
-        </div>
-
-        <!-- Mapa -->
-        <div class="detalle-section">
-          <h2 class="detalle-section-title">Ubicación</h2>
-          <div class="detalle-map" id="dMap"></div>
-        </div>
-
+      <!-- Badges -->
+      <div class="brow">
+        <span class="badge ba" id="badgeStatus">Disponible</span>
+        <span class="badge bn" id="badgeType">Casa</span>
+        <span class="badge ba hidden" id="badgeFeatured">★ Destacado</span>
       </div>
 
-      <!-- Columna lateral -->
-      <aside class="detalle-aside">
+      <h1 id="propTitle">—</h1>
+      <div class="lloc" id="propLocation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>—</span>
+      </div>
 
-        <!-- Precio + CTA -->
-        <div class="detalle-price-card" id="dPriceCard">
-          <div class="detalle-precio" id="dPrice">—</div>
-          <div class="detalle-precio-label" id="dPriceLabel"></div>
-          <div class="detalle-expenses" id="dExpenses"></div>
-          <div id="dFeatures" class="detalle-features"></div>
-          <a id="dWhatsapp" href="#" target="_blank" class="btn btn-wapp btn-wapp-full detalle-wa-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            Consultar por WhatsApp
-          </a>
-          <a href="#contact" class="btn btn-outline">
-            Formulario de contacto
-          </a>
-          <button id="dInquiry" class="btn btn-primary">
-            Consultar por esta propiedad
-          </button>
+      <div class="prow">
+        <span class="price" id="propPrice">—</span>
+        <span class="pnote" id="propNote"></span>
+      </div>
+
+      <!-- Features grid -->
+      <div class="feats" id="propFeats"></div>
+
+      <!-- Description -->
+      <div class="dblk">
+        <h2>Descripción</h2>
+        <div id="propDesc"></div>
+      </div>
+
+      <!-- Detail table -->
+      <div class="dblk">
+        <h2>Detalles</h2>
+        <div class="dtbl" id="propTable"></div>
+      </div>
+
+      <!-- Tags -->
+      <div class="tags" id="propTags"></div>
+
+      <!-- Map -->
+      <div class="sec">
+        <h2>Ubicación</h2>
+        <div class="mapbox" id="mapLink">
+          <div class="mt" id="mapLocation">Córdoba Capital</div>
+          <div class="ms" id="mapSub">Click para ver en Google Maps</div>
         </div>
+      </div>
 
-        <!-- Mini galería thumbnails -->
-        <div class="detalle-card">
-          <div class="share-title">Todas las fotos</div>
-          <div class="detalle-thumbs" id="dThumbs"></div>
-        </div>
-
-        <!-- Compartir -->
-        <div class="detalle-share-card">
-          <div class="share-title">Compartir propiedad</div>
-          <div class="share-btns">
-            <button class="share-btn" id="shareWABtn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              WhatsApp
-            </button>
-            <button class="share-btn" id="copyLinkBtn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-              Copiar enlace
-            </button>
-          </div>
-          <div id="copyMsg" class="copy-msg hidden">¡Enlace copiado!</div>
-        </div>
-
-      </aside>
     </div>
+
+    <!-- COLUMNA DERECHA: Galería + Contacto -->
+    <div class="gpanel">
+
+      <!-- Gallery main -->
+      <div class="gmain" id="gmain">
+        <div class="slides" id="mainSlides">
+          <div class="slide" style="display:flex;align-items:center;justify-content:center;color:var(--t3)">Cargando...</div>
+        </div>
+        <button class="garr prev" id="gPrev">&#8249;</button>
+        <button class="garr next" id="gNext">&#8250;</button>
+        <div class="gcnt" id="gCnt">1 / 1</div>
+        <div class="gbadge" id="gType"></div>
+      </div>
+      <div class="gdots" id="gDots"></div>
+
+      <!-- Thumbs rail -->
+      <div class="twrap">
+        <button class="tharr prev" id="tPrev">&#8249;</button>
+        <div class="trail" id="tRail"></div>
+        <button class="tharr next" id="tNext">&#8250;</button>
+      </div>
+
+      <!-- Contact card -->
+      <div class="ccard">
+        <h2>Consultar</h2>
+        <div class="sub">Respondemos en minutos</div>
+        <form class="cf" onsubmit="event.preventDefault();enviarConsulta()">
+          <div class="r2">
+            <input type="text" id="cNombre" placeholder="Nombre *" required/>
+            <input type="email" id="cEmail" placeholder="Email"/>
+          </div>
+          <input type="tel" id="cTel" placeholder="Teléfono"/>
+          <textarea id="cMensaje" placeholder="Mensaje *" required></textarea>
+          <div id="cMsg" class="cf-msg"></div>
+          <div class="cf-actions">
+            <button type="submit" class="btnp" id="cSubmit">Enviar consulta →</button>
+            <a href="#" class="btn-wa" id="waBtn" onclick="return abrirWA(event)">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp
+            </a>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
   </div>
 
-  <!-- Propiedades similares — Carrusel -->
-  <section class="similares-section">
-    <h2 class="similares-title">Propiedades similares en la zona</h2>
-    <div class="similares-carousel" id="similaresCarousel">
-      <div id="similaresGrid" class="carousel-track"></div>
-      <button class="carousel-btn carousel-prev" id="simPrev" aria-label="Anterior">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-      <button class="carousel-btn carousel-next" id="simNext" aria-label="Siguiente">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
-      </button>
+  <!-- SIMILARES -->
+  <section class="sec">
+    <div class="shdr">
+      <h2>Propiedades similares</h2>
+      <div class="actions">
+        <button class="btn-icon" onclick="openCompare()">
+          <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4 4l16 16M20 4L4 16" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+          Comparar
+        </button>
+        <a href="/bienenhaus-landing/venta">Ver todas →</a>
+      </div>
     </div>
-    <div class="carousel-dots" id="simDots"></div>
+    <div class="swrap" id="sWrap">
+      <div class="srail" id="sRail"></div>
+      <button class="sarr prev" id="sPrev">&#8249;</button>
+      <button class="sarr next" id="sNext">&#8250;</button>
+    </div>
+    <div class="sdots" id="sDots"></div>
   </section>
 
-</main>
+</div>
+
+<!-- COMPARADOR MODAL -->
+<div class="modal-overlay" id="compareModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="cmpTitle">🔍 Comparar propiedades</h2>
+      <span class="counter" id="cmpCounter">0 de 3 seleccionadas</span>
+    </div>
+
+    <!-- Select view -->
+    <div id="cmpSelectView">
+      <div class="cmp-grid" id="cmpGrid"></div>
+    </div>
+
+    <!-- Table view -->
+    <div id="cmpTableView" style="display:none">
+      <div class="cmp-table-wrap" id="cmpTableContainer"></div>
+    </div>
+
+    <!-- Select actions -->
+    <div class="modal-footer" id="cmpSelectActions">
+      <div class="select-actions">
+        <button onclick="selectAllCompare(true)">Seleccionar todo</button>
+        <button onclick="selectAllCompare(false)">Deseleccionar</button>
+      </div>
+      <div style="display:flex;gap:.6rem">
+        <button class="btn-close" onclick="closeCompare()">Cerrar</button>
+        <button class="btn-cmp" id="btnCompareAction" onclick="showComparison()" disabled>Comparar →</button>
+      </div>
+    </div>
+
+    <!-- Table actions -->
+    <div class="modal-footer" id="cmpTableActions" style="display:none">
+      <button class="btn-close" onclick="backToSelect()">← Volver a selección</button>
+      <button class="btn-close" onclick="closeCompare()">Cerrar</button>
+    </div>
+  </div>
+</div>
 
 <!-- WhatsApp flotante -->
 <a href="https://wa.me/5493510000000?text=Hola%20Bienenhaus%2C%20quisiera%20recibir%20informaci%C3%B3n."
@@ -243,43 +264,10 @@
   </svg>
 </a>
 
-<!-- Botón volver arriba -->
+<!-- Back to top -->
 <button class="back-to-top" id="backToTop" title="Volver arriba">↑</button>
 
-<!-- Consulta modal -->
-<div id="inquiryModal" class="modal-backdrop hidden">
-  <div class="modal-box modal-form-box" style="max-width:460px;padding:28px;border-radius:12px">
-    <button class="modal-close" onclick="closeInquiry()" style="position:absolute;top:12px;right:16px">×</button>
-    <h3 style="margin:0 0 6px 0;font-size:18px">Consultar por esta propiedad</h3>
-    <p id="inquiryRef" style="font-size:12px;color:var(--g3);margin:0 0 18px 0"></p>
-    <form id="inquiryForm">
-      <input type="hidden" id="iq_ts"/>
-      <input type="text" id="iq_website" style="display:none" tabindex="-1" autocomplete="off"/>
-      <div class="form-group">
-        <label class="form-label">Nombre *</label>
-        <input type="text" id="iq_name" class="form-input" required/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" id="iq_email" class="form-input"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Teléfono</label>
-        <input type="tel" id="iq_phone" class="form-input"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mensaje *</label>
-        <textarea id="iq_message" class="form-input" rows="3" required></textarea>
-      </div>
-      <div id="iqMsg" class="cf-msg hidden"></div>
-      <button type="submit" id="iqSubmit" class="btn btn-primary btn-full">Enviar consulta</button>
-    </form>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════════
-     FOOTER — Simplified
-════════════════════════════════════════════════ -->
+<!-- FOOTER -->
 <footer id="footer">
   <div class="footer-inner">
     <div class="footer-brand-col">
@@ -339,8 +327,7 @@
 </footer>
 
 <script src="/bienenhaus-landing/js/api.min.js"></script>
-<script src="/bienenhaus-landing/js/detalle.min.js"></script>
-<link rel="manifest" href="/bienenhaus-landing/manifest.json"/>
+<script src="/bienenhaus-landing/js/detalle.js"></script>
 <script src="/bienenhaus-landing/js/sw-register.min.js"></script>
 </body>
 </html>
