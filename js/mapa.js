@@ -28,7 +28,8 @@ async function initMapa(containerId, kind) {
   }).addTo(map);
 
   try {
-    const res = await fetch('/api/map/data', { credentials: 'same-origin' });
+    const base = window.__API_BASE__ || '';
+    const res = await fetch(base + '/api/map/data');
     const d = await res.json();
     if (!d.ok) throw new Error(d.error);
     const data = d.data;

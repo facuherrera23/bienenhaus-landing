@@ -287,7 +287,7 @@ window.renderProperties = function(props, pagination) {
 function injectCompareButtons() {
   document.querySelectorAll('.prop-card').forEach(function(card) {
     if (card.querySelector('.btn-compare')) return;
-    var link = card.querySelector('a[href^="/venta/"]');
+    var link = card.querySelector('a[href^="/bienenhaus-landing/venta/"]');
     if (!link) return;
     var pid = parseInt(link.getAttribute('href').split('/').pop());
     if (!pid || isNaN(pid)) return;
