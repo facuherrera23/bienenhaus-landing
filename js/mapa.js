@@ -66,7 +66,7 @@ async function initMapa(containerId, kind) {
       const priceStr = item.kind === 'alquiler'
         ? `$${Number(item.price).toLocaleString('es-AR')}/mes`
         : `USD ${Number(item.price).toLocaleString('es-AR')}`;
-      const link = item.kind === 'alquiler' ? `/alquiler/${item.id}` : `/venta/${item.id}`;
+      const link = item.kind === 'alquiler' ? `/bienenhaus-landing/alquiler/${item.id}` : `/bienenhaus-landing/venta/${item.id}`;
       const img = item.image
         ? `<img src="${item.image}" style="width:100%;height:100px;object-fit:cover;border-radius:3px;margin-bottom:6px"/>`
         : '';
