@@ -25,6 +25,11 @@ const _isRental = _path.startsWith('/alquiler/');
 const _isSale = _path.startsWith('/venta/');
 const _itemId = parseInt(_path.split('/').pop());
 
+// Restaurar la URL original del deep link en la barra de direcciones
+if (_pathRaw.match(/\/(venta|alquiler)\/\d+/)) {
+  history.replaceState(null, '', _pathRaw);
+}
+
 let _property = null;
 let _images = [];
 
