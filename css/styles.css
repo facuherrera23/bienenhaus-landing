@@ -27,48 +27,75 @@
 ╔═══════════════════════════════════════════════════════════════════*/
 
 :root {
-  --bg:          #000000;
-  --s1:          #080808;
-  --s2:          #0d0d0d;
-  --s3:          #141414;
-  --s4:          #1c1c1c;
-  --white:       #ffffff;
+  /* ── Aliases legacy → DS (backward compatibility) ── */
+  --bg:          var(--ds-color-bg);
+  --s1:          var(--ds-color-surface-1);
+  --s2:          var(--ds-color-surface-2);
+  --s3:          var(--ds-color-surface-3);
+  --s4:          var(--ds-color-surface-4);
+  --white:       var(--ds-color-text);
   --g1:          #e0e0e0;
-  --g2:          #9a9a9a;
-  --g3:          #555555;
-  --g4:          #2a2a2a;
-  --b:           rgba(255,255,255,0.06);
-  --bm:          rgba(255,255,255,0.12);
-  --bh:          rgba(255,255,255,0.22);
-  --accent:      #20b8ab;
-  --accent-dark: #178c81;
+  --g2:          var(--ds-color-text-secondary);
+  --g3:          var(--ds-color-text-muted);
+  --g4:          var(--ds-color-text-disabled);
+  --b:           var(--ds-color-border);
+  --bm:          var(--ds-color-border-medium);
+  --bh:          var(--ds-color-border-strong);
+  --accent:      var(--ds-color-accent);
+  --accent-dark: var(--ds-color-accent-dark);
   --accent-glow: rgba(32,184,171,0.18);
   --accent-b:    rgba(32,184,171,0.28);
-  --accent-warm: #20b8ab;
+  --accent-warm:  var(--ds-color-accent-warm);
   --accent-warm-b: rgba(32,184,171,0.2);
-  --danger:      #cc3535;
+  --danger:      var(--ds-color-error);
   --danger-bg:   rgba(204,53,53,0.15);
-  /* Letter-spacing scale */
-  --ls-0:        0;
-  --ls-tight:    -0.02em;
-  --ls-narrow:   0.02em;
-  --ls-wide:     0.06em;
-  --ls-label:    0.1em;
-  --ls-badge:    0.12em;
-  --ls-nav:      0.12em;
-  --ls-field:    0.12em;
-  --ls-section:  0.14em;
-  --ls-modal:    0.16em;
-  --ls-eyebrow:  0.18em;
-  --ls-brand:    0.2em;
-  --ls-dots:     2px;
-  --font-body:    'Poppins', sans-serif;
-  --font-title:   'Anton', Impact, sans-serif;
-  --font-num:     'Montserrat', sans-serif;
-  --font-sub:     var(--font-body);
-  --font-text:    var(--font-body);
-  --font-elegant: 'Quicksand', sans-serif;
-  --font-body-alt:'Open Sans', sans-serif;
+
+  /* ── Letter-spacing aliases ── */
+  --ls-0:        var(--ds-tracking-none);
+  --ls-tight:    var(--ds-tracking-tight);
+  --ls-narrow:   var(--ds-tracking-narrow);
+  --ls-wide:     var(--ds-tracking-wide);
+  --ls-label:    var(--ds-tracking-label);
+  --ls-badge:    var(--ds-tracking-badge);
+  --ls-nav:      var(--ds-tracking-nav);
+  --ls-field:    var(--ds-tracking-field);
+  --ls-section:  var(--ds-tracking-section);
+  --ls-modal:    var(--ds-tracking-modal);
+  --ls-eyebrow:  var(--ds-tracking-eyebrow);
+  --ls-brand:    var(--ds-tracking-brand);
+  --ls-dots:     var(--ds-tracking-dots);
+
+  /* ── Typography aliases ── */
+  --font-body:     var(--ds-font-body);
+  --font-title:    var(--ds-font-title);
+  --font-num:      var(--ds-font-num);
+  --font-sub:      var(--font-body);
+  --font-text:     var(--font-body);
+  --font-elegant:  var(--ds-font-elegant);
+  --font-body-alt: 'Open Sans', sans-serif;
+
+  /* ── Orphan variable aliases (fixes for previously undefined vars) ── */
+  --primary:    var(--ds-color-accent);
+  --text-muted: var(--ds-color-text-muted);
+  --t3:         var(--ds-color-text-muted);
+  --text:       var(--ds-color-text);
+  --muted:      var(--ds-color-text-muted);
+  --border:     var(--ds-color-border);
+  --radius:     var(--ds-radius-md);
+  --surface:    var(--ds-color-surface-1);
+  --surface2:   var(--ds-color-surface-2);
+  --g:          var(--ds-color-text-secondary);
+  --g6:         var(--g3);
+  --g7:         var(--g4);
+  --g8:         var(--g4);
+  --g9:         var(--g4);
+  --bg2:        var(--ds-color-surface-2);
+  --clr1a:      var(--ds-color-accent);
+  --green:      var(--ds-color-success);
+  --red:        var(--danger);
+  --success:    var(--ds-color-success);
+
+  /* ── Misc ── */
   --hero-bg-img: url(/bienenhaus-landing/images/hero-bg.webp);
 }
 
