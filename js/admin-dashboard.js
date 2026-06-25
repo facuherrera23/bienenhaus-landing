@@ -84,6 +84,14 @@ function _trendBadge(current, previous) {
   return `<span class="dash-trend ${cls}">${arr} ${Math.abs(pct)}%</span>`;
 }
 
+function crmSub(s) {
+  if (!s.leads_total) return 'Sin prospectos aún';
+  const parts = [];
+  if (s.leads_by_status?.nuevo) parts.push(`${s.leads_by_status.nuevo} nuevos`);
+  if (s.leads_unassigned) parts.push(`${s.leads_unassigned} sin agente`);
+  return parts.join(' · ');
+}
+
 async function loadDashboard() {
   const wrap = $('dashboardContent');
   if (!wrap) return;
@@ -113,6 +121,7 @@ async function loadDashboard() {
       { label: 'Mensajes',        n: s.total_msgs,   sub: `${s.unread_msgs} sin leer · ${s.msgs_this_month} este mes`, accent: true  },
       { label: 'Conv. vistas→msgs', n: `${s.conversion_rate}%`, sub: 'Tasa de conversión', accent: false },
       { label: 'Agentes',      n: s.agents,       sub: 'En el equipo',                  accent: true  },
+      { label: 'Prospectos',   n: s.leads_total || 0, sub: crmSub(s), accent: true  },
     ];
 
     const rCards = [

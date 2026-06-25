@@ -30,7 +30,8 @@ const DESTINOS = [['venta','Venta'],['locacion','Locación'],['garantia','Garant
 function esc(v) { return String(v ?? '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 const COMP_ATTRS = ['comp_antiguedad','comp_estacionamiento','comp_habitaciones',
-                    'comp_ubicacion','comp_estado_mantenimiento','comp_comodidades'];
+                    'comp_ubicacion','comp_estado_mantenimiento','comp_comodidades',
+                    'comp_orientacion','comp_vistas','comp_nivel_piso'];
 const AUTO_ATTRS = ['comp_antiguedad','comp_estacionamiento','comp_habitaciones'];
 
 function _calcCoef(c) {
@@ -76,7 +77,7 @@ function renderAppraisals() {
           ${a.valor_estimado_usd ? `<div style="color:var(--accent);font-size:13px;font-weight:600;margin-top:4px">${_fmtUSD(a.valor_estimado_usd)}</div>` : ''}
         </div>
         <div style="text-align:right;flex-shrink:0;margin-left:12px">
-          <div style="color:var(--g3);font-size:10px">${a.updated_at ? new Date(a.updated_at).toLocaleDateString() : ''}</div>
+          <div style="color:var(--g3);font-size:10px">${a.updated_at ? window.formatDateShort(a.updated_at) : ''}</div>
           <div style="color:var(--g4);font-size:10px;margin-top:2px">${a.total_comparables || 0} comp.</div>
         </div>
       </div>
@@ -119,9 +120,11 @@ async function loadAppraisals() {
   try {
     const incluirArchivadas = $('appraisalShowArchived')?.checked || false;
     const estadoFiltro = $('appraisalFilter')?.value || '';
+    const searchText = $('appraisalSearch')?.value?.trim() || '';
     const params = { page: _appraisalPage, per_page: 20 };
     if (incluirArchivadas) params.archivadas = '1';
     if (estadoFiltro) params.estado = estadoFiltro;
+    if (searchText) params.search = searchText;
     const result = await API.getAppraisals(params);
     if (Array.isArray(result)) {
       _appraisals = result;
@@ -188,6 +191,11 @@ function renderDetail(a) {
         <button class="btn btn-ghost" id="backToAppraisalsList" style="margin-bottom:8px">← Volver</button>
         <h1 class="admin-page-title">${esc(a.titulo || a.solicitante || 'Tasación #' + a.id)}</h1>
         <p class="admin-page-sub">${ESTADO_MAP[a.estado] || a.estado} · ${a.total_comparables || 0} comparables</p>
+        ${a.appraisal_request_id
+          ? `<p style="font-size:12px;color:var(--accent-b);margin-top:4px">
+              📋 Creada desde <a href="#" onclick="switchTab('tasacion-requests'); return false;" style="color:var(--accent-b);text-decoration:underline">solicitud #${a.appraisal_request_id}</a>
+            </p>`
+          : ''}
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         ${isReadOnly
@@ -573,15 +581,20 @@ function renderComparableCards(a) {
       return `<span style="color:${clr};font-size:10px;font-weight:600">${icon} ${label}</span>`;
     }
 
-    return `<div class="acm-comparable-item" style="display:block;padding:16px">
+    const isExcluded = c.excluido === true;
+    const cardStyle = isExcluded ? 'opacity:0.5;filter:grayscale(1)' : '';
+
+    return `<div class="acm-comparable-item" style="display:block;padding:16px;${cardStyle}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div>
           <strong style="color:var(--white);font-size:14px">C${c.numero}</strong>
+          ${isExcluded ? '<span style="color:var(--g4);font-size:10px;margin-left:6px">[excluido]</span>' : ''}
           <span style="color:var(--g3);font-size:11px;margin-left:8px">${esc((c.calle||'') + ' ' + (c.numero_calle||''))}</span>
           ${c.barrio ? `<span style="color:var(--g4);font-size:10px;margin-left:6px">· ${esc(c.barrio)}</span>` : ''}
         </div>
         ${isReadOnly ? '' : `<div style="display:flex;gap:4px">
           <button class="btn btn-ghost btn-sm editComparableBtn" data-aid="${a.id}" data-cid="${c.id}" style="font-size:11px;padding:2px 8px">✎</button>
+          <button class="btn btn-ghost btn-sm toggleExclusionBtn" data-aid="${a.id}" data-cid="${c.id}" style="font-size:11px;padding:2px 8px" title="${isExcluded ? 'Incluir' : 'Excluir del cálculo'}">${isExcluded ? '◉' : '◎'}</button>
           <button class="btn btn-danger btn-sm deleteComparableBtn" data-aid="${a.id}" data-cid="${c.id}" style="font-size:11px;padding:2px 8px">×</button>
         </div>`}
       </div>
@@ -598,6 +611,9 @@ function renderComparableCards(a) {
         ${attrBadge('comp_ubicacion', 'Ubic.')}
         ${attrBadge('comp_estado_mantenimiento', 'Mant.')}
         ${attrBadge('comp_comodidades', 'Comod.')}
+        ${attrBadge('comp_orientacion', 'Orient.')}
+        ${attrBadge('comp_vistas', 'Vistas')}
+        ${attrBadge('comp_nivel_piso', 'N.Piso')}
         <span style="color:var(--g4);font-size:9px;margin-left:auto">${c.tipo_operacion === 'venta' ? 'Venta' : 'Cotización'}</span>
       </div>
     </div>`;
@@ -609,6 +625,8 @@ document.addEventListener('click', e => {
   if (editBtn) openComparableForm(parseInt(editBtn.dataset.aid), parseInt(editBtn.dataset.cid));
   const delBtn = e.target.closest('.deleteComparableBtn');
   if (delBtn) confirmDeleteComparable(parseInt(delBtn.dataset.aid), parseInt(delBtn.dataset.cid));
+  const toggleBtn = e.target.closest('.toggleExclusionBtn');
+  if (toggleBtn) toggleComparableExclusion(parseInt(toggleBtn.dataset.aid), parseInt(toggleBtn.dataset.cid));
 });
 
 // ── LIVE RECALC ──────────────────────────────────────────────────────
@@ -791,17 +809,21 @@ async function loadAppraisalVersions(aid) {
       container.innerHTML = '<div style="color:var(--g4);font-size:12px;text-align:center;padding:12px">Sin versiones guardadas.</div>';
       return;
     }
-    container.innerHTML = versions.map(v =>
+    container.innerHTML = versions.map((v, i) =>
       `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--bg2);font-size:12px">
         <span class="admin-status-badge status-vendida" style="font-size:10px;padding:2px 8px">v${v.version}</span>
         <span style="color:var(--g2);flex:1">${v.created_at ? new Date(v.created_at).toLocaleString() : ''}</span>
         <span style="color:var(--g4);font-size:11px">${v.created_by || '—'}</span>
         <span style="color:var(--g4);font-size:11px">${v.has_snapshot ? '✓ Snapshot' : '—'}</span>
         <button class="btn btn-ghost btn-sm viewVersionBtn" data-version="${v.version}" style="font-size:10px;padding:2px 8px">Ver</button>
+        ${i < versions.length - 1 ? `<button class="btn btn-ghost btn-sm diffVersionBtn" data-va="${versions[i+1].version}" data-vb="${v.version}" style="font-size:10px;padding:2px 8px" title="Comparar con v${versions[i+1].version}">⇄</button>` : ''}
       </div>`
     ).join('');
     container.querySelectorAll('.viewVersionBtn').forEach(btn => {
       btn.addEventListener('click', () => viewVersion(parseInt(btn.dataset.version)));
+    });
+    container.querySelectorAll('.diffVersionBtn').forEach(btn => {
+      btn.addEventListener('click', () => compareVersions(parseInt(btn.dataset.va), parseInt(btn.dataset.vb)));
     });
   } catch (e) {
     container.innerHTML = '<div style="color:var(--g4);font-size:12px">Error al cargar versiones.</div>';
@@ -869,6 +891,81 @@ async function viewVersion(version) {
   } catch (e) {
     toast('Error al cargar versión: ' + e.message, 'error');
   }
+}
+
+async function compareVersions(va, vb) {
+  const a = _currentAppraisal;
+  if (!a) return;
+  try {
+    const data = await _req('GET', `/api/appraisals/${a.id}/versions/${va}/compare/${vb}`);
+    const changes = data.appraisal_changes || [];
+    const compChanges = data.comparable_changes || [];
+    if (!changes.length && !compChanges.length) {
+      toast('No hay diferencias entre estas versiones.', 'info');
+      return;
+    }
+    const fieldLabels = {
+      valor_estimado_usd: 'Valor estimado USD', titulo: 'Título',
+      direccion: 'Dirección', tipo_propiedad: 'Tipo propiedad',
+      superficie_cubierta: 'Sup. cubierta', precio_m2_promedio: '$/m² prom.',
+      coeficiente_promedio: 'Coef. promedio', dispersion_pct: 'Dispersión',
+      tipo_cambio_usd: 'T/C USD', valor_uva: 'UVA',
+      solicitante: 'Solicitante', destino: 'Destino',
+    };
+    const fmt = v => v == null ? '—' : typeof v === 'number' && v > 100 ? v.toLocaleString('es-AR') : String(v);
+    let html = `<div style="background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:16px;margin-top:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h4 style="color:var(--white);font-size:13px;font-weight:600">Diff v${va} → v${vb}</h4>
+        <button class="btn btn-ghost btn-sm" id="closeVersionDiff" style="font-size:11px">Cerrar</button>
+      </div>`;
+    if (changes.length) {
+      html += `<div style="margin-bottom:10px">
+        <div style="color:var(--g3);font-size:9px;font-weight:600;text-transform:uppercase;margin-bottom:4px">Cambios en la tasación</div>
+        <table style="width:100%;font-size:11px;border-collapse:collapse">
+          <tr style="color:var(--g4);font-size:9px;text-transform:uppercase">
+            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--b)">Campo</th>
+            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--b)">v${va}</th>
+            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--b)">v${vb}</th>
+          </tr>
+          ${changes.map(c => `<tr>
+            <td style="padding:4px 8px;border-bottom:1px solid var(--bg2);color:var(--g2)">${fieldLabels[c.field] || c.field}</td>
+            <td style="padding:4px 8px;border-bottom:1px solid var(--bg2);color:var(--g4)">${fmt(c.from)}</td>
+            <td style="padding:4px 8px;border-bottom:1px solid var(--bg2);color:var(--accent)">${fmt(c.to)}</td>
+          </tr>`).join('')}
+        </table>
+      </div>`;
+    }
+    if (compChanges.length) {
+      html += `<div>
+        <div style="color:var(--g3);font-size:9px;font-weight:600;text-transform:uppercase;margin-bottom:4px">Cambios en comparables</div>
+        <table style="width:100%;font-size:11px;border-collapse:collapse">
+          <tr style="color:var(--g4);font-size:9px;text-transform:uppercase">
+            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--b)">Comp.</th>
+            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--b)">Campo</th>
+            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--b)">v${va}</th>
+            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--b)">v${vb}</th>
+          </tr>
+          ${compChanges.map(c => {
+            const isAdd = c.field === '__added__';
+            const isDel = c.field === '__removed__';
+            return `<tr style="${isAdd ? 'background:rgba(39,174,96,0.08)' : isDel ? 'background:rgba(231,76,60,0.08)' : ''}">
+              <td style="padding:4px 8px;border-bottom:1px solid var(--bg2);color:var(--g2);font-weight:600">C${c.numero}</td>
+              <td style="padding:4px 8px;border-bottom:1px solid var(--bg2);color:var(--g3)">${isAdd ? '➕ Agregado' : isDel ? '➖ Eliminado' : c.field}</td>
+              <td style="padding:4px 8px;border-bottom:1px solid var(--bg2);color:var(--g4)">${fmt(c.from)}</td>
+              <td style="padding:4px 8px;border-bottom:1px solid var(--bg2);color:${isAdd ? 'var(--accent)' : isDel ? '#e74c3c' : 'var(--accent)'}">${fmt(c.to)}</td>
+            </tr>`;
+          }).join('')}
+        </table>
+      </div>`;
+    }
+    html += '</div>';
+    const container = $('appraisalVersionsContainer');
+    container.insertAdjacentHTML('beforebegin', html);
+    $('closeVersionDiff')?.addEventListener('click', () => {
+      const el = container.previousElementSibling;
+      if (el && el.id !== 'appraisalVersionsContainer') el.remove();
+    });
+  } catch (e) { toast('Error al comparar versiones: ' + e.message, 'error'); }
 }
 
 // ── MODAL: Nueva tasación rápida ─────────────────────────────────────
@@ -1014,6 +1111,9 @@ function openComparableForm(aid, cid) {
           ${manualSel('comp_ubicacion', 'Ubicación')}
           ${manualSel('comp_estado_mantenimiento', 'Mantenimiento')}
           ${manualSel('comp_comodidades', 'Comodidades')}
+          ${manualSel('comp_orientacion', 'Orientación')}
+          ${manualSel('comp_vistas', 'Vistas')}
+          ${manualSel('comp_nivel_piso', 'Nivel de piso')}
         </div>
       </div>
 
@@ -1063,6 +1163,12 @@ async function extraerDesdeURL(aid, cid) {
       status.innerHTML = '<span style="color:#e74c3c">No se pudieron extraer datos de esta URL.</span>';
       return;
     }
+    if (data._error) {
+      // Fallback parcial: al menos precargar el link
+      if (data.link_fuente) setVal('cf_link_fuente', data.link_fuente);
+      status.innerHTML = `<span style="color:#e67e22">⚠ ${esc(data._error)}</span>`;
+      return;
+    }
     const setVal = (id, val) => { const el = $(id); if (el && val != null) el.value = val; };
     const setNum = (id, val) => { const el = $(id); if (el && val != null) el.value = val; };
     const setCheck = (id, val) => { const el = $(id); if (el) el.checked = !!val; };
@@ -1071,6 +1177,7 @@ async function extraerDesdeURL(aid, cid) {
     setVal('cf_numero_calle', data.numero_calle);
     setVal('cf_barrio', data.barrio);
     setVal('cf_localidad', data.localidad);
+    setVal('cf_piso_depto', data.piso_depto);
     setNum('cf_precio_usd', data.precio_usd);
     setNum('cf_precio_ars', data.precio_ars);
     setNum('cf_superficie_cubierta', data.superficie_cubierta);
@@ -1117,6 +1224,9 @@ function _gatherComparableData() {
     comp_ubicacion: gc('cf_comp_ubicacion'),
     comp_estado_mantenimiento: gc('cf_comp_estado_mantenimiento'),
     comp_comodidades: gc('cf_comp_comodidades'),
+    comp_orientacion: gc('cf_comp_orientacion'),
+    comp_vistas: gc('cf_comp_vistas'),
+    comp_nivel_piso: gc('cf_comp_nivel_piso'),
   };
 }
 
@@ -1145,7 +1255,8 @@ function _previewHomologacion(aid) {
 function _bindComparableFormPreview(aid, cid) {
   const triggers = ['cf_precio_usd', 'cf_superficie_cubierta', 'cf_anio_construccion',
     'cf_dormitorios', 'cf_tiene_garage', 'cf_precio_ars',
-    'cf_comp_ubicacion', 'cf_comp_estado_mantenimiento', 'cf_comp_comodidades'];
+    'cf_comp_ubicacion', 'cf_comp_estado_mantenimiento', 'cf_comp_comodidades',
+    'cf_comp_orientacion', 'cf_comp_vistas', 'cf_comp_nivel_piso'];
   triggers.forEach(id => {
     const el = $(id);
     if (el) el.addEventListener('change', () => _previewHomologacion(aid));
@@ -1184,6 +1295,15 @@ async function confirmDeleteComparable(aid, cid) {
     await API.deleteComparable(aid, cid);
     await _acmRefreshDetail(aid);
     refreshAppraisalMap(aid);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function toggleComparableExclusion(aid, cid) {
+  try {
+    const data = await _req('PATCH', `/api/appraisals/${aid}/comparables/${cid}/toggle-exclusion`);
+    await _acmRefreshDetail(aid);
+    refreshAppraisalMap(aid);
+    toast(data.excluido ? 'Comparable excluido del cálculo' : 'Comparable incluido', 'info');
   } catch (e) { toast(e.message, 'error'); }
 }
 
@@ -1234,6 +1354,7 @@ window.openComparableForm = openComparableForm;
 window.closeComparableForm = closeComparableForm;
 window.saveComparableForm = saveComparableForm;
 window.confirmDeleteComparable = confirmDeleteComparable;
+window.toggleComparableExclusion = toggleComparableExclusion;
 window.filterAppraisals = filterAppraisals;
 window.showAppraisalsList = showAppraisalsList;
 window.loadAppraisals = loadAppraisals;
@@ -1253,4 +1374,23 @@ window.changeAppraisalPage = changeAppraisalPage;
 // Botón volver en detalle de tasación
 document.addEventListener('click', e => {
   if (e.target.id === 'backToAppraisalsList') showAppraisalsList();
+});
+
+// Filtro y búsqueda de tasaciones
+document.addEventListener('change', e => {
+  if (e.target.id === 'appraisalFilter' || e.target.id === 'appraisalShowArchived') {
+    _appraisalPage = 1;
+    loadAppraisals();
+  }
+});
+
+let _searchTimer = null;
+document.addEventListener('input', e => {
+  if (e.target.id === 'appraisalSearch') {
+    clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => {
+      _appraisalPage = 1;
+      loadAppraisals();
+    }, 300);
+  }
 });

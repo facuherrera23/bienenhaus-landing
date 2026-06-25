@@ -241,6 +241,18 @@ const API = {
     return API._dolarPromise;
   },
   invalidateDolar: () => { API._dolarRate = null; },
+
+  // CRM / Leads
+  getLeads:          (params) => _req('GET', '/api/crm/leads' + (params ? '?' + new URLSearchParams(params) : '')),
+  getLead:           (id) => _req('GET', `/api/crm/leads/${id}`),
+  createLead:        (data) => _req('POST', '/api/crm/leads', data),
+  updateLead:        (id, data) => _req('PATCH', `/api/crm/leads/${id}`, data),
+  deleteLead:        (id) => _req('DELETE', `/api/crm/leads/${id}`),
+  addLeadNote:       (id, data) => _req('POST', `/api/crm/leads/${id}/notes`, data),
+  sendLeadEmail:     (id, data) => _req('POST', `/api/crm/leads/${id}/send-email`, data),
+  getCrmStats:       () => _req('GET', '/api/crm/stats'),
+  convertToLead:     (type, id) => _req('POST', `/api/crm/from-${type}/${id}`),
+  getCrmAgents:      () => _req('GET', '/api/crm/agents'),
 };
 
 window.API = API;

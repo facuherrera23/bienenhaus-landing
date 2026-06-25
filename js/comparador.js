@@ -5,7 +5,7 @@ const MAX   = 2;
 let _selected = [];
 
 function esc(v) { return String(v ?? '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function fmtCmp(n) { return fmtPriceARS(n, true); }
+function fmtCmp(n) { return window.formatPrice ? window.formatPrice(n, 'ARS') : 'ARS ' + Number(n).toLocaleString('es-AR'); }
 const $ = id => document.getElementById(id);
 
 const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -214,7 +214,7 @@ window.openCompare = function() {
     // CTA
     + '<div class="compare-cta-section">'
     + [a, b].map(p => '<div class="compare-cta-col">'
-      + '<a href="/bienenhaus-landing/venta/' + p.id + '" class="btn btn-ghost" style="width:100%;padding:12px;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px">'
+      + '<a href="/venta/' + p.id + '" class="btn btn-ghost" style="width:100%;padding:12px;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px">'
       + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
       + 'Ver detalle</a>'
       + '<a href="https://wa.me/' + (window._wa ? window._wa() : '5491130110101') + '?text=' + waMsg(p) + '" target="_blank" class="btn btn-wapp" style="width:100%;padding:12px;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px">'
@@ -287,7 +287,7 @@ window.renderProperties = function(props, pagination) {
 function injectCompareButtons() {
   document.querySelectorAll('.prop-card').forEach(function(card) {
     if (card.querySelector('.btn-compare')) return;
-    var link = card.querySelector('a[href^="/bienenhaus-landing/venta/"]');
+    var link = card.querySelector('a[href^="/venta/"]');
     if (!link) return;
     var pid = parseInt(link.getAttribute('href').split('/').pop());
     if (!pid || isNaN(pid)) return;

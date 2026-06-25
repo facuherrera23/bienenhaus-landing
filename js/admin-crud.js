@@ -273,6 +273,15 @@ function openPropForm(id) {
       <hr class="af-divider"/>
 
       <div>
+        <p class="af-section-label">Video (opcional)</p>
+        <div class="field">
+          <input id="pf_video_url" class="field-input" value="${v('video_url') || ''}" placeholder="https://www.youtube.com/watch?v=..."/>
+        </div>
+      </div>
+
+      <hr class="af-divider"/>
+
+      <div>
         <p class="af-section-label">Imágenes</p>
         <div id="dropZone" class="drop-zone">
           <input type="file" id="fileInput"
@@ -322,9 +331,13 @@ function closePropForm() {
 
 async function savePropForm(id) {
   const title = $('pf_title')?.value.trim();
-  if (!title) { toast('El título es obligatorio.', 'warn'); return; }
-
+  if (!title) { toast('El título es obligatorio.', 'warn'); $('pf_title')?.focus(); return; }
   const isRental = _subTab === 'alquiler';
+  const priceEl = isRental ? $('rf_price_ars') : $('pf_price');
+  const price = priceEl ? parseFloat(priceEl.value) : 0;
+  if (price <= 0) { toast('El precio debe ser mayor a cero.', 'warn'); priceEl?.focus(); return; }
+  const location = $('pf_location')?.value.trim();
+  if (!location) { toast('La ubicación es obligatoria.', 'warn'); $('pf_location')?.focus(); return; }
 
   const baseData = {
     title,
@@ -336,6 +349,7 @@ async function savePropForm(id) {
     sqm:      $('pf_sqm').value,
     desc:     $('pf_desc').value.trim(),
     images:   _currentImages.filter(u => !u.startsWith('blob:')),
+    video_url: $('pf_video_url')?.value.trim() || '',
     featured: $('pf_featured').checked,
   };
 
@@ -354,13 +368,159 @@ async function savePropForm(id) {
       if (isRental) { _rentals.unshift(saved); _rPage = 1; }
       else { _props.unshift(saved); _page = 1; }
     }
-    renderSubTab();
-    closePropForm();
+    if (!id) showPublishStep(saved, isRental);
   } catch (e) { toast(e.message, 'error'); }
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// RENDER — AGENTES
+/* ── Paso 2: Publicación ──────────────────────── */
+function showPublishStep(item, isRental) {
+  const typeLabel = isRental ? 'Alquiler' : 'Propiedad';
+  $('propFormTitle').textContent = `Paso 2 — Publicar ${typeLabel}`;
+
+  const defaultContent = item.title + '\n' + (item.desc || '').slice(0, 200);
+
+  $('propFormContent').innerHTML = `
+    <div class="ps-body">
+      <div class="ps-progress"><span class="ps-dot done">&#10003;</span><span class="ps-line"></span><span class="ps-dot active">2</span></div>
+      <p class="ps-sub">La ${typeLabel.toLowerCase()} se guardó correctamente. Elegí d&oacute;nde publicarla:</p>
+
+      <div class="ps-section">
+        <p class="ps-section-label">📡 Portales</p>
+        <label class="ps-select-all"><input type="checkbox" id="psPortalAll" checked/> Seleccionar todos</label>
+        <div id="psPortalList" class="ps-list"></div>
+      </div>
+
+      ${isRental ? '' : `
+      <div class="ps-section">
+        <p class="ps-section-label">📱 Redes sociales</p>
+        <label class="ps-select-all"><input type="checkbox" id="psSocialAll" checked/> Seleccionar todas</label>
+        <div id="psSocialList" class="ps-list"></div>
+        <div class="field" style="margin-top:12px">
+          <label class="field-label" style="font-size:13px;color:var(--g3)">Texto del post</label>
+          <textarea id="psSocialContent" class="field-input" rows="3" style="resize:vertical">${esc(defaultContent)}</textarea>
+        </div>
+      </div>`}
+
+      <div id="psEmptyMsg" class="ps-empty" style="display:none;text-align:center;padding:32px 0;color:var(--g4)">
+        No hay portales activos ni cuentas de redes vinculadas.
+      </div>
+
+      <div class="pf-actions" style="margin-top:1.5rem">
+        <button class="btn btn-primary btn-full" id="psPublishBtn">Publicar ahora</button>
+        <button class="btn btn-ghost" id="psSkipBtn">Omitir — cerrar</button>
+      </div>
+    </div>`;
+
+  // Render portals
+  const activePortals = _portals.filter(p => p.active);
+  const portalList = $('psPortalList');
+  if (activePortals.length) {
+    portalList.innerHTML = activePortals.map(p =>
+      `<label class="ps-item"><input type="checkbox" class="ps-portal" value="${p.id}" checked/> ${esc(p.name)}</label>`
+    ).join('');
+  } else {
+    portalList.innerHTML = '<div class="ps-empty">No hay portales activos.</div>';
+  }
+
+  let hasSocial = false;
+
+  // Render social accounts
+  if (!isRental) _socialReq('GET', '/api/social/accounts').then(res => {
+    const accounts = (res.data || []).filter(a => a.active);
+    const socialList = $('psSocialList');
+    if (accounts.length) {
+      hasSocial = true;
+      socialList.innerHTML = accounts.map(a =>
+        `<label class="ps-item"><input type="checkbox" class="ps-social" value="${a.id}" checked/> ${esc(a.platform)} · ${esc(a.label || a.platform)}</label>`
+      ).join('');
+    } else {
+      socialList.innerHTML = '<div class="ps-empty">No hay cuentas de redes activas.</div>';
+    }
+    _checkEmpty(activePortals.length, hasSocial);
+  });
+  else _checkEmpty(activePortals.length, false);
+
+  $('psPublishBtn').onclick = () => executePublish(item, isRental);
+  $('psSkipBtn').onclick = () => { renderSubTab(); closePropForm(); };
+
+  // Bind "Seleccionar todos" toggles
+  const $portalAll = $('psPortalAll');
+  const $socialAll = $('psSocialAll');
+  if ($portalAll) $portalAll.addEventListener('change', function () {
+    document.querySelectorAll('.ps-portal').forEach(cb => cb.checked = this.checked);
+  });
+  if ($socialAll && !isRental) $socialAll.addEventListener('change', function () {
+    document.querySelectorAll('.ps-social').forEach(cb => cb.checked = this.checked);
+  });
+}
+
+function _checkEmpty(hasPortal, hasSocial) {
+  const btn = $('psPublishBtn');
+  const msg = $('psEmptyMsg');
+  if (!hasPortal && !hasSocial) {
+    if (btn) btn.style.display = 'none';
+    if (msg) msg.style.display = '';
+  } else {
+    if (btn) btn.style.display = '';
+    if (msg) msg.style.display = 'none';
+  }
+}
+
+async function executePublish(item, isRental) {
+  const btn = $('psPublishBtn');
+  btn.disabled = true; btn.textContent = 'Publicando...';
+
+  const portalIds = [...document.querySelectorAll('.ps-portal:checked')].map(cb => cb.value);
+  const socialIds = [...document.querySelectorAll('.ps-social:checked')].map(cb => cb.value);
+  const propId = item.id;
+
+  const portalNames = {};
+  _portals.forEach(p => { portalNames[p.id] = p.name; });
+
+  let ok = 0, err = 0;
+  const errors = [];
+
+  // Enqueue to selected portals
+  for (const pid of portalIds) {
+    try {
+      await API.enqueuePortal({
+        action: 'publish',
+        property_id: isRental ? null : propId,
+        rental_id: isRental ? propId : null,
+        portal_id: parseInt(pid),
+      });
+      ok++;
+    } catch (e) {
+      err++;
+      errors.push(portalNames[pid] || `Portal #${pid}`);
+    }
+  }
+
+  // Create social posts for selected accounts
+  const socialContent = ($('psSocialContent')?.value || item.title).trim();
+  for (const aid of socialIds) {
+    try {
+      await _socialReq('POST', '/api/social/posts', {
+        account_id: parseInt(aid),
+        property_id: isRental ? null : propId,
+        content: socialContent,
+        media_urls: JSON.stringify((item.images || []).slice(0, 10)),
+      });
+      ok++;
+    } catch (e) {
+      err++;
+      errors.push(`Social #${aid}`);
+    }
+  }
+
+  if (err) {
+    toast(`${ok} publicadas, ${err} con error:\n${errors.join(', ')}`, 'warn');
+  } else {
+    toast(`${ok} publicaciones realizadas`, 'ok');
+  }
+  renderSubTab();
+  closePropForm();
+}
 // ══════════════════════════════════════════════════════════════════════
 function renderAgents() {
   const list = $('agentsAdminList');

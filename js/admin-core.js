@@ -174,7 +174,7 @@ function switchTab(tab) {
   _tab = tab;
   document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
   document.querySelectorAll('.sidebar-link[data-tab]').forEach(el => el.classList.remove('active'));
-  const map = { dashboard: 'tabDashboard', props: 'tabProps', agents: 'tabAgents', messages: 'tabMessages', 'tasacion-requests': 'tabTasacionRequests', appraisals: 'tabAppraisals', settings: 'tabSettings', users: 'tabUsers', portals: 'tabPortals', activity: 'tabActivity' };
+  const map = { dashboard: 'tabDashboard', props: 'tabProps', agents: 'tabAgents', messages: 'tabMessages', 'tasacion-requests': 'tabTasacionRequests', appraisals: 'tabAppraisals', crm: 'tabCrm', settings: 'tabSettings', users: 'tabUsers', portals: 'tabPortals', activity: 'tabActivity' };
   $(map[tab])?.classList.remove('hidden');
   document.querySelector(`.sidebar-link[data-tab="${tab}"]`)?.classList.add('active');
 
@@ -186,6 +186,7 @@ function switchTab(tab) {
   if (tab === 'portals')    loadPortals();
   if (tab === 'appraisals') loadAppraisals();
   if (tab === 'activity')   loadActivity();
+  if (tab === 'crm')        { if (typeof initCrm === 'function') initCrm(); }
 }
 
 function switchSubTab(subtab) {
@@ -223,6 +224,13 @@ async function tryLogin() {
   const err  = $('loginError');
   err.classList.add('hidden');
   err.classList.remove('shake');
+  if (!user || !pass) {
+    err.textContent = 'Usuario y contraseña requeridos.';
+    err.classList.remove('hidden');
+    err.classList.add('shake');
+    setTimeout(() => err.classList.remove('shake'), 500);
+    return;
+  }
   btn.classList.add('login-btn--loading');
   try {
     const result = await API.login(user, pass);

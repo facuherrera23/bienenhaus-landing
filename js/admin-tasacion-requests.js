@@ -18,7 +18,30 @@ async function loadTasacionRequests() {
       return;
     }
 
-    list.innerHTML = reqs.map(r => buildTasacionCard(r)).join('');
+    const bar = `
+      <div style="display:flex;gap:8px;padding:8px 0;align-items:center;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer">
+          <input type="checkbox" id="treqSelectAll" style="width:14px;height:14px;accent-color:var(--accent)"> Seleccionar todo
+        </label>
+        <button class="btn btn-ghost btn-sm" onclick="batchTasacionAction('archive')" style="font-size:11px">📦 Archivar seleccionadas</button>
+        <button class="btn btn-ghost btn-sm" onclick="batchTasacionAction('unarchive')" style="font-size:11px">📂 Desarchivar seleccionadas</button>
+        <button class="btn btn-danger btn-sm" onclick="batchTasacionAction('delete')" style="font-size:11px">🗑 Eliminar seleccionadas</button>
+        <span id="treqSelectedCount" style="color:var(--g4);font-size:11px">0 seleccionadas</span>
+      </div>`;
+
+    list.innerHTML = bar + reqs.map(r => buildTasacionCard(r)).join('');
+
+    // Select-all toggle
+    const selAll = $('treqSelectAll');
+    if (selAll) {
+      selAll.onclick = () => {
+        document.querySelectorAll('.treq-checkbox').forEach(cb => cb.checked = selAll.checked);
+        updateTreqCount();
+      };
+      document.querySelectorAll('.treq-checkbox').forEach(cb => {
+        cb.onchange = updateTreqCount;
+      });
+    }
   } catch (e) {
     list.innerHTML = `<div class="loading-state">Error al cargar solicitudes.</div>`;
   }
@@ -51,10 +74,7 @@ const _MOTIVO_LABELS = {
 
 function buildTasacionCard(r) {
   const date = r.created_at
-    ? new Date(r.created_at).toLocaleString('es-AR', {
-        day:'2-digit', month:'2-digit', year:'numeric',
-        hour:'2-digit', minute:'2-digit'
-      })
+    ? window.formatDateTime(r.created_at)
     : '';
 
   const propLabel = _PROPERTY_TYPE_LABELS[r.property_type] || r.property_type || '—';
@@ -65,7 +85,7 @@ function buildTasacionCard(r) {
   const waLink = waNum ? `https://wa.me/${waNum}?text=${waMsg}` : '';
 
   const clientWaLink = r.email
-    ? `https://wa.me/5493510000000?text=${encodeURIComponent('Hola, envié una solicitud de tasación desde Bienenhaus.')}`
+    ? `https://wa.me/${window.WHATSAPP_NUMBER || '5493510000000'}?text=${encodeURIComponent('Hola, envié una solicitud de tasación desde Bienenhaus.')}`
     : '';
 
   const statusColors = { pendiente: '#e67e22', contactado: '#3498db', completado: '#27ae60', archivado: '#95a5a6' };
@@ -80,7 +100,10 @@ function buildTasacionCard(r) {
   return `
     <div class="msg-card" id="treq-${r.id}">
       <div class="msg-header">
-        <div style="display:flex;align-items:center;gap:10px">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0" title="Seleccionar">
+          <input type="checkbox" class="treq-checkbox" value="${r.id}" style="width:16px;height:16px;accent-color:var(--accent)">
+        </label>
+        <div style="display:flex;align-items:center;gap:10px;flex:1">
           <div>
             <div class="msg-name">${esc(r.name) || '—'}</div>
             <div class="msg-date">${date}</div>
@@ -113,6 +136,15 @@ function buildTasacionCard(r) {
       ${r.comments ? `<div class="msg-body">${esc(r.comments)}</div>` : ''}
 
       <div class="msg-actions" style="margin-top:10px">
+        ${r.appraisal_id
+          ? `<button class="btn btn-outline btn-sm" onclick="openAppraisalFromRequest(${r.appraisal_id})"
+                    style="color:var(--accent-b);border-color:var(--accent-b)">
+              📋 Ver tasación: ${esc(r.appraisal_titulo || '#' + r.appraisal_id)}
+            </button>`
+          : `<button class="btn btn-primary btn-sm" onclick="createAppraisalFromRequest(${r.id})"
+                    style="background:var(--accent-b);color:var(--white);border:none">
+              + Crear tasación
+            </button>`}
         ${r.email && _safeMailto(r.email) !== '#'
           ? `<a href="mailto:${esc(r.email)}?subject=Bienenhaus%20-%20Tasaci%C3%B3n%20de%20${encodeURIComponent(propLabel)}&body=Hola ${encodeURIComponent(r.name)},%0A%0ARecibimos tu solicitud de tasación." class="btn btn-outline btn-sm">Responder por email</a>`
           : ''}
@@ -124,6 +156,28 @@ function buildTasacionCard(r) {
           : ''}
       </div>
     </div>`;
+}
+
+function openAppraisalFromRequest(appraisalId) {
+  switchTab('appraisals');
+  setTimeout(() => openAppraisalDetail(appraisalId), 300);
+}
+
+async function createAppraisalFromRequest(requestId) {
+  try {
+    const res = await _req('POST', `/api/appraisals/from-request/${requestId}`, null);
+    const a = res.appraisal;
+    if (!a) { toast('Error al crear tasación', 'error'); return; }
+    if (res.existing) {
+      toast(`Ya existe una tasación desde esta solicitud.`, 'info');
+    } else {
+      toast('Tasación creada correctamente', 'ok');
+    }
+    switchTab('appraisals');
+    setTimeout(() => openAppraisalDetail(a.id), 300);
+  } catch (e) {
+    toast(e.message || 'Error al crear tasación', 'error');
+  }
 }
 
 async function updateTasacionStatus(id, status) {
@@ -142,3 +196,32 @@ async function deleteTasacionRequest(id) {
     loadTasacionRequests();
   } catch (e) { toast(e.message, 'error'); }
 }
+
+function updateTreqCount() {
+  const checked = document.querySelectorAll('.treq-checkbox:checked').length;
+  const el = $('treqSelectedCount');
+  if (el) el.textContent = `${checked} seleccionada${checked !== 1 ? 's' : ''}`;
+}
+
+async function batchTasacionAction(action) {
+  const checked = Array.from(document.querySelectorAll('.treq-checkbox:checked'));
+  const ids = checked.map(cb => parseInt(cb.value)).filter(n => !isNaN(n));
+  if (!ids.length) { toast('Seleccioná al menos una solicitud.', 'warn'); return; }
+
+  const labels = { delete: 'eliminar', archive: 'archivar', unarchive: 'desarchivar' };
+  const label = labels[action] || action;
+  if (!await confirmModal(`¿${label} ${ids.length} solicitud${ids.length !== 1 ? 'es' : ''}?`)) return;
+
+  try {
+    const data = await _req('POST', '/api/tasacion/batch', { action, ids });
+    toast(`${data.affected} solicitud${data.affected !== 1 ? 'es' : ''} ${label}das`, 'ok');
+    loadTasacionRequests();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+/* ── Exports ──────────────────────────────────────────────────── */
+window.loadTasacionRequests = loadTasacionRequests;
+window.updateTasacionStatus = updateTasacionStatus;
+window.deleteTasacionRequest = deleteTasacionRequest;
+window.createAppraisalFromRequest = createAppraisalFromRequest;
+window.batchTasacionAction = batchTasacionAction;

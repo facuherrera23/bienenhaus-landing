@@ -1,36 +1,25 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="canonical" id="canonicalLink" href="https://facuherrera23.github.io/bienenhaus-landing/propiedad"/>
+  <meta name="site-url" content="__SITE_URL__"/>
+  <link rel="canonical" id="canonicalLink" href="__SITE_URL__/propiedad"/>
   <title id="pageTitle">Propiedad · Bienenhaus</title>
-  <meta name="description" content="Detalle de propiedad · Bienenhaus Propiedades · Córdoba"/>
-  <meta property="og:type"        content="website"/>
-  <meta property="og:url"         content="https://facuherrera23.github.io/bienenhaus-landing/propiedad" id="ogUrl"/>
-  <meta property="og:title"       content="Propiedad · Bienenhaus" id="ogTitle"/>
-  <meta property="og:description" content="Detalle de propiedad · Bienenhaus Propiedades · Córdoba" id="ogDesc"/>
-  <meta property="og:image"       content="https://facuherrera23.github.io/bienenhaus-landing/images/logo-bienenhaus.png" id="ogImage"/>
-  <meta property="og:locale"      content="es_AR"/>
-  <meta property="og:site_name"   content="Bienenhaus Propiedades"/>
-  <meta name="twitter:card"        content="summary_large_image"/>
-  <meta name="twitter:title"       content="Propiedad · Bienenhaus" id="twTitle"/>
-  <meta name="twitter:description" content="Detalle de propiedad · Bienenhaus Propiedades · Córdoba" id="twDesc"/>
-  <meta name="twitter:image"       content="https://facuherrera23.github.io/bienenhaus-landing/images/logo-bienenhaus.png" id="twImage"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="/bienenhaus-landing/css/styles.css?v=2B"/>
-  <link rel="stylesheet" href="/bienenhaus-landing/css/detalle.css?v=2B"/>
+  <link rel="stylesheet" href="/bienenhaus-landing/css/styles.min.css"/>
+  <link rel="stylesheet" href="/bienenhaus-landing/css/detalle.min.css"/>
   <link rel="manifest" href="/bienenhaus-landing/manifest.json"/>
   <meta name="theme-color" content="#20b8ab"/>
   <link rel="icon" type="image/x-icon" href="/bienenhaus-landing/images/favicon.ico"/>
   <link rel="icon" type="image/png" sizes="32x32" href="/bienenhaus-landing/images/favicon-32x32.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="/bienenhaus-landing/images/favicon-192x192.png"/>
   <link rel="apple-touch-icon" href="/bienenhaus-landing/images/apple-touch-icon.png"/>
-  <script>window.__API_BASE__="https://bienenhaus.onrender.com";</script>
+  <script>window.__API_BASE__='https://bienenhaus.onrender.com'</script>
 </head>
-<body class="detalle-body" style="opacity:0">
+<body class="detalle-body">
 
 <!-- NAVBAR -->
 <nav id="navbar">
@@ -42,12 +31,12 @@
     </div>
     <div class="nav-links" id="navLinks">
       <a href="/bienenhaus-landing/" class="nav-link">Inicio</a>
-      <a href="#quienes" class="nav-link">Nosotros</a>
+      <a href="/bienenhaus-landing/#quienes" class="nav-link">Nosotros</a>
       <a href="/bienenhaus-landing/venta" class="nav-link" id="navVenta">Comprar</a>
       <a href="/bienenhaus-landing/alquiler" class="nav-link" id="navAlquiler">Alquilar</a>
-      <a href="#agents" class="nav-link">Equipo</a>
-      <a href="#contact" class="nav-link">Contacto</a>
-      <a href="/bienenhaus-landing/venta" class="btn btn-outline nav-cta hide-mobile" id="backBtn">← Volver</a>
+      <a href="/bienenhaus-landing/#agents" class="nav-link">Equipo</a>
+      <a href="/bienenhaus-landing/#contact" class="nav-link">Contacto</a>
+      <a href="#" class="btn btn-outline nav-cta hide-mobile" id="backBtn">← Volver</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Menú">
       <span></span><span></span><span></span>
@@ -57,211 +46,189 @@
     <a href="/bienenhaus-landing/" class="nav-link">Inicio</a>
     <a href="/bienenhaus-landing/venta" class="nav-link" id="mNavVenta">Comprar</a>
     <a href="/bienenhaus-landing/alquiler" class="nav-link" id="mNavAlquiler">Alquilar</a>
-    <a href="#agents" class="nav-link">Equipo</a>
-    <a href="#contact" class="nav-link">Contacto</a>
-    <a href="/bienenhaus-landing/venta" class="btn btn-outline" id="backBtnMobile" style="margin-top:8px">← Volver al catálogo</a>
+    <a href="/bienenhaus-landing/#agents" class="nav-link">Equipo</a>
+    <a href="/bienenhaus-landing/#contact" class="nav-link">Contacto</a>
+    <a href="#" class="btn btn-outline" id="backBtnMobile" style="margin-top:8px">← Volver al catálogo</a>
   </div>
 </nav>
 
-<!-- HEX DECORATION -->
-<div class="hzone tl" id="hzoneTl" aria-hidden="true"></div>
-<div class="hzone br" id="hzoneBr" aria-hidden="true"></div>
-<div class="hzone tr" id="hzoneTr" aria-hidden="true"></div>
-
-<!-- LOADING -->
-<div id="detalleLoading" class="detalle-loading">
-  <div class="spinner"></div>
-  <div class="spinner-label">Cargando propiedad</div>
-</div>
-
-<!-- ERROR -->
-<div id="detalleError" class="detalle-error hidden">
-  <h2>Propiedad no encontrada</h2>
-  <p>El enlace puede ser inválido o la propiedad fue eliminada.</p>
-  <a href="/bienenhaus-landing/venta" class="btn btn-outline">Ver propiedades en venta</a>
-</div>
-
-<!-- CONTENIDO PRINCIPAL -->
-<div id="detalleContent" class="detalle-page hidden">
-
-  <nav class="bc">
-    <a href="/bienenhaus-landing/">Inicio</a>
-    <span class="sep">›</span>
-    <a href="/bienenhaus-landing/venta" id="bcParent">Venta</a>
-    <span class="sep">›</span>
-    <span class="cur" id="bcTitle">—</span>
-  </nav>
-
-  <div class="pgrid">
-
-    <!-- COLUMNA IZQUIERDA: Info -->
-    <div class="info">
-
-      <!-- Badges -->
-      <div class="brow">
-        <span class="badge bn" id="badgeStatus">Disponible</span>
-        <span class="badge bn" id="badgeType">Casa</span>
-        <span class="badge ba hidden" id="badgeFeatured">★ Destacado</span>
-      </div>
-
-      <h1 id="propTitle">—</h1>
-      <div class="lloc" id="propLocation">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span>—</span>
-      </div>
-
-      <div class="prow">
-        <span class="price" id="propPrice">—</span>
-        <span class="pnote" id="propNote"></span>
-      </div>
-
-      <!-- Features grid -->
-      <div class="feats" id="propFeats"></div>
-
-      <!-- Description -->
-      <div class="dblk">
-        <h2>Descripción</h2>
-        <div id="propDesc"></div>
-      </div>
-
-      <!-- Detail table -->
-      <div class="dblk">
-        <h2>Detalles</h2>
-        <div class="dtbl" id="propTable"></div>
-      </div>
-
-      <!-- Tags -->
-      <div class="tags" id="propTags"></div>
-
-      <!-- Contact card -->
-      <div class="ccard">
-        <h2>Consultar por esta propiedad</h2>
-        <div class="sub">Respondemos en minutos</div>
-        <form class="cf" onsubmit="event.preventDefault();enviarConsulta()">
-          <div class="r2">
-            <input type="text" id="cNombre" placeholder="Nombre *" required/>
-            <input type="email" id="cEmail" placeholder="Email"/>
+<!-- ESTADO DE CARGA -->
+<div id="loadingState" class="detalle-loading">
+  <div class="loading-spinner"></div>
+      <div class="skeleton-detail-hero"></div>
+      <div class="skeleton-detail-content">
+        <div class="skeleton-detail-main">
+          <div class="skeleton-line skeleton-line--lg skeleton-line--w40"></div>
+          <div class="skeleton-line skeleton-line--sm skeleton-line--w60"></div>
+          <div class="skeleton-line skeleton-line--w30" style="margin-top:4px"></div>
+          <div class="skeleton-specs" style="margin-top:16px">
+            <div class="skeleton-line skeleton-line--spec"></div>
+            <div class="skeleton-line skeleton-line--spec"></div>
+            <div class="skeleton-line skeleton-line--spec"></div>
+            <div class="skeleton-line skeleton-line--spec"></div>
           </div>
-          <input type="tel" id="cTel" placeholder="Teléfono"/>
-          <textarea id="cMensaje" placeholder="Mensaje *" required></textarea>
-          <div id="cMsg" class="cf-msg"></div>
-          <div class="cf-actions">
-            <button type="submit" class="btnp" id="cSubmit">Enviar consulta →</button>
-            <a href="#" class="btn-wa" id="waBtn" onclick="return abrirWA(event)">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              WhatsApp
-            </a>
+          <div style="margin-top:20px">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line skeleton-line--w90"></div>
+            <div class="skeleton-line skeleton-line--w80"></div>
+            <div class="skeleton-line skeleton-line--w70"></div>
           </div>
-        </form>
-      </div>
-
-    </div>
-
-    <!-- COLUMNA DERECHA: Galería -->
-    <div class="gpanel">
-
-      <!-- Gallery main -->
-      <div class="gmain" id="gmain">
-        <div class="slides" id="mainSlides">
-          <div class="slide" style="display:flex;align-items:center;justify-content:center;color:var(--t3)">Cargando...</div>
         </div>
-        <button class="garr prev" id="gPrev">&#8249;</button>
-        <button class="garr next" id="gNext">&#8250;</button>
-        <div class="gcnt" id="gCnt">1 / 1</div>
-        <div class="gbadge" id="gType"></div>
-      </div>
-      <div class="gdots" id="gDots"></div>
-
-      <!-- Thumbs rail -->
-      <div class="twrap">
-        <button class="tharr prev" id="tPrev">&#8249;</button>
-        <div class="trail" id="tRail"></div>
-        <button class="tharr next" id="tNext">&#8250;</button>
-      </div>
-
-      <!-- Video tour -->
-      <div class="vwrap" id="vWrap">
-        <div class="vplaceholder" id="vPlaceholder">🎥 Recorrida virtual</div>
-        <iframe id="vIframe" src="" title="Recorrida virtual" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- Ubicación (full-width) -->
-  <section class="sec">
-    <h2>📍 Ubicación</h2>
-    <div class="mapbox" id="mapLink">
-      <div style="font-size:2rem;margin-bottom:.3rem">🗺</div>
-      <div class="mt" id="mapLocation">Córdoba Capital</div>
-      <div class="ms" id="mapSub">Click para ver en Google Maps</div>
-    </div>
-  </section>
-
-  <!-- SIMILARES -->
-  <section class="sec">
-    <div class="shdr">
-      <h2>🏡 Propiedades similares</h2>
-      <div class="actions">
-        <button class="btn-icon" onclick="openCompare()">
-          <svg viewBox="0 0 24 24"><path d="M19 3h-4v2h4v13H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-6 6h-2v6h2V9zm-4 2H7v4h2v-4zm8-2h-2v6h2V9z"/></svg>
-          Comparar
-        </button>
-        <button class="btn-icon" onclick="shareProperty()">
-          <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-          Compartir
-        </button>
-        <a href="/bienenhaus-landing/venta">Ver todas →</a>
+        <div class="skeleton-detail-aside">
+          <div class="skeleton-line skeleton-line--lg skeleton-line--w50"></div>
+          <div class="skeleton-line skeleton-line--sm skeleton-line--w40" style="margin-top:6px"></div>
+          <div class="skeleton-line" style="margin-top:16px;height:40px;border-radius:8px"></div>
+          <div class="skeleton-line" style="margin-top:8px;height:40px;border-radius:8px"></div>
+        </div>
       </div>
     </div>
-    <div class="swrap" id="sWrap">
-      <div class="srail" id="sRail"></div>
-      <button class="sarr prev" id="sPrev">&#8249;</button>
-      <button class="sarr next" id="sNext">&#8250;</button>
-    </div>
-    <div class="sdots" id="sDots"></div>
-  </section>
 
+    <!-- ERROR -->
+<div id="errorState" class="detalle-error hidden">
+  <p class="error-title" id="errorTitle">No encontrado</p>
+  <a href="/bienenhaus-landing/" class="btn btn-outline" id="errorBackBtn">Volver al inicio</a>
 </div>
 
-<!-- COMPARADOR MODAL -->
-<div class="modal-overlay" id="compareModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="cmpTitle">🔍 Comparar propiedades</h2>
-      <span class="counter" id="cmpCounter">0 de 3 seleccionadas</span>
-    </div>
+  <!-- CONTENIDO PRINCIPAL -->
+<main id="detalleMain" class="hidden">
 
-    <!-- Select view -->
-    <div id="cmpSelectView">
-      <div class="cmp-grid" id="cmpGrid"></div>
-    </div>
+  <!-- GALERÍA HERO -->
+  <div id="galeriaHero" class="galeria-hero">
+    <!-- Inyectado por JS -->
+  </div>
 
-    <!-- Table view -->
-    <div id="cmpTableView" style="display:none">
-      <div class="cmp-table-wrap" id="cmpTableContainer"></div>
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox hidden">
+    <button class="lb-close" id="lbClose">×</button>
+    <button class="lb-arrow lb-prev" id="lbPrev">&#8249;</button>
+    <button class="lb-arrow lb-next" id="lbNext">&#8250;</button>
+    <div class="lb-img-wrap" id="lbImgWrap">
+      <img id="lbImg" src="" alt="" class="lb-img"/>
+      <img id="lbImgNext" src="" alt="" class="lb-img lb-img--next hidden"/>
     </div>
+    <div class="lb-counter" id="lbCounter"></div>
+    <button class="lb-play" id="lbPlay" title="Presentación automática">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </button>
+    <button class="lb-fullscreen" id="lbFullscreen" title="Pantalla completa">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+    </button>
+  </div>
 
-    <!-- Select actions -->
-    <div class="modal-footer" id="cmpSelectActions">
-      <div class="select-actions">
-        <button onclick="selectAllCompare(true)">Seleccionar todo</button>
-        <button onclick="selectAllCompare(false)">Deseleccionar</button>
+  <!-- DETALLE -->
+  <div class="detalle-container">
+    <div class="detalle-grid">
+
+      <!-- Columna principal -->
+      <div class="detalle-main">
+
+        <!-- Breadcrumb -->
+        <div class="detalle-breadcrumb">
+          <a href="/bienenhaus-landing/">Inicio</a>
+          <span>›</span>
+          <a href="/bienenhaus-landing/venta" id="dBreadParent">Venta</a>
+          <span>›</span>
+          <span id="dBreadTitle">—</span>
+        </div>
+
+        <!-- Badges -->
+        <div class="detalle-badges" id="dBadges"></div>
+
+        <!-- Título -->
+        <h1 class="detalle-titulo" id="dTitle">—</h1>
+        <p class="detalle-location" id="dLocation">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span id="dLocationText">—</span>
+        </p>
+
+        <!-- Specs -->
+        <div class="detalle-specs" id="dSpecs"></div>
+
+        <!-- Descripción -->
+        <div class="detalle-section">
+          <h2 class="detalle-section-title">Descripción</h2>
+          <p class="detalle-desc" id="dDesc"></p>
+        </div>
+
+        <!-- Video -->
+        <div class="detalle-section" id="dVideoSection">
+          <h2 class="detalle-section-title">Video</h2>
+          <div id="dVideoEmbed"></div>
+        </div>
+
+        <!-- Mapa -->
+        <div class="detalle-section">
+          <h2 class="detalle-section-title">Ubicación</h2>
+          <div class="detalle-map" id="dMap"></div>
+        </div>
+
       </div>
-      <div style="display:flex;gap:.6rem">
-        <button class="btn-close" onclick="closeCompare()">Cerrar</button>
-        <button class="btn-cmp" id="btnCompareAction" onclick="showComparison()" disabled>Comparar →</button>
-      </div>
-    </div>
 
-    <!-- Table actions -->
-    <div class="modal-footer" id="cmpTableActions" style="display:none">
-      <button class="btn-close" onclick="backToSelect()">← Volver a selección</button>
-      <button class="btn-close" onclick="closeCompare()">Cerrar</button>
+      <!-- Columna lateral -->
+      <aside class="detalle-aside">
+
+        <!-- Precio + CTA -->
+        <div class="detalle-price-card" id="dPriceCard">
+          <div class="detalle-precio" id="dPrice">—</div>
+          <div class="detalle-precio-label" id="dPriceLabel"></div>
+          <div class="detalle-expenses" id="dExpenses"></div>
+          <div id="dFeatures" class="detalle-features"></div>
+          <a id="dWhatsapp" href="#" target="_blank" class="btn btn-wapp btn-wapp-full detalle-wa-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Consultar por WhatsApp
+          </a>
+          <a href="/bienenhaus-landing/#contact" class="btn btn-outline">
+            Formulario de contacto
+          </a>
+          <button id="dInquiry" class="btn btn-primary">
+            Consultar por esta propiedad
+          </button>
+        </div>
+
+        <!-- Mini galería thumbnails -->
+        <div class="detalle-card">
+          <div class="share-title">Todas las fotos</div>
+          <div class="detalle-thumbs" id="dThumbs"></div>
+        </div>
+
+        <!-- Compartir -->
+        <div class="detalle-share-card">
+          <div class="share-title">Compartir propiedad</div>
+          <div class="share-btns">
+            <button class="share-btn" id="shareWABtn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp
+            </button>
+            <button class="share-btn" id="copyLinkBtn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+              Copiar enlace
+            </button>
+          </div>
+          <div id="copyMsg" class="copy-msg hidden">¡Enlace copiado!</div>
+        </div>
+
+      </aside>
     </div>
   </div>
-</div>
+
+  <!-- Propiedades similares — Carrusel -->
+  <section class="similares-section">
+    <h2 class="similares-title">Propiedades similares en la zona</h2>
+    <div class="similares-carousel" id="similaresCarousel">
+      <div id="similaresGrid" class="carousel-track"></div>
+      <button class="carousel-btn carousel-prev" id="simPrev" aria-label="Anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="carousel-btn carousel-next" id="simNext" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+    </div>
+    <div class="carousel-dots" id="simDots"></div>
+  </section>
+
+</main>
 
 <!-- WhatsApp flotante -->
 <a href="https://wa.me/5493510000000?text=Hola%20Bienenhaus%2C%20quisiera%20recibir%20informaci%C3%B3n."
@@ -271,10 +238,43 @@
   </svg>
 </a>
 
-<!-- Back to top -->
+<!-- Botón volver arriba -->
 <button class="back-to-top" id="backToTop" title="Volver arriba">↑</button>
 
-<!-- FOOTER -->
+<!-- Consulta modal -->
+<div id="inquiryModal" class="modal-backdrop hidden">
+  <div class="modal-box modal-form-box" style="max-width:460px;padding:28px;border-radius:12px">
+    <button class="modal-close" onclick="closeInquiry()" style="position:absolute;top:12px;right:16px">×</button>
+    <h3 style="margin:0 0 6px 0;font-size:18px">Consultar por esta propiedad</h3>
+    <p id="inquiryRef" style="font-size:12px;color:var(--g3);margin:0 0 18px 0"></p>
+    <form id="inquiryForm">
+      <input type="hidden" id="iq_ts"/>
+      <input type="text" id="iq_website" style="display:none" tabindex="-1" autocomplete="off"/>
+      <div class="form-group">
+        <label class="form-label">Nombre *</label>
+        <input type="text" id="iq_name" class="form-input" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="iq_email" class="form-input"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Teléfono</label>
+        <input type="tel" id="iq_phone" class="form-input"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mensaje *</label>
+        <textarea id="iq_message" class="form-input" rows="3" required></textarea>
+      </div>
+      <div id="iqMsg" class="cf-msg hidden"></div>
+      <button type="submit" id="iqSubmit" class="btn btn-primary btn-full">Enviar consulta</button>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER — Simplified
+════════════════════════════════════════════════ -->
 <footer id="footer">
   <div class="footer-inner">
     <div class="footer-brand-col">
@@ -297,8 +297,8 @@
       <a href="/bienenhaus-landing/" class="footer-link">Inicio</a>
       <a href="/bienenhaus-landing/venta" class="footer-link">Comprar</a>
       <a href="/bienenhaus-landing/alquiler" class="footer-link">Alquilar</a>
-      <a href="#agents" class="footer-link">Equipo</a>
-      <a href="#contact" class="footer-link">Contacto</a>
+      <a href="/bienenhaus-landing/#agents" class="footer-link">Equipo</a>
+      <a href="/bienenhaus-landing/#contact" class="footer-link">Contacto</a>
     </div>
     <div class="footer-nav-col">
       <div class="footer-col-title">Contacto</div>
@@ -329,12 +329,14 @@
   </div>
   <div class="footer-legal">
     <span>© <span id="footerYear"></span> Bienenhaus Propiedades · <span class="cpi-badge">Matrícula CPI N° 1.834</span></span>
-    <a href="/bienenhaus-landing/admin.html" class="btn-admin-access">Admin</a>
+    <a href="/bienenhaus-landing/admin" class="btn-admin-access">Admin</a>
   </div>
 </footer>
 
+<script src="/bienenhaus-landing/js/utils.min.js"></script>
 <script src="/bienenhaus-landing/js/api.min.js"></script>
-<script src="/bienenhaus-landing/js/detalle.js"></script>
+<script src="/bienenhaus-landing/js/detalle.min.js"></script>
+<link rel="manifest" href="/bienenhaus-landing/manifest.json"/>
 <script src="/bienenhaus-landing/js/sw-register.min.js"></script>
 </body>
 </html>

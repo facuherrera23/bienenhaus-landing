@@ -1,14 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Administración · Bienenhaus</title>
-  <!-- Sin indexación por buscadores -->
+  <title>Administraci�n � Bienenhaus</title>
+  <!-- Sin indexaci�n por buscadores -->
   <meta name="robots" content="noindex, nofollow, noarchive"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/bienenhaus-landing/css/fonts.css"/>
   <link rel="stylesheet" href="/bienenhaus-landing/css/styles.min.css"/>
   <link rel="stylesheet" href="/bienenhaus-landing/css/admin.css?v=2B"/>
   <link rel="manifest" href="/bienenhaus-landing/manifest.json"/>
@@ -16,19 +14,21 @@
   <meta name="vapid-public-key" content="__VAPID_PUBLIC_KEY__"/>
   <meta name="contact-phone" content="+54 351 411-0000">
   <meta name="contact-email" content="info@bienenhaus.com.ar">
-  <meta name="site-url" content="https://facuherrera23.github.io/bienenhaus-landing">
+  <meta name="site-url" content="">
   <meta name="site-name" content="Bienenhaus Propiedades">
   <link rel="icon" type="image/x-icon" href="/bienenhaus-landing/images/favicon.ico"/>
   <link rel="icon" type="image/png" sizes="32x32" href="/bienenhaus-landing/images/favicon-32x32.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="/bienenhaus-landing/images/favicon-192x192.png"/>
   <link rel="apple-touch-icon" href="/bienenhaus-landing/images/apple-touch-icon.png"/>
-  <script>window.__API_BASE__="https://bienenhaus.onrender.com";</script>
+  <script>window.__API_BASE__="";</script>
 
 <body class="admin-body">
 
-<!-- ═══════════════════════════════════════════
-     LOGIN SCREEN — split screen premium
-═══════════════════════════════════════════ -->
+<a class="admin-skip-link" href="#admin-main">Saltar al contenido principal</a>
+
+<!-- -------------------------------------------
+     LOGIN SCREEN � split screen premium
+------------------------------------------- -->
 <div id="loginScreen" class="login-screen">
   <div class="login-bg-orb login-bg-orb--1"></div>
   <div class="login-bg-orb login-bg-orb--2"></div>
@@ -48,13 +48,13 @@
         </svg>
       </div>
       <h1 class="login-brand-name">Bienenhaus</h1>
-      <p class="login-brand-tagline">Propiedades · Asesoramiento · Inversiones</p>
+      <p class="login-brand-tagline">Propiedades � Asesoramiento � Inversiones</p>
       <div class="login-brand-divider"></div>
-      <p class="login-brand-desc">Panel de administración reservado para agentes autorizados.</p>
+      <p class="login-brand-desc">Panel de administraci�n reservado para agentes autorizados.</p>
     </div>
     <div class="login-brand-footer">
       <span class="login-version">v1.0.0</span>
-      <span class="login-copyright">© 2026 Bienenhaus Propiedades</span>
+      <span class="login-copyright">� 2026 Bienenhaus Propiedades</span>
     </div>
   </div>
 
@@ -71,7 +71,7 @@
           </svg>
         </div>
         <h2 class="login-card-title">Bienvenido</h2>
-        <p class="login-card-sub">Ingresá tus credenciales para acceder al panel</p>
+        <p class="login-card-sub">Ingres� tus credenciales para acceder al panel</p>
       </div>
 
       <form class="login-card-body" id="loginForm" novalidate>
@@ -82,7 +82,7 @@
         </div>
         <div class="field field--float">
           <input type="password" id="loginPass" class="field-input" placeholder=" " autocomplete="current-password" aria-required="true"/>
-          <label for="loginPass" class="field-label-float">Contraseña</label>
+          <label for="loginPass" class="field-label-float">Contrase�a</label>
           <span class="field-focus-ring"></span>
         </div>
 
@@ -100,16 +100,16 @@
       <div class="login-card-footer">
         <a href="/bienenhaus-landing/" class="login-back">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          Volver al sitio público
+          Volver al sitio p�blico
         </a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<!-- -------------------------------------------
      ADMIN PANEL (visible tras login)
-═══════════════════════════════════════════ -->
+------------------------------------------- -->
 <div id="adminScreen" class="admin-screen hidden">
 
   <!-- Sidebar -->
@@ -122,7 +122,7 @@
     <div class="sidebar-brand">
       <img src="/bienenhaus-landing/images/BienenhausBHBlanco512x512.png"
            alt="Bienenhaus" class="sidebar-logo"/>
-      <div class="sidebar-brand-sub" style="margin-top:6px">Administración</div>
+      <div class="sidebar-brand-sub" style="margin-top:6px">Administraci�n</div>
     </div>
 
     <nav class="sidebar-nav">
@@ -175,12 +175,20 @@
         <span class="sidebar-badge" id="sidebarAppraisalCount">0</span>
       </button>
 
+      <button class="sidebar-link" data-tab="crm">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        CRM
+        <span class="sidebar-badge" id="sidebarCrmCount">0</span>
+      </button>
       <button class="sidebar-link" data-tab="settings">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
         </svg>
-        Configuración
+        Configuraci�n
       </button>
       <button class="sidebar-link" data-tab="portals" data-role="admin">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -226,13 +234,13 @@
           <polyline points="16 17 21 12 16 7"/>
           <line x1="21" y1="12" x2="9" y2="12"/>
         </svg>
-        Cerrar sesión
+        Cerrar sesi�n
       </button>
     </div>
   </aside>
 
   <!-- Main content -->
-  <main class="admin-main">
+  <main class="admin-main" id="admin-main">
 
     <!-- User top bar -->
     <div class="admin-userbar" id="adminUserbar">
@@ -248,21 +256,21 @@
       </div>
     </div>
 
-    <!-- ── DASHBOARD TAB ── -->
+    <!-- -- DASHBOARD TAB -- -->
     <section id="tabDashboard" class="admin-tab-content">
       <div class="admin-topbar">
         <div>
           <h1 class="admin-page-title">Dashboard</h1>
           <p class="admin-page-sub">Resumen general del sitio</p>
         </div>
-        <button class="btn btn-ghost btn-sm" id="refreshDashboard">↻ Actualizar</button>
+        <button class="btn btn-ghost btn-sm" id="refreshDashboard">? Actualizar</button>
       </div>
       <div id="dashboardContent">
-        <div class="loading-state">Cargando estadísticas...</div>
+        <div class="loading-state">Cargando estad�sticas...</div>
       </div>
     </section>
 
-    <!-- ── PROPERTIES TAB ── -->
+    <!-- -- PROPERTIES TAB -- -->
     <section id="tabProps" class="admin-tab-content">
       <div class="admin-topbar">
         <div>
@@ -274,7 +282,7 @@
             <input type="checkbox" id="selectAllCheck" data-action="toggleSelectAll"/>
             Seleccionar todo
           </label>
-          <button class="btn btn-ghost btn-sm" data-action="exportCSV" title="Exportar CSV">⬇ CSV</button>
+          <button class="btn btn-ghost btn-sm" data-action="exportCSV" title="Exportar CSV">? CSV</button>
           <button class="btn btn-primary" id="newPropBtn">+ Nueva</button>
         </div>
       </div>
@@ -284,8 +292,8 @@
       </div>
       <div class="prop-search-bar">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="propSearch" class="prop-search-input" placeholder="Buscar por título o ubicación..." data-action="filterProps"/>
-        <span id="propSearchClear" class="prop-search-clear hidden" data-action="clearPropSearch">✕</span>
+        <input type="text" id="propSearch" class="prop-search-input" placeholder="Buscar por t�tulo o ubicaci�n..." data-action="filterProps"/>
+        <span id="propSearchClear" class="prop-search-clear hidden" data-action="clearPropSearch">?</span>
       </div>
       <div class="admin-filter-bar" id="filterBar">
         <select id="filterType" class="field-input field-input--select" data-action="applyAdminFilters">
@@ -296,7 +304,7 @@
           <option value="terreno">Terreno</option>
           <option value="ph">PH</option>
           <option value="oficina">Oficina</option>
-          <option value="galpon">Galpón</option>
+          <option value="galpon">Galp�n</option>
           <option value="otro">Otro</option>
         </select>
         <select id="filterStatus" class="field-input field-input--select" data-action="applyAdminFilters">
@@ -313,9 +321,9 @@
           <option value="3">3</option>
           <option value="4">4+</option>
         </select>
-        <input type="number" id="filterPriceMin" class="field-input filter-price-input" placeholder="Precio mín." data-action="applyAdminFilters"/>
-        <input type="number" id="filterPriceMax" class="field-input filter-price-input" placeholder="Precio máx." data-action="applyAdminFilters"/>
-        <button class="btn btn-ghost btn-sm" data-action="clearAdminFilters" title="Limpiar filtros">✕ Limpiar</button>
+        <input type="number" id="filterPriceMin" class="field-input filter-price-input" placeholder="Precio m�n." data-action="applyAdminFilters"/>
+        <input type="number" id="filterPriceMax" class="field-input filter-price-input" placeholder="Precio m�x." data-action="applyAdminFilters"/>
+        <button class="btn btn-ghost btn-sm" data-action="clearAdminFilters" title="Limpiar filtros">? Limpiar</button>
       </div>
       <div id="batchBar" class="batch-bar hidden">
         <span class="batch-count" id="batchCount">0 seleccionadas</span>
@@ -323,14 +331,14 @@
         <button class="btn btn-warn btn-sm" data-action="batchSetStatus" data-status="vendida">Vendida</button>
         <button class="btn btn-ghost btn-sm" data-action="batchSetStatus" data-status="oculta">Ocultar</button>
         <button class="btn btn-danger btn-sm" data-action="batchDelete">Eliminar</button>
-        <button class="btn btn-ghost btn-sm" data-action="clearSelection" style="margin-left:auto">✕ Limpiar</button>
+        <button class="btn btn-ghost btn-sm" data-action="clearSelection" style="margin-left:auto">? Limpiar</button>
       </div>
       <div id="propsAdminList" class="admin-list">
         <div class="loading-state">Cargando...</div>
       </div>
     </section>
 
-    <!-- ── AGENTS TAB ── -->
+    <!-- -- AGENTS TAB -- -->
     <section id="tabAgents" class="admin-tab-content hidden">
       <div class="admin-topbar">
         <div>
@@ -345,35 +353,35 @@
     </section>
 
 
-    <!-- ── MESSAGES TAB ── -->
+    <!-- -- MESSAGES TAB -- -->
     <section id="tabMessages" class="admin-tab-content hidden">
       <div class="admin-topbar">
         <div>
           <h1 class="admin-page-title">Mensajes</h1>
           <p class="admin-page-sub" id="msgSubtitle">Cargando...</p>
         </div>
-        <button class="btn btn-ghost btn-sm" id="refreshMsgs">↻ Actualizar</button>
+        <button class="btn btn-ghost btn-sm" id="refreshMsgs">? Actualizar</button>
       </div>
       <div id="msgList" class="admin-list">
         <div class="loading-state">Cargando mensajes...</div>
       </div>
     </section>
 
-    <!-- ── TASACION REQUESTS TAB ── -->
+    <!-- -- TASACION REQUESTS TAB -- -->
     <section id="tabTasacionRequests" class="admin-tab-content hidden">
       <div class="admin-topbar">
         <div>
-          <h1 class="admin-page-title">Solicitudes de Tasación</h1>
+          <h1 class="admin-page-title">Solicitudes de Tasaci�n</h1>
           <p class="admin-page-sub" id="tasacionReqSubtitle">Cargando...</p>
         </div>
-        <button class="btn btn-ghost btn-sm" id="refreshTasacionReqs">↻ Actualizar</button>
+        <button class="btn btn-ghost btn-sm" id="refreshTasacionReqs">? Actualizar</button>
       </div>
       <div id="tasacionReqList" class="admin-list">
         <div class="loading-state">Cargando solicitudes...</div>
       </div>
     </section>
 
-    <!-- ── APPRAISALS TAB ── -->
+    <!-- -- APPRAISALS TAB -- -->
     <section id="tabAppraisals" class="admin-tab-content hidden">
       <div id="appraisalsListView">
         <div class="admin-topbar">
@@ -381,10 +389,10 @@
             <h1 class="admin-page-title">Tasaciones</h1>
             <p class="admin-page-sub" id="appraisalSubtitle">Cargando...</p>
           </div>
-          <button class="btn btn-primary" id="newAppraisalBtn">+ Nueva tasación</button>
+          <button class="btn btn-primary" id="newAppraisalBtn">+ Nueva tasaci�n</button>
         </div>
         <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-          <input id="appraisalSearch" class="field-input" style="flex:1;min-width:200px" placeholder="Buscar por título, cliente o dirección..."/>
+          <input id="appraisalSearch" class="field-input" style="flex:1;min-width:200px" placeholder="Buscar por t�tulo, cliente o direcci�n..."/>
           <select id="appraisalFilter" class="field-input field-input--select" style="width:auto">
             <option value="">Todos los estados</option>
             <option value="borrador">Borrador</option>
@@ -404,17 +412,40 @@
       <div id="appraisalDetailView" class="hidden"></div>
     </section>
 
-    <!-- ── SETTINGS TAB ── -->
+    <!-- -- CRM TAB -- -->
+    <section id="tabCrm" class="admin-tab-content hidden">
+      <div class="admin-topbar">
+        <div>
+          <h1 class="admin-page-title">CRM</h1>
+          <p class="admin-page-sub" id="crmSubtitle">Prospectos y pipeline</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" id="refreshCrm">? Actualizar</button>
+          <button class="btn btn-primary" id="newLeadBtn">+ Nuevo prospecto</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+        <input id="crmSearch" class="field-input" style="flex:1;min-width:200px" placeholder="Buscar por nombre, email o tel�fono..."/>
+        <select id="crmStatusFilter" class="field-input field-input--select" style="width:auto"></select>
+        <select id="crmOriginFilter" class="field-input field-input--select" style="width:auto"></select>
+        <select id="crmAgentFilter" class="field-input field-input--select" style="width:auto"></select>
+      </div>
+      <div id="crmLeadList" class="admin-list">
+        <div class="loading-state">Cargando prospectos...</div>
+      </div>
+    </section>
+
+    <!-- -- SETTINGS TAB -- -->
     <section id="tabSettings" class="admin-tab-content hidden">
       <div class="admin-topbar">
         <div>
-          <h1 class="admin-page-title">Configuración</h1>
-          <p class="admin-page-sub">Ajustes del panel de administración</p>
+          <h1 class="admin-page-title">Configuraci�n</h1>
+          <p class="admin-page-sub">Ajustes del panel de administraci�n</p>
         </div>
         <label class="compact-toggle" title="Modo compacto">
           <input type="checkbox" id="compactToggle" data-action="toggleCompact"/>
           <span class="compact-toggle-track">
-            <span class="compact-toggle-icon">⊞</span>
+            <span class="compact-toggle-icon">?</span>
           </span>
           <span class="compact-toggle-label">Modo compacto</span>
         </label>
@@ -422,7 +453,7 @@
       <div id="settingsList"></div>
     </section>
 
-    <!-- ── USERS TAB ── -->
+    <!-- -- USERS TAB -- -->
     <section id="tabUsers" class="admin-tab-content hidden">
       <div class="admin-topbar">
         <div>
@@ -436,7 +467,7 @@
       </div>
     </section>
 
-    <!-- ── PORTALS TAB ── -->
+    <!-- -- PORTALS TAB -- -->
     <section id="tabPortals" class="admin-tab-content hidden">
       <div class="admin-topbar">
         <div>
@@ -478,7 +509,7 @@
         <div style="display:flex;gap:8px;margin-bottom:12px">
           <button class="btn btn-ghost btn-sm" id="btnQueuePending" data-action="loadQueue" data-status="pending">Pendientes</button>
           <button class="btn btn-ghost btn-sm" id="btnQueueAll" data-action="loadQueue" data-status="all">Todas</button>
-          <button class="btn btn-ghost btn-sm" data-action="refreshQueue" style="margin-left:auto">↻ Actualizar</button>
+          <button class="btn btn-ghost btn-sm" data-action="refreshQueue" style="margin-left:auto">? Actualizar</button>
         </div>
         <div id="queueList" class="admin-list">
           <div class="loading-state">Cargando cola...</div>
@@ -486,16 +517,16 @@
       </div>
     </section>
 
-    <!-- ── MARKETING TAB ── -->
+    <!-- -- MARKETING TAB -- -->
     <section id="tabMarketing" class="admin-tab-content hidden">
       <div class="admin-topbar">
         <div>
           <h1 class="admin-page-title">Marketing</h1>
-          <p class="admin-page-sub" id="marketingSubtitle">Redes sociales · Publicaciones automáticas</p>
+          <p class="admin-page-sub" id="marketingSubtitle">Redes sociales � Publicaciones autom�ticas</p>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" id="refreshMarketingBtn" data-action="refreshMarketing">↻ Actualizar</button>
-          <button class="btn btn-primary" id="newPostBtn">+ Nueva publicación</button>
+          <button class="btn btn-ghost btn-sm" id="refreshMarketingBtn" data-action="refreshMarketing">? Actualizar</button>
+          <button class="btn btn-primary" id="newPostBtn">+ Nueva publicaci�n</button>
         </div>
       </div>
       <div class="admin-subtabs" id="marketingSubtabs">
@@ -530,7 +561,7 @@
           <select id="postFilterAccount" class="prop-filter-select" data-action="filterPosts">
             <option value="">Todas las cuentas</option>
           </select>
-          <button class="btn btn-ghost btn-sm" data-action="refreshPosts" style="margin-left:auto">↻ Actualizar</button>
+          <button class="btn btn-ghost btn-sm" data-action="refreshPosts" style="margin-left:auto">? Actualizar</button>
         </div>
         <div id="marketingPostsList" class="admin-list">
           <div class="loading-state">Cargando publicaciones...</div>
@@ -542,7 +573,7 @@
         <div class="mk-card">
           <div class="mk-card-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            <span>Generar descripción con IA</span>
+            <span>Generar descripci�n con IA</span>
           </div>
           <div class="mk-card-body">
             <div class="field" style="margin-bottom:14px">
@@ -553,14 +584,14 @@
             </div>
             <button class="btn btn-primary" id="generateDescBtn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-              Generar descripción
+              Generar descripci�n
             </button>
             <div id="generatorResult" class="hidden" style="margin-top:14px">
               <label class="mk-label">Texto generado</label>
               <textarea id="generatedText" class="mk-textarea" style="min-height:140px"></textarea>
               <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
                 <button class="btn btn-primary btn-sm" id="copyGeneratedBtn">Copiar</button>
-                <button class="btn btn-ghost btn-sm" id="useGeneratedBtn">Usar en nueva publicación</button>
+                <button class="btn btn-ghost btn-sm" id="useGeneratedBtn">Usar en nueva publicaci�n</button>
               </div>
             </div>
           </div>
@@ -568,14 +599,14 @@
       </div>
     </section>
 
-    <!-- ── ACTIVITY TAB ── -->
+    <!-- -- ACTIVITY TAB -- -->
     <section id="tabActivity" class="admin-tab-content hidden">
       <div class="admin-topbar">
         <div>
           <h1 class="admin-page-title">Actividad</h1>
           <p class="admin-page-sub">Historial de cambios en propiedades, alquileres y agentes</p>
         </div>
-        <button class="btn btn-ghost btn-sm" id="refreshActivity">↻ Actualizar</button>
+        <button class="btn btn-ghost btn-sm" id="refreshActivity">? Actualizar</button>
       </div>
       <div id="activityList">
         <div class="loading-state">Cargando actividad...</div>
@@ -585,151 +616,151 @@
   </main>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MODAL: Vista rápida de propiedad
-═══════════════════════════════════════════ -->
+<!-- -------------------------------------------
+     MODAL: Vista r�pida de propiedad
+------------------------------------------- -->
 <div id="propPreviewModal" class="modal-backdrop hidden">
   <div class="modal-box" style="max-width:700px">
     <div class="modal-header">
       <div class="modal-title" id="propPreviewTitle">Propiedad</div>
-      <button class="modal-close" id="closePropPreview">×</button>
+      <button class="modal-close" id="closePropPreview">�</button>
     </div>
     <div class="modal-form-content" id="propPreviewContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<!-- -------------------------------------------
      MODAL: Formulario de propiedad
-═══════════════════════════════════════════ -->
+------------------------------------------- -->
 <div id="propFormModal" class="modal-backdrop hidden">
   <div class="modal-box modal-form-box">
     <div class="modal-header">
       <div class="modal-title" id="propFormTitle">Nueva Propiedad</div>
-      <button class="modal-close" id="closePropForm">×</button>
+      <button class="modal-close" id="closePropForm">�</button>
     </div>
     <div class="modal-form-content" id="propFormContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<!-- -------------------------------------------
      MODAL: Formulario de agente
-═══════════════════════════════════════════ -->
+------------------------------------------- -->
 <div id="agentFormModal" class="modal-backdrop hidden">
   <div class="modal-box modal-form-box">
     <div class="modal-header">
       <div class="modal-title" id="agentFormTitle">Nuevo Agente</div>
-      <button class="modal-close" id="closeAgentForm">×</button>
+      <button class="modal-close" id="closeAgentForm">�</button>
     </div>
     <div class="modal-form-content" id="agentFormContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<!-- -------------------------------------------
      MODAL: Formulario de usuario
-═══════════════════════════════════════════ -->
+------------------------------------------- -->
 <div id="userFormModal" class="modal-backdrop hidden">
   <div class="modal-box modal-form-box">
     <div class="modal-header">
       <div class="modal-title" id="userFormTitle">Nuevo Usuario</div>
-      <button class="modal-close" id="closeUserForm">×</button>
+      <button class="modal-close" id="closeUserForm">�</button>
     </div>
     <div class="modal-form-content" id="userFormContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<!-- -------------------------------------------
      MODAL: Formulario de portal
-═══════════════════════════════════════════ -->
+------------------------------------------- -->
 <div id="portalFormModal" class="modal-backdrop hidden">
   <div class="modal-box modal-form-box">
     <div class="modal-header">
       <div class="modal-title" id="portalFormTitle">Nuevo Portal</div>
-      <button class="modal-close" id="closePortalForm">×</button>
+      <button class="modal-close" id="closePortalForm">�</button>
     </div>
     <div class="modal-form-content" id="portalFormContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MODAL: Nueva tasación rápida
-═══════════════════════════════════════════ -->
+<!-- -------------------------------------------
+     MODAL: Nueva tasaci�n r�pida
+------------------------------------------- -->
 <div id="appraisalFormModal" class="modal-backdrop hidden">
   <div class="modal-box modal-form-box">
     <div class="modal-header">
-      <div class="modal-title" id="appraisalFormTitle">Nueva tasación</div>
-      <button class="modal-close" id="closeAppraisalForm">×</button>
+      <div class="modal-title" id="appraisalFormTitle">Nueva tasaci�n</div>
+      <button class="modal-close" id="closeAppraisalForm">�</button>
     </div>
     <div class="modal-form-content" id="appraisalFormContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<!-- -------------------------------------------
      MODAL: Formulario de comparable (desde detalle)
-═══════════════════════════════════════════ -->
+------------------------------------------- -->
 <div id="comparableFormModal" class="modal-backdrop hidden">
   <div class="modal-box" style="max-width:800px">
     <div class="modal-header">
       <div class="modal-title" id="comparableFormTitle">Nuevo comparable</div>
-      <button class="modal-close" id="closeComparableBtn">×</button>
+      <button class="modal-close" id="closeComparableBtn">�</button>
     </div>
     <div class="modal-form-content" id="comparableFormContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<!-- -------------------------------------------
      MODAL: Logs de portal
-═══════════════════════════════════════════ -->
+------------------------------------------- -->
 <div id="portalLogsModal" class="modal-backdrop hidden">
   <div class="modal-box" style="max-width:700px">
     <div class="modal-header">
       <div class="modal-title" id="portalLogsModalTitle">Logs</div>
-      <button class="modal-close" id="closePortalLogsBtn">×</button>
+      <button class="modal-close" id="closePortalLogsBtn">�</button>
     </div>
     <div id="portalLogsModalBody" class="modal-form-content"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
+<!-- -------------------------------------------
      MODAL: Cuenta de red social
-═══════════════════════════════════════════ -->
+------------------------------------------- -->
 <div id="socialAccountFormModal" class="modal-backdrop hidden">
   <div class="modal-box modal-form-box">
     <div class="modal-header">
       <div class="modal-title" id="socialAccountFormTitle">Nueva cuenta</div>
-      <button class="modal-close" id="closeSocialAccountForm">×</button>
+      <button class="modal-close" id="closeSocialAccountForm">�</button>
     </div>
     <div class="modal-form-content" id="socialAccountFormContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MODAL: Publicación en redes sociales
-═══════════════════════════════════════════ -->
+<!-- -------------------------------------------
+     MODAL: Publicaci�n en redes sociales
+------------------------------------------- -->
 <div id="socialPostFormModal" class="modal-backdrop hidden">
   <div class="modal-box" style="max-width:650px">
     <div class="modal-header">
-      <div class="modal-title" id="socialPostFormTitle">Nueva publicación</div>
-      <button class="modal-close" id="closeSocialPostForm">×</button>
+      <div class="modal-title" id="socialPostFormTitle">Nueva publicaci�n</div>
+      <button class="modal-close" id="closeSocialPostForm">�</button>
     </div>
     <div class="modal-form-content" id="socialPostFormContent"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MODAL: Vista previa de publicación
-═══════════════════════════════════════════ -->
+<!-- -------------------------------------------
+     MODAL: Vista previa de publicaci�n
+------------------------------------------- -->
 <div id="socialPostPreviewModal" class="modal-backdrop hidden">
   <div class="modal-box" style="max-width:580px">
     <div class="modal-header">
       <div class="modal-title">Vista previa</div>
-      <button class="modal-close" id="closeSocialPostPreview">×</button>
+      <button class="modal-close" id="closeSocialPostPreview">�</button>
     </div>
     <div class="modal-form-content" id="socialPostPreviewContent"></div>
   </div>
 </div>
 
 <script>
-// ── CSRF-aware request helper ──
+// -- CSRF-aware request helper --
 async function _socialReq(method, path, body) {
   var csrf = window._csrfToken;
   if (!csrf && method !== 'GET') {
@@ -772,7 +803,7 @@ function toast(msg, type, duration) {
   var t = document.createElement('div');
   var colors = { info: 'rgba(32,184,171,0.12)', warn: 'rgba(200,169,110,0.15)', error: 'rgba(204,53,53,0.15)', success: 'rgba(76,175,128,0.12)' };
   var borders = { info: 'rgba(32,184,171,0.3)', warn: 'rgba(200,169,110,0.3)', error: 'rgba(204,53,53,0.3)', success: 'rgba(76,175,128,0.3)' };
-  var icons = { info: 'ℹ', warn: '⚠', error: '✕', success: '✓' };
+  var icons = { info: '?', warn: '?', error: '?', success: '?' };
   t.style.cssText = 'pointer-events:auto;background:' + colors[type] + ';border:1px solid ' + borders[type] + ';border-radius:8px;padding:12px 18px;color:var(--white);font-size:12px;font-family:Poppins,sans-serif;display:flex;align-items:center;gap:8px;max-width:360px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,0.3);transform:translateX(120%);opacity:0;transition:transform .4s cubic-bezier(0.16, 1, 0.3, 1), opacity .3s';
   t.innerHTML = '<span style="font-size:14px;flex-shrink:0">' + icons[type] + '</span><span style="flex:1;line-height:1.4"></span>';
   t.lastChild.textContent = msg;
@@ -784,7 +815,7 @@ function toast(msg, type, duration) {
   }, duration);
 }
 
-// Confirm modal — returns Promise<boolean>
+// Confirm modal � returns Promise<boolean>
 function confirmModal(msg) {
   return new Promise(function (resolve) {
     var existing = document.getElementById('confirmModalWrap');
@@ -798,7 +829,7 @@ function confirmModal(msg) {
     box.style.cssText = 'background:var(--s1,#0f0f0f);border:1px solid var(--b,#222);border-radius:10px;padding:28px 30px 24px;max-width:380px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,0.5)';
 
     var icon = document.createElement('div');
-    icon.textContent = '⚠';
+    icon.textContent = '?';
     icon.style.cssText = 'font-size:28px;margin-bottom:12px;text-align:center';
 
     var text = document.createElement('div');
@@ -881,7 +912,7 @@ function toggleCompact(checked) {
   localStorage.setItem('compactMode', checked);
 }
 
-// ── Event delegation (replaces unsafe-inline event handlers) ──
+// -- Event delegation (replaces unsafe-inline event handlers) --
 (function() {
   function _action(el) {
     return el.getAttribute('data-action');
@@ -953,11 +984,11 @@ function toggleCompact(checked) {
   });
 })();
 
-// ═══════════════════════════════════════════════════════════════
+// ---------------------------------------------------------------
 // MARKETING (Redes Sociales)
-// ═══════════════════════════════════════════════════════════════
+// ---------------------------------------------------------------
 
-// ── Subtabs ──
+// -- Subtabs --
 document.addEventListener('click', function(e) {
   var btn = e.target.closest('[data-marketing-subtab]');
   if (!btn) return;
@@ -973,7 +1004,7 @@ document.addEventListener('click', function(e) {
   if (target === 'generator') loadGeneratorProps();
 });
 
-// ── Load accounts ──
+// -- Load accounts --
 function loadSocialAccounts() {
   var list = document.getElementById('marketingAccountsList');
   var summary = document.getElementById('mkAccountSummary');
@@ -1014,18 +1045,18 @@ function loadSocialAccounts() {
       if (pageInfo) h += '<div class="mk-account-meta">' + pageInfo + '</div>';
       h += '<div class="mk-account-actions">';
       h += '<button class="btn btn-ghost btn-sm" data-action="openSocialAccountForm" data-aid="' + a.id + '">Editar</button>';
-      h += '<button class="btn btn-ghost btn-sm" data-action="testSocialAccount" data-aid="' + a.id + '">Probar conexión</button>';
+      h += '<button class="btn btn-ghost btn-sm" data-action="testSocialAccount" data-aid="' + a.id + '">Probar conexi�n</button>';
       h += '<button class="btn btn-ghost btn-sm" data-action="toggleSocialAccount" data-aid="' + a.id + '">' + (isActive ? 'Desactivar' : 'Activar') + '</button>';
       h += '<button class="btn btn-ghost btn-sm" style="color:var(--danger)" data-action="confirmDeleteSocialAccount" data-aid="' + a.id + '">Eliminar</button>';
       h += '</div></div></div>';
     });
     list.innerHTML = h || '<div class="empty-state">Sin cuentas</div>';
   }).catch(function(err) {
-    list.innerHTML = '<div class="error-state">Error de conexión: ' + err.message + '</div>';
+    list.innerHTML = '<div class="error-state">Error de conexi�n: ' + err.message + '</div>';
   });
 }
 
-// ── Open account form ──
+// -- Open account form --
 function openSocialAccountForm(aid) {
   var modal = document.getElementById('socialAccountFormModal');
   var content = document.getElementById('socialAccountFormContent');
@@ -1056,7 +1087,7 @@ function openSocialAccountForm(aid) {
       '<input type="checkbox" id="saActive"' + ((account && account.active) ? ' checked' : '') + ' class="mk-checkbox"/></div>' +
       '</div>' +
       '<div class="mk-form-footer">' +
-      (isEdit ? '<button class="btn btn-ghost btn-sm" id="testSocialConnBtn" data-aid="' + aid + '">Probar conexión</button>' : '') +
+      (isEdit ? '<button class="btn btn-ghost btn-sm" id="testSocialConnBtn" data-aid="' + aid + '">Probar conexi�n</button>' : '') +
       '<div class="mk-footer-actions">' +
       '<button class="btn btn-ghost" id="cancelSocialAccountBtn">Cancelar</button>' +
       '<button class="btn btn-primary" id="saveSocialAccountBtn">' + (isEdit ? 'Guardar' : 'Crear') + '</button></div></div>';
@@ -1069,10 +1100,10 @@ function openSocialAccountForm(aid) {
         btn.textContent = 'Probando...';
         _socialReq('POST', '/api/social/accounts/' + aid + '/test').then(function(res) {
             btn.disabled = false;
-            btn.textContent = 'Probar conexión';
-            if (res.ok) { toast('✅ Conectado: ' + (res.data.name||'') + (res.data.followers ? ' · ' + res.data.followers + ' seguidores' : ''), 'success', 5000); }
+            btn.textContent = 'Probar conexi�n';
+            if (res.ok) { toast('? Conectado: ' + (res.data.name||'') + (res.data.followers ? ' � ' + res.data.followers + ' seguidores' : ''), 'success', 5000); }
             else { toast(res.error||'Error', 'error'); }
-          }).catch(function(err) { btn.disabled = false; btn.textContent = 'Probar conexión'; toast(err.message, 'error'); });
+          }).catch(function(err) { btn.disabled = false; btn.textContent = 'Probar conexi�n'; toast(err.message, 'error'); });
       };
     }
     document.getElementById('saveSocialAccountBtn').onclick = function() {
@@ -1109,7 +1140,7 @@ function openSocialAccountForm(aid) {
   modal.classList.remove('hidden');
 }
 
-// ── Toggle account active ──
+// -- Toggle account active --
 function toggleSocialAccount(aid, el) {
   _socialReq('PUT', '/api/social/accounts/' + aid, {}).then(function(res) {
     if (!res.ok) { toast('Error', 'error'); return; }
@@ -1118,14 +1149,14 @@ function toggleSocialAccount(aid, el) {
   }).catch(function(err) { toast(err.message, 'error'); });
 }
 
-// ── Test connection ──
+// -- Test connection --
 function testSocialAccount(aid) {
-  var toastTimeout = setTimeout(function() { toast('Probando conexión...', 'info'); }, 300);
+  var toastTimeout = setTimeout(function() { toast('Probando conexi�n...', 'info'); }, 300);
   _socialReq('POST', '/api/social/accounts/' + aid + '/test').then(function(res) {
       clearTimeout(toastTimeout);
-      if (!res.ok) { toast(res.error||'Error de conexión', 'error'); return; }
+      if (!res.ok) { toast(res.error||'Error de conexi�n', 'error'); return; }
       var d = res.data;
-      var msg = '✅ Conectado: ' + (d.name||'') + (d.followers ? ' · ' + d.followers + ' seguidores' : '');
+      var msg = '? Conectado: ' + (d.name||'') + (d.followers ? ' � ' + d.followers + ' seguidores' : '');
       toast(msg, 'success', 5000);
     }).catch(function(err) {
       clearTimeout(toastTimeout);
@@ -1133,9 +1164,9 @@ function testSocialAccount(aid) {
     });
 }
 
-// ── Delete account ──
+// -- Delete account --
 function confirmDeleteSocialAccount(aid) {
-  confirmModal('¿Eliminar esta cuenta? Los posts asociados dejarán de tener cuenta.').then(function(ok) {
+  confirmModal('�Eliminar esta cuenta? Los posts asociados dejar�n de tener cuenta.').then(function(ok) {
     if (!ok) return;
     _socialReq('DELETE', '/api/social/accounts/' + aid).then(function(res) {
       if (res.ok) { toast('Cuenta eliminada', 'success'); loadSocialAccounts(); }
@@ -1144,7 +1175,7 @@ function confirmDeleteSocialAccount(aid) {
   });
 }
 
-// ── Posts ──
+// -- Posts --
 function loadSocialPosts() {
   var list = document.getElementById('marketingPostsList');
   var summary = document.getElementById('mkPostSummary');
@@ -1175,7 +1206,7 @@ function loadSocialPosts() {
         '</div>';
     } else if (summary) { summary.innerHTML = ''; }
     if (!data.length) {
-      list.innerHTML = '<div class="empty-state">Sin publicaciones aún.</div>';
+      list.innerHTML = '<div class="empty-state">Sin publicaciones a�n.</div>';
       updatePostAccountFilter([]);
       return;
     }
@@ -1202,7 +1233,7 @@ function loadSocialPosts() {
       }
       h += '</div></div>';
       h += '<div class="mk-post-preview">' + escHtml(short) + '</div>';
-      if (p.media_urls && p.media_urls.length) h += '<div style="font-size:10px;color:var(--g3);margin-top:4px">📷 ' + p.media_urls.length + ' imagen(es)</div>';
+      if (p.media_urls && p.media_urls.length) h += '<div style="font-size:10px;color:var(--g3);margin-top:4px">?? ' + p.media_urls.length + ' imagen(es)</div>';
       h += '<div class="mk-post-footer"><span class="mk-post-account">' + escHtml(accountLabel) + '</span></div>';
       if (p.error) h += '<div class="mk-post-error">Error: ' + escHtml(p.error) + '</div>';
       h += '</div>';
@@ -1210,7 +1241,7 @@ function loadSocialPosts() {
     list.innerHTML = h || '<div class="empty-state">Sin resultados</div>';
     updatePostAccountFilter(data);
   }).catch(function(err) {
-    list.innerHTML = '<div class="error-state">Error de conexión: ' + err.message + '</div>';
+    list.innerHTML = '<div class="error-state">Error de conexi�n: ' + err.message + '</div>';
   });
 }
 
@@ -1251,10 +1282,10 @@ function refreshPosts() {
 }
 
 function deleteSocialPost(pid) {
-  confirmModal('¿Eliminar esta publicación?').then(function(ok) {
+  confirmModal('�Eliminar esta publicaci�n?').then(function(ok) {
     if (!ok) return;
     _socialReq('DELETE', '/api/social/posts/' + pid).then(function(res) {
-      if (res.ok) { toast('Publicación eliminada', 'success'); loadSocialPosts(); }
+      if (res.ok) { toast('Publicaci�n eliminada', 'success'); loadSocialPosts(); }
       else { toast(res.error||'Error', 'error'); }
     }).catch(function(err) { toast(err.message, 'error'); });
   });
@@ -1262,16 +1293,16 @@ function deleteSocialPost(pid) {
 
 function previewSocialPost(pid) {
   _socialReq('GET', '/api/social/posts?account_id=0').then(function(res) {
-    if (!res.ok) { toast('Error cargando publicación', 'error'); return; }
+    if (!res.ok) { toast('Error cargando publicaci�n', 'error'); return; }
     var p = (res.data||[]).find(function(x) { return x.id === pid; });
-    if (!p) { toast('Publicación no encontrada', 'error'); return; }
+    if (!p) { toast('Publicaci�n no encontrada', 'error'); return; }
     var modal = document.getElementById('socialPostPreviewModal');
     var content = document.getElementById('socialPostPreviewContent');
     var statusLabels = { draft: 'Borrador', scheduled: 'Programado', publishing: 'Publicando', published: 'Publicado', failed: 'Fallido' };
-    var scheduled = p.scheduled_at ? '<div style="font-size:11px;color:var(--g3);margin-bottom:8px">📅 ' + p.scheduled_at.replace('T', ' ').substring(0, 16) + '</div>' : '';
+    var scheduled = p.scheduled_at ? '<div style="font-size:11px;color:var(--g3);margin-bottom:8px">?? ' + p.scheduled_at.replace('T', ' ').substring(0, 16) + '</div>' : '';
     var media = '';
     if (p.media_urls && p.media_urls.length) {
-      media = '<div style="margin:10px 0 6px;font-size:10px;color:var(--g3)">📷 ' + p.media_urls.length + ' imagen(es):</div>';
+      media = '<div style="margin:10px 0 6px;font-size:10px;color:var(--g3)">?? ' + p.media_urls.length + ' imagen(es):</div>';
       p.media_urls.forEach(function(url) {
         media += '<img src="' + escHtml(url) + '" style="max-width:100%;border-radius:6px;margin-bottom:6px;max-height:300px;object-fit:cover;background:var(--s3)" onerror="this.style.display=\'none\'" />';
       });
@@ -1292,12 +1323,12 @@ function previewSocialPost(pid) {
 
 function publishSocialPost(pid) {
   _socialReq('PUT', '/api/social/posts/' + pid, {status: 'publishing'}).then(function(res) {
-    if (res.ok) { toast('Publicación procesada', 'success'); loadSocialPosts(); }
+    if (res.ok) { toast('Publicaci�n procesada', 'success'); loadSocialPosts(); }
     else { toast(res.error||'Error', 'error'); }
   }).catch(function(err) { toast(err.message, 'error'); });
 }
 
-// ── Generator ──
+// -- Generator --
 function loadGeneratorProps() {
   var sel = document.getElementById('generatorPropSelect');
   if (!sel) return;
@@ -1308,7 +1339,7 @@ function loadGeneratorProps() {
     data.forEach(function(p) {
       var opt = document.createElement('option');
       opt.value = p.id;
-      opt.textContent = (p.title || 'Sin título') + ' - ' + (p.city || '');
+      opt.textContent = (p.title || 'Sin t�tulo') + ' - ' + (p.city || '');
       sel.appendChild(opt);
     });
   }).catch(function() {});
@@ -1319,7 +1350,7 @@ document.addEventListener('click', function(e) {
   if (!el) return;
   var modal = document.getElementById('socialPostFormModal');
   var content = document.getElementById('socialPostFormContent');
-  document.getElementById('socialPostFormTitle').textContent = 'Nueva publicación';
+  document.getElementById('socialPostFormTitle').textContent = 'Nueva publicaci�n';
   content.innerHTML =
     '<div class="mk-form-grid">' +
     '<div class="mk-field"><label class="mk-label">Cuenta</label>' +
@@ -1328,7 +1359,7 @@ document.addEventListener('click', function(e) {
     '<select id="spProperty" class="mk-select"><option value="">Sin propiedad</option></select></div>' +
     '<div class="mk-field" style="grid-column:1/-1"><label class="mk-label">Contenido</label>' +
     '<textarea id="spContent" class="mk-textarea" style="min-height:120px"></textarea></div>' +
-    '<div class="mk-field" style="grid-column:1/-1"><label class="mk-label">URLs de imágenes (una por línea)</label>' +
+    '<div class="mk-field" style="grid-column:1/-1"><label class="mk-label">URLs de im�genes (una por l�nea)</label>' +
     '<textarea id="spMedia" class="mk-textarea" style="min-height:60px" placeholder="https://..."></textarea></div>' +
     '<div class="mk-field"><label class="mk-label">Programar para</label>' +
     '<input type="datetime-local" id="spScheduled" class="mk-input"/></div>' +
@@ -1375,7 +1406,7 @@ document.addEventListener('click', function(e) {
     };
     if (scheduled) body.scheduled_at = new Date(scheduled).toISOString();
     _socialReq('POST', '/api/social/posts', body).then(function(res) {
-      if (res.ok) { modal.classList.add('hidden'); toast('Publicación creada', 'success'); loadSocialPosts(); }
+      if (res.ok) { modal.classList.add('hidden'); toast('Publicaci�n creada', 'success'); loadSocialPosts(); }
       else { toast(res.error||'Error', 'error'); }
     }).catch(function(err) { toast(err.message, 'error'); });
   };
@@ -1386,18 +1417,18 @@ document.addEventListener('click', function(e) {
   var el = e.target.closest('#generateDescBtn');
   if (!el) return;
   var propId = document.getElementById('generatorPropSelect').value;
-  if (!propId) { toast('Seleccioná una propiedad', 'warn'); return; }
+  if (!propId) { toast('Seleccion� una propiedad', 'warn'); return; }
   el.disabled = true;
   el.textContent = 'Generando...';
   _socialReq('POST', '/api/social/generate-description', {property_id: parseInt(propId)}).then(function(res) {
     el.disabled = false;
-    el.textContent = 'Generar descripción';
+    el.textContent = 'Generar descripci�n';
     if (!res.ok) { toast(res.error||'Error', 'error'); return; }
     document.getElementById('generatedText').value = res.data.description;
     document.getElementById('generatorResult').classList.remove('hidden');
   }).catch(function(err) {
     el.disabled = false;
-    el.textContent = 'Generar descripción';
+    el.textContent = 'Generar descripci�n';
     toast(err.message, 'error');
   });
 });
@@ -1416,7 +1447,7 @@ document.addEventListener('click', function(e) {
   if (!el) return;
   var ta = document.getElementById('generatedText');
   var modal = document.getElementById('socialPostFormModal');
-  document.getElementById('socialPostFormTitle').textContent = 'Nueva publicación (desde generador)';
+  document.getElementById('socialPostFormTitle').textContent = 'Nueva publicaci�n (desde generador)';
   document.getElementById('socialPostFormContent').innerHTML =
     '<div class="mk-form-grid">' +
     '<div class="mk-field"><label class="mk-label">Cuenta</label>' +
@@ -1425,7 +1456,7 @@ document.addEventListener('click', function(e) {
     '<select id="spProperty" class="mk-select"><option value="">Sin propiedad</option></select></div>' +
     '<div class="mk-field" style="grid-column:1/-1"><label class="mk-label">Contenido</label>' +
     '<textarea id="spContent" class="mk-textarea" style="min-height:120px">' + escHtml(ta.value) + '</textarea></div>' +
-    '<div class="mk-field" style="grid-column:1/-1"><label class="mk-label">URLs de imágenes (una por línea)</label>' +
+    '<div class="mk-field" style="grid-column:1/-1"><label class="mk-label">URLs de im�genes (una por l�nea)</label>' +
     '<textarea id="spMedia" class="mk-textarea" style="min-height:60px" placeholder="https://..."></textarea></div>' +
     '<div class="mk-field"><label class="mk-label">Programar para</label>' +
     '<input type="datetime-local" id="spScheduled" class="mk-input"/></div>' +
@@ -1470,7 +1501,7 @@ document.addEventListener('click', function(e) {
     };
     if (scheduled) body.scheduled_at = new Date(scheduled).toISOString();
     _socialReq('POST', '/api/social/posts', body).then(function(res) {
-      if (res.ok) { modal.classList.add('hidden'); toast('Publicación creada', 'success'); loadSocialPosts(); }
+      if (res.ok) { modal.classList.add('hidden'); toast('Publicaci�n creada', 'success'); loadSocialPosts(); }
       else { toast(res.error||'Error', 'error'); }
     }).catch(function(err) { toast(err.message, 'error'); });
   };
@@ -1484,6 +1515,7 @@ document.addEventListener('click', function(e) {
   el.closest('.modal-backdrop').classList.add('hidden');
 });
 </script>
+<script src="/bienenhaus-landing/js/utils.js"></script>
 <script src="/bienenhaus-landing/js/admin-bundle.min.js"></script>
 <script src="/bienenhaus-landing/js/pdf-brochure.js"></script>
 <script src="/bienenhaus-landing/js/pdf-appraisal.js"></script>

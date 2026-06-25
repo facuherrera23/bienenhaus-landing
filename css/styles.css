@@ -96,7 +96,7 @@
   --success:    var(--ds-color-success);
 
   /* ── Misc ── */
-  --hero-bg-img: url(/bienenhaus-landing/images/hero-bg.webp);
+  --hero-bg-img: url('/bienenhaus-landing/images/hero-bg.webp');
 }
 
 /* ── Grain texture overlay ───────────────────────────────────────────── */
@@ -215,7 +215,7 @@ input:focus, textarea:focus, select:focus { outline: none; }
 #hero::before {
   content: '';
   position: absolute; inset: 0; z-index: 0;
-  background-image: url(/bienenhaus-landing/images/hex-pattern.svg);
+  background-image: url('/bienenhaus-landing/images/hex-pattern.svg');
   background-size: 120px 104px;
   opacity: .5;
   pointer-events: none;
@@ -714,7 +714,7 @@ input:focus, textarea:focus, select:focus { outline: none; }
 .section-heading::before {
   content: '';
   position: absolute; top: -40px; left: -40px; right: -40px; bottom: -40px;
-  background-image: url(/bienenhaus-landing/images/hex-pattern.svg);
+  background-image: url('/bienenhaus-landing/images/hex-pattern.svg');
   background-size: 120px 104px;
   opacity: .06;
   pointer-events: none;

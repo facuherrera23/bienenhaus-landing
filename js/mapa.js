@@ -28,8 +28,7 @@ async function initMapa(containerId, kind) {
   }).addTo(map);
 
   try {
-    const base = window.__API_BASE__ || '';
-    const res = await fetch(base + '/api/map/data');
+    const res = await fetch('/api/map/data', { credentials: 'same-origin' });
     const d = await res.json();
     if (!d.ok) throw new Error(d.error);
     const data = d.data;
@@ -67,7 +66,7 @@ async function initMapa(containerId, kind) {
       const priceStr = item.kind === 'alquiler'
         ? `$${Number(item.price).toLocaleString('es-AR')}/mes`
         : `USD ${Number(item.price).toLocaleString('es-AR')}`;
-      const link = item.kind === 'alquiler' ? `/bienenhaus-landing/alquiler/${item.id}` : `/bienenhaus-landing/venta/${item.id}`;
+      const link = item.kind === 'alquiler' ? `/alquiler/${item.id}` : `/venta/${item.id}`;
       const img = item.image
         ? `<img src="${item.image}" style="width:100%;height:100px;object-fit:cover;border-radius:3px;margin-bottom:6px"/>`
         : '';

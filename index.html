@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="canonical" href="https://facuherrera23.github.io/bienenhaus-landing/"/>
+  <link rel="canonical" href="__SITE_URL__/"/>
   <title>Bienenhaus Propiedades · Córdoba</title>
   <meta name="description" content="Inmobiliaria de confianza en Córdoba. Casas, departamentos y fincas seleccionados por expertos."/>
   <!-- Schema.org RealEstateAgent -->
@@ -13,11 +13,11 @@
     "@type": "RealEstateAgent",
     "name": "Bienenhaus Propiedades",
     "description": "Inmobiliaria en Córdoba. Casas, departamentos, fincas y terrenos seleccionados por expertos en el mercado inmobiliario de Córdoba.",
-    "url": "https://facuherrera23.github.io/bienenhaus-landing",
+    "url": "__SITE_URL__",
     "telephone": "+54 351 411-0000",
     "email": "info@bienenhaus.com.ar",
-    "image": "https://facuherrera23.github.io/bienenhaus-landing/images/logo-bienenhaus.png",
-    "logo": "https://facuherrera23.github.io/bienenhaus-landing/images/logo-bienenhaus.png",
+    "image": "__SITE_URL__/images/logo-bienenhaus.png",
+    "logo": "__SITE_URL__/images/logo-bienenhaus.png",
     "priceRange": "$$",
     "currenciesAccepted": "USD",
     "areaServed": [
@@ -68,16 +68,16 @@
   <!-- SEO + Open Graph -->
   <meta name="robots" content="index, follow"/>
   <meta property="og:type"        content="website"/>
-  <meta property="og:url"         content="https://facuherrera23.github.io/bienenhaus-landing"/>
+  <meta property="og:url"         content="__SITE_URL__"/>
   <meta property="og:title"       content="Bienenhaus Propiedades · Córdoba"/>
   <meta property="og:description" content="Inmobiliaria en Córdoba. Casas, departamentos y fincas seleccionadas por expertos."/>
-  <meta property="og:image"       content="https://facuherrera23.github.io/bienenhaus-landing/images/logo-bienenhaus.png"/>
+  <meta property="og:image"       content="__SITE_URL__/images/logo-bienenhaus.png"/>
   <meta property="og:locale"      content="es_AR"/>
   <meta property="og:site_name"   content="Bienenhaus Propiedades"/>
   <meta name="twitter:card"        content="summary_large_image"/>
   <meta name="twitter:title"       content="Bienenhaus Propiedades · Córdoba"/>
   <meta name="twitter:description" content="Inmobiliaria en Córdoba. Casas, departamentos y fincas seleccionadas por expertos."/>
-  <meta name="twitter:image"       content="https://facuherrera23.github.io/bienenhaus-landing/images/logo-bienenhaus.png"/>
+  <meta name="twitter:image"       content="__SITE_URL__/images/logo-bienenhaus.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="preconnect" href="https://res.cloudinary.com"/>
@@ -219,8 +219,8 @@
       .tasacion-toggle { font-size: 0.75rem; padding: 12px 24px; }
     }
   </style>
-  <script>window.__API_BASE__="https://bienenhaus.onrender.com";</script>
-
+  <script>window.__API_BASE__='https://bienenhaus.onrender.com'</script>
+</head>
 <body>
 
 <!-- ════════════════════════════════════════════════
@@ -894,7 +894,7 @@
   </div>
   <div class="footer-legal">
     <span>© <span id="footerYear"></span> Bienenhaus Propiedades · <span class="cpi-badge">Matrícula CPI N° 1.834</span></span>
-    <a href="/bienenhaus-landing/admin.html" class="btn-admin-access">Admin</a>
+    <a href="/bienenhaus-landing/admin" class="btn-admin-access">Admin</a>
   </div>
 </footer>
 
@@ -915,8 +915,9 @@
   </svg>
 </a>
 
+<script src="/bienenhaus-landing/js/utils.min.js"></script>
 <script src="/bienenhaus-landing/js/api.min.js"></script>
-<script src="/bienenhaus-landing/js/properties.js"></script>
+<script src="/bienenhaus-landing/js/properties.min.js"></script>
   <script src="/bienenhaus-landing/js/agents.min.js"></script>
   <script src="/bienenhaus-landing/js/comparador.min.js"></script>
   <script src="/bienenhaus-landing/js/main.min.js"></script>

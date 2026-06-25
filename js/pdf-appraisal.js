@@ -145,8 +145,8 @@ async function generarPDFAppraisal(id) {
     if ((a.comparables || []).length > 0) {
       const head = [['#', 'Dirección', 'Precio USD', 'm²', 'USD/m²', 'Coef.', 'Ajustado', 'Antig.', 'Estac.', 'Hab.', 'Ubic.', 'Mant.', 'Comod.']];
       const body = a.comparables.map(c => {
-        const coef = c._coef ?? '';
-        const ajustado = c._ajustado ?? '';
+        const coef = c.coeficiente_ajuste ?? '';
+        const ajustado = c.valor_m2_ajustado ?? '';
         return [
           `C${c.numero}`,
           `${c.calle || ''} ${c.numero_calle || ''}`.trim() || '—',

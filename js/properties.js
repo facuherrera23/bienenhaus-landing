@@ -99,7 +99,7 @@ function buildPropCard(prop) {
       </div>
       <div class="card-body">
         <div class="card-location">${eloc}</div>
-        <a href="/bienenhaus-landing/venta/${prop.id}" class="card-title-link"><h3 class="card-title">${etitle}</h3></a>
+        <a href="/venta/${prop.id}" class="card-title-link"><h3 class="card-title">${etitle}</h3></a>
         <p class="card-desc">${edesc}</p>
         <div class="card-specs">
           <div class="spec"><div class="spec-n">${prop.beds}</div><div class="spec-l">dorms.</div></div>
@@ -107,7 +107,7 @@ function buildPropCard(prop) {
           <div class="spec"><div class="spec-n">${prop.sqm}m²</div><div class="spec-l">sup.</div></div>
         </div>
         <div class="card-footer">
-          <a href="/bienenhaus-landing/venta/${prop.id}" class="btn btn-ghost btn-sm">Ver detalle</a>
+          <a href="/venta/${prop.id}" class="btn btn-ghost btn-sm">Ver detalle</a>
           ${whatsappLink}
         </div>
       </div>

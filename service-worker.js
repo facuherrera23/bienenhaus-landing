@@ -143,13 +143,13 @@ self.addEventListener('push', (e) => {
   self.registration.showNotification(data.title, {
     body: data.body,
     icon: data.icon,
-    badge: '/bienenhaus-landing/images/logo-bienenhaus.png',
+    badge: '/images/logo-bienenhaus.png',
     data: data.url ? { url: data.url } : {},
   });
 });
 
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
-  const url = e.notification.data?.url || '/bienenhaus-landing/';
+  const url = e.notification.data?.url || '/';
   clients.openWindow(url);
 });

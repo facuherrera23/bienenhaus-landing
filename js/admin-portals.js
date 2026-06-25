@@ -73,6 +73,10 @@ function renderPortals() {
         </label>
         <button class="btn btn-ghost btn-sm" onclick="editPortal(${p.id})">Editar</button>
         <button class="btn btn-ghost btn-sm" onclick="viewPortalLogs(${p.id})">Logs</button>
+        ${p.slug === 'mercadolibre' ? `
+          <button class="btn btn-ghost btn-sm" onclick="syncFromML()">↻ ML Import</button>
+          <button class="btn btn-ghost btn-sm" onclick="syncBidiML()">⟷ ML Sync</button>
+        ` : ''}
         <button class="btn btn-danger btn-sm" onclick="confirmDeletePortal(${p.id})">Eliminar</button>
       </div>
     </div>`).join('');
@@ -233,6 +237,16 @@ function openPortalForm(data) {
         </label>
         <span style="color:var(--g3);font-size:13px">Portal activo</span>
       </div>
+      ${data && data.slug === 'mercadolibre' ? `
+      <div style="margin-top:16px;padding:12px;background:var(--g7);border-radius:6px">
+        <p style="font-size:13px;color:var(--g3);margin-bottom:8px">
+          Vinculá tu cuenta de MercadoLibre para empezar a publicar:
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="connectMercadoLibre()" id="mlConnectBtn">
+          🔗 Conectar con MercadoLibre
+        </button>
+        <span id="mlConnectedBadge" style="display:none;color:var(--green);font-size:13px">✓ Conectado</span>
+      </div>` : ''}
       <div style="display:flex;gap:10px;margin-top:20px">
         <button class="btn btn-primary btn-full" id="savePortalBtn">${data ? 'Guardar cambios' : 'Crear portal'}</button>
         <button class="btn btn-ghost" onclick="closePortalForm()">Cancelar</button>
@@ -240,6 +254,17 @@ function openPortalForm(data) {
     </div>`;
   $('portalFormModal').classList.remove('hidden');
   $('savePortalBtn').onclick = () => savePortalForm(data?.id);
+
+  // Mostrar badge si ML ya está conectado
+  if (data && data.slug === 'mercadolibre') {
+    const cfg = data.config || {};
+    if (cfg.refresh_token || cfg.access_token) {
+      const badge = $('mlConnectedBadge');
+      const btn = $('mlConnectBtn');
+      if (badge) badge.style.display = '';
+      if (btn) btn.textContent = '🔄 Reconectar con MercadoLibre';
+    }
+  }
 }
 
 function closePortalForm() { $('portalFormModal').classList.add('hidden'); }
@@ -312,6 +337,96 @@ function viewPortalLogs(portalId) {
 
 function closePortalLogsModal() { $('portalLogsModal').classList.add('hidden'); }
 
+/* ── MercadoLibre OAuth ───────────────────────────────────────── */
+async function connectMercadoLibre() {
+  const btn = $('mlConnectBtn');
+  if (!btn) return;
+  btn.disabled = true; btn.textContent = 'Conectando...';
+  try {
+    const data = await _req('GET', '/api/portals/ml/auth-url');
+    if (data.auth_url) {
+      const popup = window.open(data.auth_url, 'ml_oauth',
+        'width=600,height=700,left=200,top=100');
+      if (!popup) { toast('Bloqueador de ventanas emergentes. Permití popups para este sitio.', 'warn'); return; }
+      const timer = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(timer);
+          btn.textContent = '🔗 Conectar con MercadoLibre';
+          btn.disabled = false;
+          toast('Cuenta vinculada correctamente. Cerra y volvé a abrir el editor para ver los tokens.', 'ok');
+        }
+      }, 500);
+    }
+  } catch (e) {
+    btn.textContent = '🔗 Conectar con MercadoLibre';
+    btn.disabled = false;
+    toast(e.message, 'error');
+  }
+}
+
+/* ── ML Sync ────────────────────────────────────────────────── */
+async function syncFromML() {
+  return syncBidiML();
+}
+
+function showSyncProgressModal() {
+  const existing = $('mlSyncModal');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.id = 'mlSyncModal';
+  el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center';
+  el.innerHTML = `
+    <div style="background:var(--g9);border-radius:8px;padding:24px;min-width:360px;max-width:480px">
+      <h3 style="margin:0 0 8px">Sincronizando con MercadoLibre…</h3>
+      <p id="mlSyncPhase" style="font-size:13px;color:var(--g3);margin:0 0 12px">Iniciando…</p>
+      <div style="height:8px;background:var(--g7);border-radius:4px;overflow:hidden">
+        <div id="mlSyncBar" style="width:0%;height:100%;background:var(--accent);border-radius:4px;transition:width .3s"></div>
+      </div>
+      <p id="mlSyncCount" style="font-size:12px;color:var(--g4);margin:6px 0 12px;text-align:right">0 / 0</p>
+      <div id="mlSyncErrors" style="max-height:100px;overflow-y:auto;font-size:12px;color:var(--red);margin-bottom:8px"></div>
+      <div style="text-align:right">
+        <button class="btn btn-ghost btn-sm" onclick="closeSyncProgressModal()">Cerrar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(el);
+}
+
+function closeSyncProgressModal() {
+  const el = $('mlSyncModal');
+  if (el) el.remove();
+}
+
+function updateSyncProgress() {
+  _req('GET', '/api/portals/ml/sync/progress').then(p => {
+    const phase = $('mlSyncPhase');
+    const bar = $('mlSyncBar');
+    const count = $('mlSyncCount');
+    const errDiv = $('mlSyncErrors');
+    if (!phase) return;
+    phase.textContent = p.phase || 'Sincronizando…';
+    const pct = p.total > 0 ? Math.round((p.current / p.total) * 100) : 0;
+    if (bar) bar.style.width = pct + '%';
+    if (count) count.textContent = `${p.current} / ${p.total}`;
+    if (errDiv && p.errors && p.errors.length) errDiv.textContent = p.errors.join('\n');
+    if (!p.running) {
+      setTimeout(closeSyncProgressModal, 1500);
+      loadPortals();
+    }
+  }).catch(() => {});
+  if ($('mlSyncModal')) setTimeout(updateSyncProgress, 800);
+}
+
+async function syncBidiML() {
+  showSyncProgressModal();
+  updateSyncProgress();
+  try {
+    await _req('POST', '/api/portals/ml/sync');
+  } catch (e) {
+    const phase = $('mlSyncPhase');
+    if (phase) phase.textContent = 'Error: ' + e.message;
+  }
+}
+
 /* ── Exports ──────────────────────────────────────────────────── */
 window.openPortalForm = openPortalForm;
 window.closePortalForm = closePortalForm;
@@ -319,6 +434,10 @@ window.confirmDeletePortal = confirmDeletePortal;
 window.togglePortal = togglePortal;
 window.viewPortalLogs = viewPortalLogs;
 window.closePortalLogsModal = closePortalLogsModal;
+window.closeSyncProgressModal = closeSyncProgressModal;
+window.syncFromML = syncFromML;
+window.syncBidiML = syncBidiML;
 window.loadQueue = loadQueue;
 window.retryQueueItem = retryQueueItem;
+window.connectMercadoLibre = connectMercadoLibre;
 window.cancelQueueItem = cancelQueueItem;
