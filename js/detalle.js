@@ -6,6 +6,14 @@ const ICON_TYPE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" s
 function esc(v) { return String(v ?? '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 const $ = id => document.getElementById(id);
 
+// Support direct query params: propiedad.html?id=123 or propiedad.html?alquiler=456
+const _qp = new URLSearchParams(window.location.search);
+if (_qp.get('id') && !sessionStorage.getItem('gh_redirect')) {
+  sessionStorage.setItem('gh_redirect', '/venta/' + _qp.get('id'));
+} else if (_qp.get('alquiler') && !sessionStorage.getItem('gh_redirect')) {
+  sessionStorage.setItem('gh_redirect', '/alquiler/' + _qp.get('alquiler'));
+}
+
 const _pathRaw = sessionStorage.getItem('gh_redirect') || window.location.pathname;
 sessionStorage.removeItem('gh_redirect');
 // Strip GH Pages repo prefix (e.g. /bienenhaus-landing) if present

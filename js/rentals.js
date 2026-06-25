@@ -93,7 +93,7 @@ function buildRentalCard(rental) {
       </div>
       <div class="card-body">
         <div class="card-location">${eloc}</div>
-        <a href="/alquiler/${rental.id}" class="card-title-link"><h3 class="card-title">${etitle}</h3></a>
+        <a href="/bienenhaus-landing/alquiler/${rental.id}" class="card-title-link"><h3 class="card-title">${etitle}</h3></a>
         <p class="card-desc">${edesc}</p>
         <div class="card-specs">
           <div class="spec"><div class="spec-n">${rental.beds}</div><div class="spec-l">dorms.</div></div>
@@ -108,7 +108,7 @@ function buildRentalCard(rental) {
             </div>
             ${expHtml}
           </div>
-          <a href="/alquiler/${rental.id}" class="btn btn-ghost btn-sm">Ver detalle</a>
+          <a href="/bienenhaus-landing/alquiler/${rental.id}" class="btn btn-ghost btn-sm">Ver detalle</a>
           ${!isRented
             ? `<a href="https://wa.me/${_wa()}?text=Hola%20Bienenhaus%2C%20me%20interesa%20el%20alquiler%20${encodeURIComponent(rental.title)}"
                  target="_blank" class="btn btn-outline btn-sm">Consultar</a>`
