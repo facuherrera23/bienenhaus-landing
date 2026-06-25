@@ -764,9 +764,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (_isRental) {
       item = await API.getRental(_itemId);
     } else if (_isSale) {
-      const res = await fetch(`/api/properties/${_itemId}`).then(r => r.json());
-      if (!res.ok) throw new Error('No encontrada');
-      item = res.data;
+      item = await API.getProperty(_itemId);
     }
     renderItem(item);
   } catch {

@@ -81,6 +81,7 @@ const API = {
     }
     return data;
   },
+  getProperty    : (id) => _req('GET', `/api/properties/${id}`),
   createProperty : (data) => _req('POST',   '/api/properties',        data),
   updateProperty : (id, data) => _req('PUT', `/api/properties/${id}`,  data),
   setStatus      : (id, status) => _req('PATCH', `/api/properties/${id}/status`, { status }),
